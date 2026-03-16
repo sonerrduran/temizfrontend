@@ -3,7 +3,7 @@
  * Ses efektleri ve müzik yönetimi
  */
 
-export type SoundType = 
+export type SoundType =
   | 'correct'
   | 'incorrect'
   | 'click'
@@ -74,7 +74,7 @@ export function playSound(type: SoundType, options: SoundOptions = {}): void {
   const { volume = 1.0, loop = false, playbackRate = 1.0 } = options;
 
   let audio = audioCache.get(type);
-  
+
   if (!audio) {
     audio = new Audio(SOUND_URLS[type]);
     audioCache.set(type, audio);

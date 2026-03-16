@@ -1,6 +1,8 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
 import path from 'path';
+import federationConfig from './module-federation.config';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
@@ -11,7 +13,8 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
     },
     plugins: [
-      react()
+      react(),
+      federation(federationConfig),
     ],
     resolve: {
       alias: {
@@ -24,9 +27,13 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
     build: {
+      target: 'esnext',
+      minify: false,
+      cssCodeSplit: false,
+      modulePreload: false,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
@@ -40,32 +47,21 @@ export default defineConfig(({ mode }) => {
               }
               return 'vendor';
             }
-            
-            // Game category chunks
-            if (id.includes('/features/games/math-games/')) return 'math-games';
-            if (id.includes('/features/games/logic-games/')) return 'logic-games';
-            if (id.includes('/features/games/language-games/')) return 'language-games';
-            if (id.includes('/features/life-skills/')) return 'life-skills';
-            if (id.includes('/features/fast-reading/')) return 'fast-reading';
-            if (id.includes('/features/focus/')) return 'focus-games';
-            if (id.includes('/features/learning/')) return 'learning-tools';
-            
-            // Feature chunks
+
+            // Feature chunks (non-micro-frontend features)
             if (id.includes('/features/dashboard/')) return 'dashboard';
             if (id.includes('/features/profile/')) return 'profile';
             if (id.includes('/features/leaderboard/')) return 'leaderboard';
+            if (id.includes('/features/lessons/')) return 'lessons';
+            if (id.includes('/features/fast-reading/')) return 'fast-reading';
+            if (id.includes('/features/focus/')) return 'focus-games';
+            if (id.includes('/features/learning/')) return 'learning-tools';
+            if (id.includes('/features/life-skills/')) return 'life-skills';
           },
         },
       },
       chunkSizeWarningLimit: 1000,
       sourcemap: mode === 'development',
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: mode === 'production',
-          drop_debugger: mode === 'production',
-        },
-      },
     },
     optimizeDeps: {
       include: ['react', 'react-dom', 'react-router-dom'],

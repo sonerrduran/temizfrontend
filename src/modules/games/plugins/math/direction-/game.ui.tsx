@@ -2,17 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { GameUIProps } from '../../../engine/types/game.types';
 import { DirectionLogic } from './game.logic';
 
-export const DirectionGame: React.FC<GameUIProps> = ({
-  config,
-  logic,
-  onComplete,
-  onExit,
-}) => {
+export const DirectionGame: React.FC<GameUIProps> = ({ config, logic, onComplete, onExit }) => {
   const gameLogic = logic as DirectionLogic;
   const [, forceUpdate] = useState({});
   const [timeLeft, setTimeLeft] = useState(30);
 
-  
   useEffect(() => {
     const timer = setInterval(() => {
       const state = gameLogic.getState();
@@ -23,10 +17,10 @@ export const DirectionGame: React.FC<GameUIProps> = ({
         handleTimeout();
       }
     }, 1000);
-    
+
     return () => clearInterval(timer);
   }, [timeLeft]);
-  
+
   const handleTimeout = () => {
     const state = gameLogic.getState();
     if (state.isComplete) {
@@ -36,16 +30,15 @@ export const DirectionGame: React.FC<GameUIProps> = ({
       forceUpdate({});
     }
   };
-  
 
   const handleAnswer = (answer: any) => {
     const result = gameLogic.handleAnswer(answer);
     const state = gameLogic.getState();
-    
+
     if (state.isComplete) {
       onComplete(state.score);
     }
-    
+
     forceUpdate({});
   };
 
@@ -69,10 +62,12 @@ export const DirectionGame: React.FC<GameUIProps> = ({
 
         <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8">
           <div className="text-center text-white">
-            <p className="text-2xl mb-4">Soru {state.currentQuestion + 1} / {state.totalQuestions}</p>
+            <p className="text-2xl mb-4">
+              Soru {state.currentQuestion + 1} / {state.totalQuestions}
+            </p>
             <p className="text-xl mb-4">⏱️ {timeLeft}s</p>
             <p className="text-lg mb-4">Seviye: {state.level}</p>
-            
+
             <div className="mt-8">
               <button
                 onClick={() => handleAnswer(true)}

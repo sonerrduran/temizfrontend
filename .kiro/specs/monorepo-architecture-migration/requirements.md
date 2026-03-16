@@ -1,278 +1,502 @@
-# Gereksinimler Dokümanı: Monorepo Mimari Dönüşümü
+# Gereksinimler Belgesi: Monorepo Mimari Yeniden Yapılandırma
 
-## Giriş
+## Genel Bakış
 
-Eğitim Galaksisi uygulaması, şu anda tek bir monolitik yapıda olan bir Türkçe eğitim platformudur. Bu proje, uygulamayı modern monorepo mimarisine dönüştürerek ölçeklenebilirlik, bakım kolaylığı ve kod yeniden kullanılabilirliğini artırmayı hedeflemektedir. Dönüşüm sırasında mevcut tasarımlar, renkler ve kullanıcı deneyimi korunacak, gereksiz kod ve karmaşıklık temizlenecektir.
+Bu belge, Eğitim Galaksisi projesinin monorepo mimarisine geçişi için fonksiyonel ve fonksiyonel olmayan gereksinimleri tanımlar.
 
-## Sözlük
+## Fonksiyonel Gereksinimler
 
-- **Monorepo**: Birden fazla projeyi tek bir kod deposunda yöneten mimari yapı
-- **Workspace**: Monorepo içindeki bağımsız paket veya uygulama
-- **Feature_Module**: Belirli bir işlevselliği kapsayan bağımsız modül (örn: oyunlar, dersler)
-- **Design_System**: Tutarlı UI bileşenleri ve tasarım kuralları içeren paket
-- **Game_Engine**: Oyun mantığını ve ortak oyun işlevlerini içeren paket
-- **Migration_System**: Mevcut kodun yeni yapıya taşınmasını yöneten sistem
-- **Legacy_Code**: Mevcut monolitik yapıdaki kod
-- **Target_Architecture**: Hedeflenen monorepo yapısı
-- **Rollback_Mechanism**: Hata durumunda geri dönüş mekanizması
+### FR-1: Monorepo Yapısı
 
-## Gereksinimler
+**FR-1.1**: Sistem, 3 ayrı uygulama içeren monorepo yapısına sahip olmalıdır
+- apps/web: Öğrenci uygulaması (Host application)
+- apps/admin: Admin paneli
+- apps/teacher: Öğretmen paneli
 
-### Gereksinim 1: Monorepo Yapısı Oluşturma
+**FR-1.2**: Sistem, shared packages yapısına sahip olmalıdır
+- packages/game-engine: Oyun motoru
+- packages/ui: UI bileşenleri
+- packages/shared: Ortak utilities
+- packages/mock-data: Test verileri
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, projeyi monorepo yapısına dönüştürmek istiyorum, böylece farklı uygulamalar ve paketler bağımsız olarak yönetilebilir.
+**FR-1.3**: Sistem, micro frontends yapısına sahip olmalıdır
+- micro-frontends/math-games: Matematik oyunları
+- micro-frontends/logic-games: Mantık oyunları
+- micro-frontends/language-games: Dil oyunları
 
-#### Kabul Kriterleri
+**FR-1.4**: Tüm uygulamalar workspace bağımlılıklarını kullanmalıdır
 
-1. THE Migration_System SHALL create a workspace structure with apps/ and packages/ directories
-2. THE Migration_System SHALL create apps/web workspace for the main student application
-3. THE Migration_System SHALL create apps/admin workspace for the administrator panel
-4. THE Migration_System SHALL create apps/teacher workspace for the teacher panel
-5. WHEN workspace structure is created, THE Migration_System SHALL preserve all existing functionality
-6. THE Migration_System SHALL create a root package.json with workspace configuration
-7. THE Migration_System SHALL configure TypeScript path aliases for cross-workspace imports
+**FR-1.5**: Micro frontends Module Federation ile yönetilmelidir
+- Vite Plugin Federation kullanımı
+- Runtime'da dinamik yükleme
+- Shared dependencies singleton pattern
 
-### Gereksinim 2: Feature-Based Modül Yapısı
+### FR-2: Routing Sistemi
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, özellikleri bağımsız modüller halinde organize etmek istiyorum, böylece kod daha kolay bulunabilir ve bakımı yapılabilir.
+**FR-2.1**: Tüm routing React Router ile yapılmalıdır
+- Switch/case tabanlı routing tamamen kaldırılmalı
+- setMode() gibi state-based navigation kaldırılmalı
 
-#### Kabul Kriterleri
+**FR-2.2**: Her feature kendi routes.tsx dosyasına sahip olmalıdır
 
-1. THE Migration_System SHALL create features/games module containing all game-related components
-2. THE Migration_System SHALL create features/lessons module containing all lesson-related components
-3. THE Migration_System SHALL create features/analytics module containing analytics and reporting components
-4. THE Migration_System SHALL create features/leaderboard module containing leaderboard and ranking components
-5. WHEN migrating components to feature modules, THE Migration_System SHALL maintain all import paths through barrel exports
-6. THE Migration_System SHALL create index.ts files in each feature module for clean exports
-7. FOR ALL feature modules, THE Migration_System SHALL ensure zero circular dependencies
+**FR-2.3**: Route guards implementasyonu olmalıdır
+- Public routes (login, register)
+- Protected routes (authenticated users)
+- Role-based routes (STUDENT, TEACHER, ADMIN)
 
-### Gereksinim 3: Oyun Motoru Paketi
+**FR-2.4**: Lazy loading ile route-based code splitting olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, ortak oyun mantığını paylaşılan bir pakette toplamak istiyorum, böylece oyunlar arasında kod tekrarı önlenir.
+### FR-3: Feature-Based Architecture
 
-#### Kabul Kriterleri
+**FR-3.1**: Tüm componentler features/ klasörü altında organize edilmelidir
 
-1. THE Migration_System SHALL create packages/game-engine workspace
-2. THE Game_Engine SHALL provide a base GameTemplate component for all games
-3. THE Game_Engine SHALL provide scoring logic that is consistent across all games
-4. THE Game_Engine SHALL provide level progression logic
-5. THE Game_Engine SHALL provide game state management utilities
-6. WHEN a game uses Game_Engine, THE Game_Engine SHALL maintain the game's original visual design
-7. THE Game_Engine SHALL provide sound effect and animation utilities
-8. THE Game_Engine SHALL provide timer and countdown utilities
+**FR-3.2**: components/ klasörü tamamen kaldırılmalıdır
 
-### Gereksinim 4: UI Tasarım Sistemi Paketi
+**FR-3.3**: Her feature şu yapıya sahip olmalıdır:
+- components/: Feature-specific components
+- hooks/: Feature-specific hooks
+- types/: Feature-specific types
+- routes.tsx: Feature routes
+- index.ts: Public exports
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, tutarlı UI bileşenlerini merkezi bir pakette toplamak istiyorum, böylece tasarım tutarlılığı sağlanır.
+### FR-4: Oyun Sistemi
 
-#### Kabul Kriterleri
+**FR-4.1**: Oyunlar micro frontends olarak organize edilmelidir
+- math-games: Matematik oyunları (1-8. sınıf)
+- logic-games: Mantık oyunları (Sudoku, Puzzle, Memory, Two-Player)
+- language-games: Dil oyunları (Türkçe, İngilizce, 1-8. sınıf)
 
-1. THE Migration_System SHALL create packages/ui workspace
-2. THE Design_System SHALL preserve all existing color schemes from gameTheme.ts
-3. THE Design_System SHALL provide Button, Card, Modal, and Input components
-4. THE Design_System SHALL provide GameCard component with existing visual design
-5. THE Design_System SHALL provide Layout components (Header, Footer, Sidebar)
-6. WHEN Design_System components are used, THE Design_System SHALL maintain pixel-perfect compatibility with existing designs
-7. THE Design_System SHALL export all color constants and theme variables
-8. THE Design_System SHALL provide TypeScript types for all component props
+**FR-4.2**: Her micro frontend bağımsız olarak build ve deploy edilebilmelidir
 
-### Gereksinim 5: Micro Frontend Hazırlığı
+**FR-4.3**: Dil oyunları sınıf seviyelerine göre organize edilmelidir
+- turkish/grade1/, turkish/grade2/, vb.
+- english/grade1/, english/grade2/, vb.
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, gelecekte micro frontend mimarisine geçiş için altyapı hazırlamak istiyorum, böylece oyun kategorileri bağımsız olarak deploy edilebilir.
+**FR-4.4**: Her oyun route-based erişime sahip olmalıdır
+- Örnek: /games/math/grade1/addition
+- Örnek: /games/language/turkish/grade1/letters/match
 
-#### Kabul Kriterleri
+**FR-4.5**: Oyunlar game-engine package'ını kullanmalıdır
 
-1. THE Migration_System SHALL create features/games/math-games subdirectory
-2. THE Migration_System SHALL create features/games/logic-games subdirectory
-3. THE Migration_System SHALL create features/games/language-games subdirectory
-4. WHEN organizing games by category, THE Migration_System SHALL maintain all existing game functionality
-5. THE Migration_System SHALL ensure each game category can be imported independently
-6. THE Migration_System SHALL create separate routing configuration for each game category
-7. WHERE micro frontend deployment is needed, THE Target_Architecture SHALL support independent deployment of game categories
+**FR-4.6**: Micro frontends host app tarafından dinamik olarak yüklenmelidir
+- Lazy loading
+- Error boundaries
+- Fallback UI
 
-### Gereksinim 6: Tasarım ve Renk Koruması
 
-**Kullanıcı Hikayesi:** Kullanıcı olarak, uygulama mimarisinin değişmesine rağmen aynı görsel deneyimi yaşamak istiyorum, böylece alışkanlıklarım bozulmaz.
+### FR-5: Ders Sistemi
 
-#### Kabul Kriterleri
+**FR-5.1**: Tüm dersler features/lessons/ altında organize edilmelidir
 
-1. THE Migration_System SHALL preserve all color values from styles/gameTheme.ts
-2. THE Migration_System SHALL preserve all component styling and CSS classes
-3. THE Migration_System SHALL preserve all animations and transitions
-4. THE Migration_System SHALL preserve all icon and emoji usage
-5. WHEN a component is migrated, THE Migration_System SHALL verify visual output matches Legacy_Code exactly
-6. THE Migration_System SHALL preserve all responsive design breakpoints
-7. THE Migration_System SHALL preserve all font sizes, weights, and families
+**FR-5.2**: Her ders konusu kendi klasörüne sahip olmalıdır
+- turkish/, math/, science/, english/, vb.
 
-### Gereksinim 7: Kod Temizleme ve Optimizasyon
+**FR-5.3**: Sınıf seviyeleri alt klasörlerde organize edilmelidir
+- turkish/grade1/, turkish/grade2/, vb.
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, kullanılmayan kodu ve gereksiz karmaşıklığı temizlemek istiyorum, böylece kod tabanı daha sürdürülebilir olur.
+**FR-5.4**: Ders menüleri route-based olmalıdır
+- /lessons/turkish
+- /lessons/turkish/grade1
 
-#### Kabul Kriterleri
+### FR-6: Dashboard Sistemi
 
-1. THE Migration_System SHALL identify and remove unused components
-2. THE Migration_System SHALL identify and remove unused dependencies from package.json
-3. THE Migration_System SHALL consolidate duplicate code into shared utilities
-4. THE Migration_System SHALL remove commented-out code blocks
-5. WHEN removing code, THE Migration_System SHALL verify no runtime errors are introduced
-6. THE Migration_System SHALL standardize import statements across all files
-7. THE Migration_System SHALL remove console.log statements from production code
+**FR-6.1**: Her rol için ayrı dashboard olmalıdır
+- StudentDashboard
+- TeacherDashboard
+- AdminDashboard
+- ParentDashboard
 
-### Gereksinim 8: Adım Adım Migrasyon Planı
+**FR-6.2**: Dashboard, kullanıcı rolüne göre otomatik yönlendirme yapmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, migrasyonun adım adım ve test edilebilir şekilde yapılmasını istiyorum, böylece her adımda uygulamanın çalışır durumda kalması garanti edilir.
+**FR-6.3**: Dashboard'da kullanıcı istatistikleri gösterilmelidir
+- Toplam oyun sayısı
+- Toplam skor
+- Toplam yıldız
+- Seviye
+- Sıralama
 
-#### Kabul Kriterleri
+### FR-7: Kimlik Doğrulama
 
-1. THE Migration_System SHALL create a migration plan with distinct phases
-2. THE Migration_System SHALL ensure each migration phase is independently testable
-3. THE Migration_System SHALL create a rollback procedure for each migration phase
-4. WHEN a migration phase is completed, THE Migration_System SHALL run all existing tests
-5. THE Migration_System SHALL document each migration step with clear instructions
-6. THE Migration_System SHALL create migration checkpoints that can be committed to version control
-7. IF a migration phase fails, THEN THE Rollback_Mechanism SHALL restore the previous working state
+**FR-7.1**: JWT token tabanlı authentication olmalıdır
 
-### Gereksinim 9: Bağımlılık Yönetimi
+**FR-7.2**: Refresh token mekanizması olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, workspace'ler arası bağımlılıkları düzgün yönetmek istiyorum, böylece paketler birbirini doğru şekilde referans eder.
+**FR-7.3**: Login ve register sayfaları olmalıdır
 
-#### Kabul Kriterleri
+**FR-7.4**: Kullanıcı rolleri desteklenmelidir
+- STUDENT
+- TEACHER
+- PARENT
+- SCHOOL_ADMIN
+- SUPER_ADMIN
 
-1. THE Migration_System SHALL configure workspace dependencies in root package.json
-2. THE Migration_System SHALL use workspace protocol for internal package references
-3. THE Migration_System SHALL ensure packages/ui can be imported by all apps
-4. THE Migration_System SHALL ensure packages/game-engine can be imported by all apps
-5. WHEN building the project, THE Migration_System SHALL resolve all workspace dependencies correctly
-6. THE Migration_System SHALL prevent circular dependencies between workspaces
-7. THE Migration_System SHALL configure TypeScript to recognize workspace packages
+### FR-8: Profil Yönetimi
 
-### Gereksinim 10: Build ve Development Yapılandırması
+**FR-8.1**: Kullanıcı profil sayfası olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, monorepo yapısında build ve development süreçlerinin sorunsuz çalışmasını istiyorum, böylece geliştirme verimliliği korunur.
+**FR-8.2**: Profil bilgileri güncellenebilmelidir
+- Ad, soyad
+- Avatar
+- Sınıf seviyesi
 
-#### Kabul Kriterleri
+**FR-8.3**: Kullanıcı istatistikleri görüntülenebilmelidir
 
-1. THE Migration_System SHALL configure Vite for monorepo structure
-2. THE Migration_System SHALL enable hot module replacement for all workspaces
-3. THE Migration_System SHALL configure build scripts for each workspace
-4. THE Migration_System SHALL configure a root build script that builds all workspaces
-5. WHEN running dev server, THE Migration_System SHALL support concurrent development of multiple workspaces
-6. THE Migration_System SHALL configure TypeScript compilation for all workspaces
-7. THE Migration_System SHALL ensure build output is optimized for production
+**FR-8.4**: Başarılar (achievements) gösterilmelidir
 
-### Gereksinim 11: Mevcut Modül Yapısının Korunması
+### FR-9: Sıralama Tablosu
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, mevcut modüllerin (Academic, Fast Reading, First Aid, vb.) yapısının korunmasını istiyorum, böylece içerik kaybı olmaz.
+**FR-9.1**: Global sıralama tablosu olmalıdır
 
-#### Kabul Kriterleri
+**FR-9.2**: Oyun bazlı sıralama tablosu olmalıdır
 
-1. THE Migration_System SHALL preserve all Academic module components (matematik, Türkçe, İngilizce, fen, sosyal bilgiler)
-2. THE Migration_System SHALL preserve all Fast Reading module components
-3. THE Migration_System SHALL preserve all First Aid module components
-4. THE Migration_System SHALL preserve all Focus module components
-5. THE Migration_System SHALL preserve all Language module components
-6. THE Migration_System SHALL preserve all Learning module components
-7. THE Migration_System SHALL preserve all Logic Games module components
-8. THE Migration_System SHALL preserve all Memory module components
-9. THE Migration_System SHALL preserve all Reading module components
-10. THE Migration_System SHALL preserve all Stories module components
-11. WHEN migrating modules, THE Migration_System SHALL maintain all grade-level subdivisions
-12. THE Migration_System SHALL preserve all teacher tools components
+**FR-9.3**: Sıralama tablosu filtrelenebilmelidir
+- Günlük, haftalık, aylık, tüm zamanlar
 
-### Gereksinim 12: Routing ve Navigation Yapısı
+**FR-9.4**: Kullanıcının kendi sıralaması vurgulanmalıdır
 
-**Kullanıcı Hikayesi:** Kullanıcı olarak, uygulama içinde gezinirken aynı URL yapısını ve navigasyon deneyimini yaşamak istiyorum, böylece yer imleri ve alışkanlıklar bozulmaz.
+### FR-10: Admin Paneli
 
-#### Kabul Kriterleri
+**FR-10.1**: Okul yönetimi (CRUD) olmalıdır
 
-1. THE Migration_System SHALL preserve all existing route paths from AppRouter.tsx
-2. THE Migration_System SHALL maintain role-based routing (student, teacher, admin, parent)
-3. THE Migration_System SHALL preserve all protected route logic
-4. THE Migration_System SHALL maintain lazy loading for route components
-5. WHEN a user navigates to a route, THE Target_Architecture SHALL render the same component as Legacy_Code
-6. THE Migration_System SHALL preserve all route parameters and query strings
-7. THE Migration_System SHALL maintain navigation guards and authentication checks
+**FR-10.2**: Öğretmen yönetimi (CRUD) olmalıdır
 
-### Gereksinim 13: State Management Yapısı
+**FR-10.3**: Öğrenci yönetimi (CRUD) olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, mevcut state management yapısının (Zustand stores) korunmasını istiyorum, böylece uygulama durumu doğru şekilde yönetilir.
+**FR-10.4**: Sistem ayarları yönetimi olmalıdır
 
-#### Kabul Kriterleri
+**FR-10.5**: Raporlama ve analitik olmalıdır
 
-1. THE Migration_System SHALL preserve authStore functionality
-2. THE Migration_System SHALL preserve gameStore functionality
-3. THE Migration_System SHALL preserve uiStore functionality
-4. THE Migration_System SHALL organize stores within appropriate feature modules
-5. WHEN a component uses a store, THE Target_Architecture SHALL provide the same state interface as Legacy_Code
-6. THE Migration_System SHALL maintain all store actions and selectors
-7. THE Migration_System SHALL preserve store persistence logic
+### FR-11: Öğretmen Paneli
 
-### Gereksinim 14: API ve Service Katmanı
+**FR-11.1**: Sınıf yönetimi olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, API ve service katmanının merkezi bir yerde organize edilmesini istiyorum, böylece backend entegrasyonu tutarlı olur.
+**FR-11.2**: Öğrenci performans takibi olmalıdır
 
-#### Kabul Kriterleri
+**FR-11.3**: Ödev atama ve değerlendirme olmalıdır
 
-1. THE Migration_System SHALL create a shared services package or directory
-2. THE Migration_System SHALL preserve all API service functions from services/api.ts
-3. THE Migration_System SHALL preserve Gemini AI service integration
-4. THE Migration_System SHALL preserve practice question service
-5. WHEN an app calls an API service, THE Target_Architecture SHALL use the same service interface as Legacy_Code
-6. THE Migration_System SHALL organize services by domain (auth, games, lessons, analytics)
-7. THE Migration_System SHALL maintain all error handling and retry logic
+**FR-11.4**: İçerik oluşturma olmalıdır
 
-### Gereksinim 15: Test Edilebilirlik ve Doğrulama
+**FR-11.5**: Öğretmen araçları erişimi olmalıdır
+- Whiteboard, Timer, Random Picker, vb.
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, migrasyon sonrası uygulamanın doğru çalıştığını doğrulamak istiyorum, böylece üretim ortamına güvenle deploy edilebilir.
+## Fonksiyonel Olmayan Gereksinimler
 
-#### Kabul Kriterleri
+### NFR-1: Performans
 
-1. THE Migration_System SHALL create a validation checklist for each migration phase
-2. THE Migration_System SHALL verify all routes are accessible after migration
-3. THE Migration_System SHALL verify all games are playable after migration
-4. THE Migration_System SHALL verify all lessons are accessible after migration
-5. WHEN validation is performed, THE Migration_System SHALL test on multiple screen sizes
-6. THE Migration_System SHALL verify authentication and authorization work correctly
-7. THE Migration_System SHALL verify all API integrations function correctly
-8. THE Migration_System SHALL create smoke tests for critical user flows
-9. THE Migration_System SHALL verify build output size is not significantly larger than Legacy_Code
-10. THE Migration_System SHALL verify application performance is not degraded
+**NFR-1.1**: İlk sayfa yükleme süresi (FCP) 1.5 saniyeden az olmalıdır
 
-## Özel Gereksinim Notları
+**NFR-1.2**: Etkileşime hazır süre (TTI) 3 saniyeden az olmalıdır
 
-### Parser ve Serializer Gereksinimleri
+**NFR-1.3**: Oyun başlatma süresi 500ms'den az olmalıdır
 
-Bu projede doğrudan parser/serializer bulunmamaktadır, ancak gelecekte eklenmesi durumunda:
+**NFR-1.4**: Route değişim süresi 200ms'den az olmalıdır
 
-**Gereksinim 16: Veri Formatı İşleme (Gelecek)**
+**NFR-1.5**: Ana bundle boyutu 200KB'den (gzipped) küçük olmalıdır
 
-**Kullanıcı Hikayesi:** Geliştirici olarak, oyun verilerini ve ders içeriklerini parse edip serialize edebilmek istiyorum, böylece içerik yönetimi kolaylaşır.
+**NFR-1.6**: Feature chunk'ları 50KB'den (gzipped) küçük olmalıdır
 
-#### Kabul Kriterleri
+**NFR-1.7**: Micro frontend bundle'ları 150KB'den (gzipped) küçük olmalıdır
 
-1. WHERE content parsing is needed, THE Content_Parser SHALL parse JSON configuration files into typed objects
-2. WHERE content parsing is needed, THE Content_Parser SHALL return descriptive errors for invalid content
-3. WHERE content serialization is needed, THE Pretty_Printer SHALL format content objects back into valid JSON
-4. FOR ALL valid content objects, parsing then printing then parsing SHALL produce an equivalent object (round-trip property)
+**NFR-1.8**: Micro frontend yükleme süresi 1 saniyeden az olmalıdır
 
-## Migrasyon Aşamaları Özeti
+### NFR-2: Ölçeklenebilirlik
 
-1. **Aşama 1**: Monorepo yapısı ve workspace konfigürasyonu
-2. **Aşama 2**: packages/ui tasarım sistemi oluşturma
-3. **Aşama 3**: packages/game-engine oluşturma
-4. **Aşama 4**: Feature modüllerini organize etme (games, lessons, analytics, leaderboard)
-5. **Aşama 5**: Apps yapısını oluşturma (web, admin, teacher)
-6. **Aşama 6**: Routing ve navigation yapısını güncelleme
-7. **Aşama 7**: State management ve services yapısını organize etme
-8. **Aşama 8**: Kod temizleme ve optimizasyon
-9. **Aşama 9**: Test ve doğrulama
-10. **Aşama 10**: Dokümantasyon ve deployment hazırlığı
+**NFR-2.1**: Sistem, yeni feature eklemeyi kolaylaştırmalıdır
 
-## Kısıtlar ve Notlar
+**NFR-2.2**: Sistem, yeni oyun eklemeyi kolaylaştırmalıdır
 
-- Migrasyon sırasında uygulama her zaman çalışır durumda kalmalıdır
-- Her aşama bağımsız olarak test edilebilir olmalıdır
-- Mevcut kullanıcı verileri ve oturum bilgileri korunmalıdır
-- Performans düşüşü kabul edilemez
-- Tasarım ve renk değişiklikleri kabul edilemez
-- Tüm mevcut özellikler korunmalıdır
+**NFR-2.3**: Sistem, yeni ders konusu eklemeyi kolaylaştırmalıdır
+
+**NFR-2.4**: Kod tekrarı %5'ten az olmalıdır
+
+**NFR-2.5**: Cyclomatic complexity 10'dan az olmalıdır
+
+### NFR-3: Bakım Kolaylığı
+
+**NFR-3.1**: Test coverage %80'den fazla olmalıdır
+
+**NFR-3.2**: TypeScript strict mode aktif olmalıdır
+
+**NFR-3.3**: ESLint hata sayısı 0 olmalıdır
+
+**NFR-3.4**: Tüm public API'ler dokümante edilmelidir
+
+**NFR-3.5**: Her feature README.md dosyasına sahip olmalıdır
+
+### NFR-4: Güvenlik
+
+**NFR-4.1**: Tüm API çağrıları HTTPS üzerinden yapılmalıdır
+
+**NFR-4.2**: JWT token'lar güvenli şekilde saklanmalıdır (httpOnly cookie)
+
+**NFR-4.3**: XSS koruması aktif olmalıdır
+
+**NFR-4.4**: CSRF koruması aktif olmalıdır
+
+**NFR-4.5**: Input validation hem client hem server tarafında yapılmalıdır
+
+**NFR-4.6**: Rate limiting implementasyonu olmalıdır
+
+**NFR-4.7**: Hassas veriler client-side'da saklanmamalıdır
+
+### NFR-5: Kullanılabilirlik
+
+**NFR-5.1**: Arayüz responsive olmalıdır (mobile, tablet, desktop)
+
+**NFR-5.2**: Lighthouse accessibility score 90'dan fazla olmalıdır
+
+**NFR-5.3**: Keyboard navigation desteklenmelidir
+
+**NFR-5.4**: Screen reader uyumlu olmalıdır
+
+**NFR-5.5**: Hata mesajları kullanıcı dostu olmalıdır
+
+**NFR-5.6**: Loading states gösterilmelidir
+
+### NFR-6: Tarayıcı Uyumluluğu
+
+**NFR-6.1**: Chrome (son 2 versiyon) desteklenmelidir
+
+**NFR-6.2**: Firefox (son 2 versiyon) desteklenmelidir
+
+**NFR-6.3**: Safari (son 2 versiyon) desteklenmelidir
+
+**NFR-6.4**: Edge (son 2 versiyon) desteklenmelidir
+
+### NFR-7: Monitoring ve Logging
+
+**NFR-7.1**: Error tracking sistemi olmalıdır (Sentry)
+
+**NFR-7.2**: Analytics sistemi olmalıdır (Google Analytics)
+
+**NFR-7.3**: Performance monitoring olmalıdır
+
+**NFR-7.4**: User behavior tracking olmalıdır
+
+### NFR-8: Deployment
+
+**NFR-8.1**: CI/CD pipeline olmalıdır
+
+**NFR-8.2**: Automated testing pipeline olmalıdır
+
+**NFR-8.3**: Staging environment olmalıdır
+
+**NFR-8.4**: Rollback mekanizması olmalıdır
+
+**NFR-8.5**: Zero-downtime deployment desteklenmelidir
+
+**NFR-8.6**: Her micro frontend bağımsız deploy edilebilmelidir
+
+**NFR-8.7**: Micro frontends CDN'e deploy edilmelidir
+
+**NFR-8.8**: Paralel deployment desteklenmelidir
+
+## Kabul Kriterleri
+
+### AC-1: Monorepo Yapısı
+
+- [ ] 3 ayrı app çalışıyor (web, admin, teacher)
+- [ ] 4 shared package çalışıyor (game-engine, ui, shared, mock-data)
+- [ ] 3 micro frontend çalışıyor (math-games, logic-games, language-games)
+- [ ] Workspace bağımlılıkları çözülüyor
+- [ ] Turbo build sistemi çalışıyor
+- [ ] Module Federation yapılandırması tamamlandı
+
+### AC-2: Routing Sistemi
+
+- [ ] App.tsx'te switch/case kalmadı
+- [ ] Tüm routing React Router ile yapılıyor
+- [ ] Route guards çalışıyor
+- [ ] Lazy loading aktif
+- [ ] 404 sayfası çalışıyor
+
+### AC-3: Feature Organization
+
+- [ ] components/ klasörü boş
+- [ ] Tüm componentler features/ altında
+- [ ] Her feature kendi routes.tsx'e sahip
+- [ ] Import path'leri doğru
+
+### AC-4: Oyun Sistemi
+
+- [ ] Tüm oyunlar micro frontends'te organize
+- [ ] Her micro frontend bağımsız çalışıyor
+- [ ] Oyun kategorileri organize
+- [ ] Sınıf seviyeleri organize
+- [ ] Game engine çalışıyor
+- [ ] Oyun başlatma/bitirme akışı çalışıyor
+- [ ] Micro frontend yükleme çalışıyor
+- [ ] Error boundaries aktif
+- [ ] Fallback UI gösteriliyor
+
+### AC-5: Performans
+
+- [ ] FCP < 1.5s
+- [ ] TTI < 3s
+- [ ] Bundle size < 200KB
+- [ ] Micro frontend bundle size < 150KB
+- [ ] Micro frontend load time < 1s
+- [ ] Lighthouse score > 90
+
+### AC-6: Test Coverage
+
+- [ ] Unit test coverage > %80
+- [ ] Integration testler yazıldı
+- [ ] E2E testler yazıldı
+- [ ] Tüm testler geçiyor
+
+### AC-7: Güvenlik
+
+- [ ] HTTPS zorunlu
+- [ ] JWT authentication çalışıyor
+- [ ] Route guards çalışıyor
+- [ ] Input validation aktif
+- [ ] XSS/CSRF koruması aktif
+
+### AC-8: Documentation
+
+- [ ] README.md güncel
+- [ ] API documentation tamamlandı
+- [ ] Migration guide hazırlandı
+- [ ] Deployment guide hazırlandı
+- [ ] Micro frontends guide hazırlandı
+
+## Kısıtlamalar
+
+### Teknik Kısıtlamalar
+
+**C-1**: React 18.2+ kullanılmalıdır
+
+**C-2**: TypeScript 5.2+ kullanılmalıdır
+
+**C-3**: Vite 5.0+ build tool olarak kullanılmalıdır
+
+**C-4**: Turbo monorepo tool olarak kullanılmalıdır
+
+**C-5**: React Router 6.20+ routing için kullanılmalıdır
+
+**C-6**: Module Federation (Vite Plugin) kullanılmalıdır
+
+### İş Kısıtlamaları
+
+**C-7**: Migration 13 haftada tamamlanmalıdır
+
+**C-8**: Migration sırasında production downtime olmamalıdır
+
+**C-9**: Mevcut kullanıcı verileri korunmalıdır
+
+**C-10**: Mevcut oyun ilerlemeleri korunmalıdır
+
+### Kaynak Kısıtlamaları
+
+**C-11**: Migration için maksimum 2 full-time developer
+
+**C-12**: Staging environment mevcut
+
+**C-13**: Production environment mevcut
+
+**C-14**: CDN infrastructure mevcut (micro frontends için)
+
+## Bağımlılıklar
+
+### Harici Bağımlılıklar
+
+**D-1**: Backend API hazır olmalıdır
+
+**D-2**: Authentication servisi çalışıyor olmalıdır
+
+**D-3**: Database migration tamamlanmış olmalıdır
+
+### Dahili Bağımlılıklar
+
+**D-4**: Design system tamamlanmış olmalıdır
+
+**D-5**: Game engine API finalize edilmiş olmalıdır
+
+**D-6**: Shared utilities tamamlanmış olmalıdır
+
+**D-7**: CDN infrastructure hazır olmalıdır
+
+## Riskler
+
+### Yüksek Riskler
+
+**R-1**: Migration sırasında production downtime
+- Azaltma: Feature branch, staging test, gradual rollout
+
+**R-2**: Broken dependencies
+- Azaltma: TypeScript, automated tests, import validation
+
+### Orta Riskler
+
+**R-3**: Performance degradation
+- Azaltma: Performance monitoring, bundle analysis, optimization, lazy loading
+
+**R-4**: User experience disruption
+- Azaltma: Gradual migration, feature flags, user testing
+
+**R-5**: Micro frontend load failures
+- Azaltma: Fallback URLs, error boundaries, CDN redundancy, monitoring
+
+### Düşük Riskler
+
+**R-6**: Documentation eksikliği
+- Azaltma: Continuous documentation, code reviews
+
+**R-7**: Test coverage yetersizliği
+- Azaltma: TDD approach, automated coverage reports
+
+**R-8**: Shared dependency conflicts
+- Azaltma: Singleton pattern, version pinning, peer dependency management
+
+## Başarı Metrikleri
+
+### Teknik Metrikler
+
+- Test coverage: %80+
+- Bundle size: < 200KB
+- Micro frontend bundle size: < 150KB
+- FCP: < 1.5s
+- TTI: < 3s
+- Micro frontend load time: < 1s
+- Lighthouse score: > 90
+- ESLint errors: 0
+
+### İş Metrikleri
+
+- Yeni feature ekleme süresi: -50%
+- Bug fix süresi: -40%
+- Code review süresi: -30%
+- Sayfa yükleme süresi: -60%
+- Deployment süresi: -60% (paralel deployment)
+- Hata oranı: -80%
+- Kullanıcı memnuniyeti: +40%
+
+## Öncelikler
+
+### P0 (Kritik)
+
+- Monorepo yapısı kurulumu
+- Routing standardizasyonu
+- Component migration
+- Basic testing
+
+### P1 (Yüksek)
+
+- App separation (admin, teacher)
+- Performance optimization
+- Security implementation
+- Comprehensive testing
+
+### P2 (Orta)
+
+- Advanced features
+- Analytics integration
+- Monitoring setup
+- Documentation
+
+### P3 (Düşük)
+
+- Nice-to-have features
+- Advanced optimizations
+- Additional tooling

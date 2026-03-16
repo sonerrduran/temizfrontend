@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "size"
-    ],
+    "tags": ["math", "size"],
     "description": "Size Match oyunu",
     "icon": "🔢"
   },

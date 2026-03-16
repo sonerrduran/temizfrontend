@@ -1,610 +1,596 @@
-# Tasarım Dokümanı: Monorepo Mimari Dönüşümü
+# Tasarım Belgesi: Monorepo Mimari Yeniden Yapılandırma
 
 ## Genel Bakış
 
-Bu tasarım dokümanı, Eğitim Galaksisi uygulamasının mevcut monolitik yapıdan modern monorepo mimarisine dönüşümünü detaylandırır. Dönüşüm, uygulamanın ölçeklenebilirliğini, bakım kolaylığını ve kod yeniden kullanılabilirliğini artırmayı hedeflerken, mevcut tasarım, renkler ve kullanıcı deneyimini koruyacaktır.
+Eğitim Galaksisi projesi, mevcut durumda 6000+ satırlık monolitik App.tsx dosyası ve karışık routing yapısı (switch/case + React Router) ile çalışmaktadır. Bu tasarım belgesi, projenin modern bir monorepo mimarisine geçişini, feature-based architecture'a dönüşümünü ve tüm routing yapısının React Router'a standardizasyonunu tanımlar.
 
-### Mevcut Durum Analizi
+**Temel Hedefler:**
+- App.tsx'teki 6000+ satır kodu modüler yapıya dönüştürme
+- Switch/case tabanlı routing'i tamamen kaldırma
+- Tüm uygulamayı React Router tabanlı yapıya geçirme
+- components/ klasörünü tamamen kaldırıp features/ yapısına geçiş
+- Monorepo yapısında 3 ayrı uygulama: web (öğrenci), admin, teacher
+- Shared packages ile kod tekrarını önleme
 
-**Sorunlar:**
-- App.tsx dosyası 6000+ satır ve yönetilemez durumda
-- Tüm oyun ve bileşen importları tek bir dosyada
-- Dev switch-case yapısı ile oyun seçimi
-- Derin iç içe klasör yapısı (components/)
-- Tutarsız isimlendirme ve kod tekrarı
-- Backend yokluğu - tüm veriler hardcoded
-- Gereksiz kod ve karmaşıklık
-
-**Hedefler:**
-- Monorepo yapısı ile workspace bazlı organizasyon
-- Feature-based modül yapısı
-- Paylaşılan paketler (UI, Game Engine)
-- Mock data yapısı ve API contract'ları
-- App.tsx'in parçalanması
-- Temiz ve sürdürülebilir kod tabanı
+**Kapsam:**
+- Mimari yeniden yapılandırma
+- Routing stratejisi standardizasyonu
+- Component organizasyonu
+- Shared package yapısı
+- Migration stratejisi
 
 ## Mimari
 
-### Monorepo Yapısı
+### Mevcut Durum Analizi
 
-```
-egitim-galaksisi/
-├── apps/
-│   ├── web/                    # Ana öğrenci uygulaması
-│   │   ├── src/
-│   │   │   ├── features/       # Feature modülleri
-│   │   │   ├── pages/          # Sayfa bileşenleri
-│   │   │   ├── routes/         # Routing yapılandırması
-│   │   │   ├── stores/         # Zustand stores
-│   │   │   ├── App.tsx         # Ana uygulama (sadece routing)
-│   │   │   └── main.tsx        # Entry point
-│   │   ├── package.json
-│   │   └── vite.config.ts
-│   │
-│   ├── teacher/                # Öğretmen paneli
-│   │   ├── src/
-│   │   │   ├── features/
-│   │   │   ├── pages/
-│   │   │   └── App.tsx
-│   │   └── package.json
-│   │
-│   └── admin/                  # Yönetici paneli
-│       ├── src/
-│       │   ├── features/
-│       │   ├── pages/
-│       │   └── App.tsx
-│       └── package.json
-│
-├── packages/
-│   ├── ui/                     # Tasarım sistemi
-│   │   ├── src/
-│   │   │   ├── components/     # UI bileşenleri
-│   │   │   ├── theme/          # Tema ve renkler
-│   │   │   ├── styles/         # Global stiller
-│   │   │   └── index.ts        # Barrel export
-│   │   └── package.json
-│   │
-│   ├── game-engine/            # Oyun motoru
-│   │   ├── src/
-│   │   │   ├── components/     # Oyun bileşenleri
-│   │   │   ├── hooks/          # Oyun hooks
-│   │   │   ├── utils/          # Oyun utilities
-│   │   │   ├── types/          # Oyun tipleri
-│   │   │   └── index.ts
-│   │   └── package.json
-│   │
-│   ├── shared/                 # Paylaşılan utilities
-│   │   ├── src/
-│   │   │   ├── utils/
-│   │   │   ├── types/
-│   │   │   ├── constants/
-│   │   │   └── index.ts
-│   │   └── package.json
-│   │
-│   └── mock-data/              # Mock data ve API contracts
-│       ├── src/
-│       │   ├── data/           # Mock veriler
-│       │   ├── contracts/      # API interface'leri
-│       │   ├── generators/     # Veri üreticileri
-│       │   └── index.ts
-│       └── package.json
-│
-├── package.json                # Root package.json (workspaces)
-├── tsconfig.json               # Root TypeScript config
-├── vite.config.ts              # Root Vite config
-└── turbo.json                  # Turborepo config (opsiyonel)
+```mermaid
+graph TD
+    A[App.tsx 6000+ satır] --> B[Switch/Case Routing]
+    A --> C[React Router Routing]
+    A --> D[components/]
+    A --> E[apps/web/src/features/]
+    
+    B --> F[Eski Oyunlar]
+    C --> G[Yeni Oyunlar]
+    D --> H[academic/]
+    D --> I[logic-games/]
+    D --> J[fast-reading/]
+    E --> K[games/]
+    E --> L[lessons/]
+    
+    style A fill:#ff6b6b
+    style B fill:#ff6b6b
+    style D fill:#ff6b6b
+
+    style E fill:#51cf66
 ```
 
-### Feature Modül Organizasyonu
+**Sorunlar:**
+- App.tsx'te hem switch/case hem React Router kullanımı
+- components/ ve features/ klasörleri arasında kod dağılımı
+- Tutarsız routing yapısı
+- Kod tekrarı ve bakım zorluğu
 
-Her feature modülü kendi içinde bağımsız ve organize edilmiştir:
+### Hedef Mimari
 
-```
-apps/web/src/features/
-├── games/
-│   ├── math-games/
-│   │   ├── grade1/
-│   │   ├── grade2/
-│   │   ├── ...
-│   │   └── index.ts
-│   ├── logic-games/
-│   │   ├── sudoku/
-│   │   ├── puzzle/
-│   │   ├── two-player/
-│   │   └── index.ts
-│   ├── language-games/
-│   │   ├── turkish/
-│   │   ├── english/
-│   │   └── index.ts
-│   ├── components/             # Oyun ortak bileşenleri
-│   ├── hooks/                  # Oyun hooks
-│   ├── types/                  # Oyun tipleri
-│   ├── GameBrowser.tsx         # Oyun tarayıcı
-│   ├── GamePlayer.tsx          # Oyun oynatıcı
-│   └── index.ts
-│
-├── lessons/
-│   ├── math/
-│   ├── turkish/
-│   ├── science/
-│   ├── components/
-│   └── index.ts
-│
-├── fast-reading/
-│   ├── exercises/
-│   ├── measurements/
-│   ├── brain-games/
-│   └── index.ts
-│
-├── focus/
-│   ├── exercises/
-│   ├── timer/
-│   └── index.ts
-│
-├── learning/
-│   ├── flashcards/
-│   ├── mind-maps/
-│   ├── mnemonics/
-│   └── index.ts
-│
-├── life-skills/
-│   ├── traffic/
-│   ├── first-aid/
-│   ├── hygiene/
-│   ├── digital/
-│   ├── financial/
-│   └── index.ts
-│
-├── teacher-tools/
-│   ├── whiteboard/
-│   ├── timer/
-│   ├── random-picker/
-│   └── index.ts
-│
-├── stories/
-│   ├── StoryBook.tsx
-│   └── index.ts
-│
-├── auth/
-│   ├── LoginPage.tsx
-│   ├── RegisterPage.tsx
-│   └── index.ts
-│
-├── dashboard/
-│   ├── StudentDashboard.tsx
-│   ├── TeacherDashboard.tsx
-│   ├── AdminDashboard.tsx
-│   ├── ParentDashboard.tsx
-│   └── index.ts
-│
-├── profile/
-│   ├── ProfilePage.tsx
-│   ├── components/
-│   └── index.ts
-│
-└── leaderboard/
-    ├── LeaderboardPage.tsx
-    ├── components/
-    └── index.ts
+```mermaid
+graph TD
+    A[Monorepo Root] --> B[apps/]
+    A --> C[packages/]
+    A --> D[micro-frontends/]
+    
+    B --> E[web/]
+    B --> F[admin/]
+    B --> G[teacher/]
+    
+    D --> H[math-games/]
+    D --> I[logic-games/]
+    D --> J[language-games/]
+    
+    E --> K[src/features/]
+    F --> L[src/features/]
+    G --> M[src/features/]
+    
+    K --> N[dashboard/]
+    K --> O[auth/]
+    K --> P[lessons/]
+    K --> Q[profile/]
+    
+    C --> R[game-engine/]
+    C --> S[ui/]
+    C --> T[shared/]
+    C --> U[mock-data/]
+    
+    H --> V[grade1-8/]
+    I --> W[sudoku/puzzle/]
+    J --> X[turkish/english/]
+    
+    X --> Y[grade1-8/]
+    
+    style A fill:#51cf66
+    style B fill:#51cf66
+    style C fill:#51cf66
+    style D fill:#4dabf7
+    style H fill:#4dabf7
+    style I fill:#4dabf7
+    style J fill:#4dabf7
 ```
 
 ## Bileşenler ve Arayüzler
 
-### packages/ui - Tasarım Sistemi
+### 1. Monorepo Yapısı
 
-Tasarım sistemi, tüm uygulamalarda kullanılacak tutarlı UI bileşenlerini sağlar.
+#### Micro Frontends Mimarisi
 
-**Bileşen Yapısı:**
+**Amaç**: Oyun kategorilerini bağımsız, ölçeklenebilir micro frontend'ler olarak ayırma
 
-```typescript
-// packages/ui/src/components/Button/Button.tsx
-export interface ButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  className?: string;
-}
-
-export const Button: React.FC<ButtonProps> = ({
-  children,
-  onClick,
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  className = '',
-}) => {
-  // Implementation
-};
+**Micro Frontend Yapısı**:
+```
+micro-frontends/
+├── math-games/              # Matematik oyunları micro frontend
+│   ├── src/
+│   │   ├── games/
+│   │   │   ├── grade1/
+│   │   │   ├── grade2/
+│   │   │   ├── grade3/
+│   │   │   ├── grade4/
+│   │   │   ├── grade5/
+│   │   │   ├── grade6/
+│   │   │   ├── grade7/
+│   │   │   └── grade8/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── types/
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── module-federation.config.ts
+│
+├── logic-games/             # Mantık oyunları micro frontend
+│   ├── src/
+│   │   ├── games/
+│   │   │   ├── sudoku/
+│   │   │   ├── puzzle/
+│   │   │   ├── memory/
+│   │   │   └── two-player/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── types/
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── module-federation.config.ts
+│
+└── language-games/          # Dil oyunları micro frontend
+    ├── src/
+    │   ├── games/
+    │   │   ├── turkish/
+    │   │   │   ├── grade1/
+    │   │   │   ├── grade2/
+    │   │   │   ├── grade3/
+    │   │   │   ├── grade4/
+    │   │   │   ├── grade5/
+    │   │   │   ├── grade6/
+    │   │   │   ├── grade7/
+    │   │   │   └── grade8/
+    │   │   └── english/
+    │   │       ├── grade1/
+    │   │       ├── grade2/
+    │   │       └── ...
+    │   ├── components/
+    │   ├── hooks/
+    │   └── types/
+    ├── package.json
+    ├── vite.config.ts
+    └── module-federation.config.ts
 ```
 
-**Tema Yapısı:**
+**Module Federation Yapılandırması**:
+
+Her micro frontend, Vite Module Federation plugin kullanarak bağımsız olarak build edilir ve runtime'da host app (apps/web) tarafından yüklenir.
 
 ```typescript
-// packages/ui/src/theme/gameTheme.ts
-export const gameTheme = {
-  background: 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900',
-  outerCard: 'bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-700',
-  exitButton: 'bg-red-600/90 hover:bg-red-500/90',
-  header: {
-    container: 'bg-slate-800/80 backdrop-blur-md rounded-xl border border-slate-700',
-    text: 'text-white font-black',
+// micro-frontends/math-games/module-federation.config.ts
+import { defineConfig } from '@originjs/vite-plugin-federation';
+
+export default defineConfig({
+  name: 'mathGames',
+  filename: 'remoteEntry.js',
+  exposes: {
+    './MathGamesRouter': './src/MathGamesRouter.tsx',
+    './Grade1Games': './src/games/grade1/index.ts',
+    './Grade2Games': './src/games/grade2/index.ts',
+    // ... diğer grade'ler
   },
-  text: {
-    primary: 'text-white',
-    secondary: 'text-slate-400',
-    heading: 'text-white',
+  shared: {
+    react: { singleton: true, requiredVersion: '^18.2.0' },
+    'react-dom': { singleton: true, requiredVersion: '^18.2.0' },
+    'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
+    '@egitim-galaksisi/game-engine': { singleton: true },
+    '@egitim-galaksisi/ui': { singleton: true },
+  }
+});
+```
+
+```typescript
+// apps/web/module-federation.config.ts
+import { defineConfig } from '@originjs/vite-plugin-federation';
+
+export default defineConfig({
+  name: 'host',
+  remotes: {
+    mathGames: 'http://localhost:5001/assets/remoteEntry.js',
+    logicGames: 'http://localhost:5002/assets/remoteEntry.js',
+    languageGames: 'http://localhost:5003/assets/remoteEntry.js',
   },
-  feedback: {
-    correct: 'bg-green-500/90 border-2 border-green-300 text-white',
-    incorrect: 'bg-red-500/90 border-2 border-red-300 text-white',
-  },
-};
-
-export const colorSchemes = {
-  green: {
-    innerCard: 'bg-gradient-to-br from-green-500 via-emerald-500 to-green-600',
-    button: 'bg-green-500 hover:bg-green-400',
-    box: 'bg-green-700/40 border-2 border-green-400',
-  },
-  // ... diğer renkler
-};
+  shared: {
+    react: { singleton: true, requiredVersion: '^18.2.0' },
+    'react-dom': { singleton: true, requiredVersion: '^18.2.0' },
+    'react-router-dom': { singleton: true, requiredVersion: '^6.20.0' },
+    '@egitim-galaksisi/game-engine': { singleton: true },
+    '@egitim-galaksisi/ui': { singleton: true },
+  }
+});
 ```
 
-**Ana Bileşenler:**
-
-1. **Button** - Tüm buton varyasyonları
-2. **Card** - Kart bileşenleri (GameCard, InfoCard, etc.)
-3. **Modal** - Modal ve overlay bileşenleri
-4. **Input** - Form input bileşenleri
-5. **Layout** - Layout bileşenleri (Header, Footer, Sidebar)
-6. **GameTemplate** - Oyun şablonu bileşeni
-7. **LoadingSpinner** - Yükleme göstergesi
-8. **ErrorBoundary** - Hata yakalama bileşeni
-
-### packages/game-engine - Oyun Motoru
-
-Oyun motoru, tüm oyunlarda kullanılacak ortak mantığı sağlar.
-
-**Temel Yapı:**
+**Micro Frontend Yükleme Stratejisi**:
 
 ```typescript
-// packages/game-engine/src/components/GameTemplate.tsx
-export interface GameTemplateProps {
-  title: string;
-  emoji?: string;
-  level: number;
-  maxLevel?: number;
-  score: number;
-  onExit: () => void;
-  children: React.ReactNode;
-  colorScheme?: ColorScheme;
-}
-
-export const GameTemplate: React.FC<GameTemplateProps> = (props) => {
-  // Implementation
-};
-```
-
-**Hooks:**
-
-```typescript
-// packages/game-engine/src/hooks/useGameState.ts
-export interface GameState {
-  level: number;
-  score: number;
-  lives: number;
-  isPlaying: boolean;
-  isPaused: boolean;
-}
-
-export const useGameState = (initialState?: Partial<GameState>) => {
-  const [state, setState] = useState<GameState>({
-    level: 1,
-    score: 0,
-    lives: 3,
-    isPlaying: false,
-    isPaused: false,
-    ...initialState,
-  });
-
-  const incrementScore = (points: number) => {
-    setState(prev => ({ ...prev, score: prev.score + points }));
-  };
-
-  const nextLevel = () => {
-    setState(prev => ({ ...prev, level: prev.level + 1 }));
-  };
-
-  const loseLife = () => {
-    setState(prev => ({ ...prev, lives: Math.max(0, prev.lives - 1) }));
-  };
-
-  const startGame = () => {
-    setState(prev => ({ ...prev, isPlaying: true, isPaused: false }));
-  };
-
-  const pauseGame = () => {
-    setState(prev => ({ ...prev, isPaused: true }));
-  };
-
-  const resumeGame = () => {
-    setState(prev => ({ ...prev, isPaused: false }));
-  };
-
-  const resetGame = () => {
-    setState({
-      level: 1,
-      score: 0,
-      lives: 3,
-      isPlaying: false,
-      isPaused: false,
-    });
-  };
-
-  return {
-    state,
-    incrementScore,
-    nextLevel,
-    loseLife,
-    startGame,
-    pauseGame,
-    resumeGame,
-    resetGame,
-  };
-};
-```
-
-**Utilities:**
-
-```typescript
-// packages/game-engine/src/utils/scoring.ts
-export const calculateScore = (
-  correctAnswers: number,
-  totalQuestions: number,
-  timeBonus: number = 0,
-  difficultyMultiplier: number = 1
-): number => {
-  const baseScore = (correctAnswers / totalQuestions) * 100;
-  return Math.round((baseScore + timeBonus) * difficultyMultiplier);
-};
-
-export const calculateStars = (score: number): number => {
-  if (score >= 90) return 3;
-  if (score >= 70) return 2;
-  if (score >= 50) return 1;
-  return 0;
-};
-```
-
-### packages/mock-data - Mock Data ve API Contracts
-
-Backend yokluğunda kullanılacak mock data yapısı.
-
-**API Contract Interface'leri:**
-
-```typescript
-// packages/mock-data/src/contracts/game.ts
-export interface GameCategory {
-  id: string;
-  name: string;
-  code: string;
-  icon: string;
-  color: string;
-  description?: string;
-  sortOrder: number;
-  isActive: boolean;
-}
-
-export interface Game {
-  id: string;
-  name: string;
-  code: string;
-  categoryId: string;
-  description?: string;
-  icon: string;
-  gradeMin: number;
-  gradeMax: number;
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
-  component: string;
-  path?: string;
-  tags: string[];
-  isActive: boolean;
-  isFeatured: boolean;
-  sortOrder: number;
-  playCount: number;
-  avgRating: number;
-}
-
-export interface GameContent {
-  id: string;
-  gameId: string;
-  type: 'QUESTION' | 'LEVEL' | 'STORY';
-  content: any;
-  metadata?: any;
-}
-```
-
-**Mock Data:**
-
-```typescript
-// packages/mock-data/src/data/games.ts
-export const mockGameCategories: GameCategory[] = [
-  {
-    id: '1',
-    name: 'Matematik Oyunları',
-    code: 'MATH',
-    icon: '🔢',
-    color: 'blue',
-    description: 'Matematik becerilerini geliştiren oyunlar',
-    sortOrder: 1,
-    isActive: true,
-  },
-  {
-    id: '2',
-    name: 'Mantık Oyunları',
-    code: 'LOGIC',
-    icon: '🧩',
-    color: 'purple',
-    description: 'Mantık ve problem çözme oyunları',
-    sortOrder: 2,
-    isActive: true,
-  },
-  // ... diğer kategoriler
-];
-
-export const mockGames: Game[] = [
-  {
-    id: 'math-addition-1',
-    name: 'Meyve Toplama',
-    code: 'FRUIT_ADDITION',
-    categoryId: '1',
-    description: 'Meyvelerle toplama işlemi öğren',
-    icon: '🍎',
-    gradeMin: 1,
-    gradeMax: 2,
-    difficulty: 'EASY',
-    component: 'FruitAdditionGame',
-    path: '/games/math/fruit-addition',
-    tags: ['toplama', 'temel matematik', '1. sınıf'],
-    isActive: true,
-    isFeatured: true,
-    sortOrder: 1,
-    playCount: 1250,
-    avgRating: 4.8,
-  },
-  // ... diğer oyunlar
-];
-```
-
-**Data Generators:**
-
-```typescript
-// packages/mock-data/src/generators/userGenerator.ts
-export const generateMockUser = (overrides?: Partial<User>): User => {
-  return {
-    id: faker.string.uuid(),
-    email: faker.internet.email(),
-    name: faker.person.fullName(),
-    role: 'STUDENT',
-    gradeLevel: faker.number.int({ min: 1, max: 8 }),
-    stars: faker.number.int({ min: 0, max: 5000 }),
-    xp: faker.number.int({ min: 0, max: 10000 }),
-    level: faker.number.int({ min: 1, max: 50 }),
-    avatar: faker.helpers.arrayElement(['👨‍🚀', '🤖', '👽', '👩‍🚀']),
-    solvedProblems: faker.number.int({ min: 0, max: 1000 }),
-    streakDays: faker.number.int({ min: 0, max: 365 }),
-    ...overrides,
-  };
-};
-```
-
-### App.tsx Parçalanması
-
-Mevcut 6000+ satırlık App.tsx dosyası şu şekilde parçalanacak:
-
-**Yeni App.tsx (Sadece Routing):**
-
-```typescript
-// apps/web/src/App.tsx
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { AppRoutes } from './routes';
-import { ErrorBoundary } from '@egitim-galaksisi/ui';
-
-const App: React.FC = () => {
-  return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </ErrorBoundary>
-  );
-};
-
-export default App;
-```
-
-**Routing Yapısı:**
-
-```typescript
-// apps/web/src/routes/index.tsx
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+// apps/web/src/features/games/MicroFrontendLoader.tsx
+import { lazy, Suspense } from 'react';
 import { LoadingSpinner } from '@egitim-galaksisi/ui';
-import { ProtectedRoute } from './ProtectedRoute';
-import { DashboardRouter } from './DashboardRouter';
 
-// Lazy load pages
-const LoginPage = lazy(() => import('../features/auth/LoginPage'));
-const RegisterPage = lazy(() => import('../features/auth/RegisterPage'));
+// Dinamik import ile micro frontend yükleme
+const MathGamesRouter = lazy(() => import('mathGames/MathGamesRouter'));
+const LogicGamesRouter = lazy(() => import('logicGames/LogicGamesRouter'));
+const LanguageGamesRouter = lazy(() => import('languageGames/LanguageGamesRouter'));
 
-// Lazy load feature routes
-const GameRoutes = lazy(() => import('../features/games/routes'));
-const LessonRoutes = lazy(() => import('../features/lessons/routes'));
-const ProfileRoutes = lazy(() => import('../features/profile/routes'));
-const LeaderboardRoutes = lazy(() => import('../features/leaderboard/routes'));
+export function MicroFrontendLoader({ category }: { category: string }) {
+  const getRouter = () => {
+    switch (category) {
+      case 'math':
+        return <MathGamesRouter />;
+      case 'logic':
+        return <LogicGamesRouter />;
+      case 'language':
+        return <LanguageGamesRouter />;
+      default:
+        return <div>Kategori bulunamadı</div>;
+    }
+  };
 
-export const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-
-        {/* Dashboard */}
-        <Route path="/" element={<ProtectedRoute><DashboardRouter /></ProtectedRoute>} />
-
-        {/* Feature Routes */}
-        <Route path="/games/*" element={<ProtectedRoute><GameRoutes /></ProtectedRoute>} />
-        <Route path="/lessons/*" element={<ProtectedRoute><LessonRoutes /></ProtectedRoute>} />
-        <Route path="/profile/*" element={<ProtectedRoute><ProfileRoutes /></ProtectedRoute>} />
-        <Route path="/leaderboard/*" element={<ProtectedRoute><LeaderboardRoutes /></ProtectedRoute>} />
-
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      {getRouter()}
     </Suspense>
   );
-};
+}
 ```
 
-**Feature Routes:**
+**Deployment Stratejisi**:
 
+Her micro frontend bağımsız olarak deploy edilir:
+
+1. **Development**:
+   - math-games: http://localhost:5001
+   - logic-games: http://localhost:5002
+   - language-games: http://localhost:5003
+   - host (apps/web): http://localhost:5000
+
+2. **Production**:
+   - math-games: https://cdn.egitimgalaksisi.com/math-games/
+   - logic-games: https://cdn.egitimgalaksisi.com/logic-games/
+   - language-games: https://cdn.egitimgalaksisi.com/language-games/
+   - host: https://app.egitimgalaksisi.com
+
+**Build ve Deploy Pipeline**:
+
+```yaml
+# .github/workflows/deploy-micro-frontends.yml
+name: Deploy Micro Frontends
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'micro-frontends/**'
+
+jobs:
+  deploy-math-games:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build math-games
+        run: |
+          cd micro-frontends/math-games
+          npm install
+          npm run build
+      - name: Deploy to CDN
+        run: |
+          aws s3 sync dist/ s3://cdn.egitimgalaksisi.com/math-games/
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DIST_ID }}
+
+  deploy-logic-games:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build logic-games
+        run: |
+          cd micro-frontends/logic-games
+          npm install
+          npm run build
+      - name: Deploy to CDN
+        run: |
+          aws s3 sync dist/ s3://cdn.egitimgalaksisi.com/logic-games/
+
+  deploy-language-games:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build language-games
+        run: |
+          cd micro-frontends/language-games
+          npm install
+          npm run build
+      - name: Deploy to CDN
+        run: |
+          aws s3 sync dist/ s3://cdn.egitimgalaksisi.com/language-games/
+```
+
+**Avantajlar**:
+- Bağımsız deployment (her micro frontend ayrı deploy edilebilir)
+- Takım bağımsızlığı (farklı takımlar farklı micro frontend'lerde çalışabilir)
+- Ölçeklenebilirlik (her micro frontend ayrı scale edilebilir)
+- Teknoloji bağımsızlığı (her micro frontend farklı teknoloji kullanabilir)
+- Hata izolasyonu (bir micro frontend'teki hata diğerlerini etkilemez)
+- Daha küçük bundle size'lar (sadece gerekli micro frontend yüklenir)
+
+**Dezavantajlar ve Çözümler**:
+- **Shared dependency yönetimi**: Module Federation ile singleton pattern kullanımı
+- **Routing koordinasyonu**: Host app'te merkezi routing yönetimi
+- **State paylaşımı**: Shared packages ve event bus kullanımı
+- **Development complexity**: Docker Compose ile tüm micro frontend'leri birlikte çalıştırma
+
+#### apps/web (Öğrenci Uygulaması)
+
+**Amaç**: Öğrencilerin oyunları oynadığı, dersleri takip ettiği ana uygulama (Host Application)
+
+**Klasör Yapısı**:
+```
+apps/web/
+├── src/
+│   ├── features/
+│   │   ├── dashboard/       # Öğrenci dashboard
+│   │   ├── auth/            # Kimlik doğrulama
+│   │   ├── profile/         # Profil yönetimi
+│   │   ├── leaderboard/     # Sıralama tablosu
+│   │   ├── analytics/       # Analitik
+│   │   ├── lessons/         # Ders içerikleri (micro frontend olmayan)
+│   │   ├── fast-reading/    # Hızlı okuma
+│   │   ├── focus/           # Odaklanma
+│   │   ├── learning/        # Öğrenme araçları
+│   │   ├── language/        # Dil öğrenimi
+│   │   ├── life-skills/     # Yaşam becerileri
+│   │   ├── stories/         # Hikayeler
+│   │   └── teacher-tools/   # Öğretmen araçları
+│   ├── micro-frontend-loader/  # Micro frontend yükleme logic
+│   ├── routes/              # Route tanımları
+│   ├── stores/              # State management
+│   ├── services/            # API servisleri
+│   ├── types/               # TypeScript tipleri
+│   └── utils/               # Yardımcı fonksiyonlar
+├── index.html
+├── package.json
+├── vite.config.ts
+└── module-federation.config.ts
+```
+
+**Sorumluluklar**:
+- Host application (micro frontend'leri yükler)
+- Öğrenci arayüzü
+- Merkezi routing yönetimi
+- Authentication ve authorization
+- Ders içeriklerini gösterme (non-game)
+- İlerleme takibi
+- Sıralama tablosu
+
+
+#### apps/admin (Admin Paneli)
+
+**Amaç**: Sistem yöneticilerinin okul, öğretmen ve öğrenci yönetimini yaptığı panel
+
+**Klasör Yapısı**:
+```
+apps/admin/
+├── src/
+│   ├── features/
+│   │   ├── dashboard/       # Admin dashboard
+│   │   ├── schools/         # Okul yönetimi
+│   │   ├── teachers/        # Öğretmen yönetimi
+│   │   ├── students/        # Öğrenci yönetimi
+│   │   ├── analytics/       # Sistem analitiği
+│   │   ├── settings/        # Sistem ayarları
+│   │   └── reports/         # Raporlama
+│   ├── routes/
+│   ├── stores/
+│   ├── services/
+│   └── types/
+├── package.json
+└── vite.config.ts
+```
+
+**Sorumluluklar**:
+- Okul yönetimi (CRUD)
+- Öğretmen yönetimi (CRUD)
+- Öğrenci yönetimi (CRUD)
+- Sistem ayarları
+- Raporlama ve analitik
+
+#### apps/teacher (Öğretmen Paneli)
+
+**Amaç**: Öğretmenlerin sınıf yönetimi, öğrenci takibi ve içerik yönetimi yaptığı panel
+
+**Klasör Yapısı**:
+```
+apps/teacher/
+├── src/
+│   ├── features/
+│   │   ├── dashboard/       # Öğretmen dashboard
+│   │   ├── classes/         # Sınıf yönetimi
+│   │   ├── students/        # Öğrenci takibi
+│   │   ├── assignments/     # Ödev yönetimi
+│   │   ├── analytics/       # Sınıf analitiği
+│   │   ├── content/         # İçerik yönetimi
+│   │   └── tools/           # Öğretmen araçları
+│   ├── routes/
+│   ├── stores/
+│   ├── services/
+│   └── types/
+├── package.json
+└── vite.config.ts
+```
+
+**Sorumluluklar**:
+- Sınıf yönetimi
+- Öğrenci performans takibi
+- Ödev atama ve değerlendirme
+- İçerik oluşturma
+- Sınıf içi araçlar
+
+### 2. Shared Packages
+
+#### packages/game-engine
+
+**Amaç**: Tüm oyunlar için ortak oyun motoru
+
+**Arayüz**:
 ```typescript
-// apps/web/src/features/games/routes.tsx
-import React, { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+interface GameEngine {
+  // Oyun yaşam döngüsü
+  initialize(config: GameConfig): void;
+  start(): void;
+  pause(): void;
+  resume(): void;
+  end(result: GameResult): void;
+  
+  // Skor yönetimi
+  updateScore(points: number): void;
+  getScore(): number;
+  
+  // Seviye yönetimi
+  nextLevel(): void;
+  getCurrentLevel(): number;
+  
+  // Zamanlayıcı
+  startTimer(duration: number): void;
+  stopTimer(): void;
+  getTimeRemaining(): number;
+}
 
-const GameBrowser = lazy(() => import('./GameBrowser'));
-const GamePlayer = lazy(() => import('./GamePlayer'));
+interface GameConfig {
+  gameId: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  timeLimit?: number;
+  maxLives?: number;
+  soundEnabled: boolean;
+  animationEnabled: boolean;
+}
 
-// Math Games
-const MathGameRoutes = lazy(() => import('./math-games/routes'));
+interface GameResult {
+  score: number;
+  level: number;
+  timeSpent: number;
+  accuracy: number;
+  stars: number;
+  completed: boolean;
+}
+```
 
-// Logic Games
-const LogicGameRoutes = lazy(() => import('./logic-games/routes'));
+**Özellikler**:
+- Oyun yaşam döngüsü yönetimi
+- Skor hesaplama
+- Seviye ilerlemesi
+- Zamanlayıcı
+- Ses ve animasyon yönetimi
 
-// Language Games
-const LanguageGameRoutes = lazy(() => import('./language-games/routes'));
 
-const GameRoutes: React.FC = () => {
-  return (
-    <Routes>
-      <Route index element={<GameBrowser />} />
-      <Route path=":gameId" element={<GamePlayer />} />
-      
-      {/* Category Routes */}
-      <Route path="math/*" element={<MathGameRoutes />} />
-      <Route path="logic/*" element={<LogicGameRoutes />} />
-      <Route path="language/*" element={<LanguageGameRoutes />} />
-    </Routes>
-  );
-};
+#### packages/ui
 
-export default GameRoutes;
+**Amaç**: Tüm uygulamalar için ortak UI bileşenleri (Design System)
+
+**Arayüz**:
+```typescript
+// Button Component
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'danger' | 'success';
+  size: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  loading?: boolean;
+  icon?: React.ReactNode;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+// Card Component
+interface CardProps {
+  title?: string;
+  subtitle?: string;
+  image?: string;
+  badge?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+// Modal Component
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  children: React.ReactNode;
+}
+
+// Layout Components
+interface LayoutProps {
+  header?: React.ReactNode;
+  sidebar?: React.ReactNode;
+  footer?: React.ReactNode;
+  children: React.ReactNode;
+}
+```
+
+**Bileşenler**:
+- Button, Input, Select, Checkbox, Radio
+- Card, Modal, Drawer, Tooltip
+- Layout, Header, Sidebar, Footer
+- Table, Pagination
+- Loading, ErrorBoundary
+- Toast, Alert
+
+#### packages/shared
+
+**Amaç**: Ortak utilities, hooks ve helper fonksiyonlar
+
+**Arayüz**:
+```typescript
+// Validation utilities
+interface ValidationUtils {
+  validateEmail(email: string): boolean;
+  validatePassword(password: string): boolean;
+  validateUsername(username: string): boolean;
+}
+
+// Date utilities
+interface DateUtils {
+  formatDate(date: Date, format: string): string;
+  getRelativeTime(date: Date): string;
+  isToday(date: Date): boolean;
+}
+
+// Storage utilities
+interface StorageUtils {
+  setItem(key: string, value: any): void;
+  getItem(key: string): any;
+  removeItem(key: string): void;
+  clear(): void;
+}
+
+// Custom hooks
+function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void];
+function useDebounce<T>(value: T, delay: number): T;
+function useMediaQuery(query: string): boolean;
+```
+
+#### packages/mock-data
+
+**Amaç**: Geliştirme ve test için mock data
+
+**Arayüz**:
+```typescript
+interface MockDataGenerator {
+  generateUsers(count: number): User[];
+  generateGames(count: number): Game[];
+  generateLeaderboard(gameId: string): LeaderboardEntry[];
+  generateProgress(userId: string): Progress[];
+}
 ```
 
 ## Veri Modelleri
@@ -612,1146 +598,1867 @@ export default GameRoutes;
 ### User Model
 
 ```typescript
-export interface User {
+interface User {
   id: string;
+  username: string;
   email: string;
-  name: string;
-  role: UserRole;
-  gradeLevel: number;
-  stars: number;
-  xp: number;
-  level: number;
-  avatar: string;
-  solvedProblems: number;
-  streakDays: number;
-  schoolId?: string | null;
-  school?: School | null;
+  role: 'STUDENT' | 'TEACHER' | 'PARENT' | 'SCHOOL_ADMIN' | 'SUPER_ADMIN';
+  profile: UserProfile;
+  stats: UserStats;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type UserRole = 'SUPER_ADMIN' | 'SCHOOL_ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
-```
-
-### Game Models
-
-```typescript
-export interface GameCategory {
-  id: string;
-  name: string;
-  code: string;
-  icon: string;
-  color: string;
-  description?: string;
-  sortOrder: number;
-  isActive: boolean;
-  games?: Game[];
+interface UserProfile {
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  grade?: number;
+  schoolId?: string;
+  classId?: string;
 }
 
-export interface Game {
+interface UserStats {
+  totalGamesPlayed: number;
+  totalScore: number;
+  totalStars: number;
+  level: number;
+  rank: number;
+  achievements: Achievement[];
+}
+```
+
+**Validasyon Kuralları**:
+- username: 3-20 karakter, alfanumerik
+- email: geçerli email formatı
+- password: minimum 8 karakter, en az 1 büyük harf, 1 küçük harf, 1 rakam
+- grade: 1-8 arası
+
+
+### Game Model
+
+```typescript
+interface Game {
   id: string;
-  name: string;
-  code: string;
-  categoryId: string;
-  description?: string;
-  icon: string;
-  gradeMin: number;
-  gradeMax: number;
-  difficulty: GameDifficulty;
+  title: string;
+  description: string;
+  category: GameCategory;
+  subcategory: string;
+  grade: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  thumbnail: string;
+  route: string;
   component: string;
-  path?: string;
   tags: string[];
   isActive: boolean;
-  isFeatured: boolean;
-  sortOrder: number;
-  playCount: number;
-  avgRating: number;
-  category?: GameCategory;
+  createdAt: Date;
 }
 
-export type GameDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
+type GameCategory = 
+  | 'math-games'
+  | 'logic-games'
+  | 'language-games'
+  | 'fast-reading'
+  | 'focus'
+  | 'learning'
+  | 'life-skills';
 
-export interface GameSession {
-  id: string;
+interface GameProgress {
   userId: string;
   gameId: string;
+  level: number;
   score: number;
   stars: number;
-  correctAnswers: number;
-  totalQuestions: number;
-  timeSpent: number;
-  completedAt: Date;
+  completedAt?: Date;
+  attempts: number;
+  bestScore: number;
 }
 ```
 
-### Lesson Models
+**Validasyon Kuralları**:
+- title: 3-100 karakter
+- grade: 0-8 (0 = tüm seviyeler)
+- difficulty: enum değerlerinden biri
+- route: benzersiz, URL-safe format
+
+### Routing Model
 
 ```typescript
-export interface Subject {
-  id: string;
-  name: string;
-  code: string;
-  icon: string;
-  color: string;
-  gradeLevel: number;
-  sortOrder: number;
-  isActive: boolean;
+interface RouteConfig {
+  path: string;
+  component: React.ComponentType;
+  exact?: boolean;
+  protected?: boolean;
+  roles?: UserRole[];
+  children?: RouteConfig[];
 }
 
-export interface Topic {
-  id: string;
-  subjectId: string;
-  name: string;
-  description?: string;
-  sortOrder: number;
-  isActive: boolean;
-}
-
-export interface Lesson {
-  id: string;
-  topicId: string;
-  name: string;
-  content: any;
-  type: 'VIDEO' | 'TEXT' | 'INTERACTIVE';
-  duration: number;
-  sortOrder: number;
-  isActive: boolean;
+interface FeatureRoutes {
+  basePath: string;
+  routes: RouteConfig[];
 }
 ```
 
-### Leaderboard Models
+## Routing Stratejisi
+
+### Routing Mimarisi
+
+```mermaid
+graph TD
+    A[AppRouter] --> B[Public Routes]
+    A --> C[Protected Routes]
+    
+    B --> D[/login]
+    B --> E[/register]
+    
+    C --> F[Role-Based Router]
+    
+    F --> G[Student Routes]
+    F --> H[Teacher Routes]
+    F --> I[Admin Routes]
+    
+    G --> J[/dashboard]
+    G --> K[/games/*]
+    G --> L[/lessons/*]
+    G --> M[/profile]
+    G --> N[/leaderboard]
+    
+    K --> O[/games/math/*]
+    K --> P[/games/logic/*]
+    K --> Q[/games/language/*]
+    
+    Q --> R[/games/language/turkish/*]
+    Q --> S[/games/language/english/*]
+    
+    R --> T[/games/language/turkish/grade1/*]
+    R --> U[/games/language/turkish/grade2/*]
+```
+
+### Route Yapısı
+
+#### Öğrenci Routes (apps/web)
 
 ```typescript
-export interface LeaderboardEntry {
-  rank: number;
-  userId: string;
-  userName: string;
-  avatar: string;
-  stars: number;
-  xp: number;
-  level: number;
-  solvedProblems: number;
-  streakDays: number;
+// Ana routes
+/                                    → StudentDashboard
+/login                               → LoginPage
+/register                            → RegisterPage
+
+// Oyun routes
+/games                               → GameBrowser
+/games/:category                     → CategoryGames
+/games/:category/:subcategory        → SubcategoryGames
+/play/:gameId                        → GamePlayer
+
+// Ders routes
+/lessons                             → LessonsDashboard
+/lessons/:subject                    → SubjectMenu
+/lessons/:subject/grade:grade        → GradeMenu
+/lessons/:subject/grade:grade/:topic → TopicGames
+
+// Profil ve sıralama
+/profile                             → ProfilePage
+/profile/:userId                     → UserProfile
+/leaderboard                         → LeaderboardPage
+/leaderboard/:gameId                 → GameLeaderboard
+```
+
+**Örnek Route Yapısı - Türkçe Oyunları**:
+```
+/games/language/turkish              → Turkish Games Menu
+/games/language/turkish/grade1       → Grade 1 Menu
+/games/language/turkish/grade1/letters/match → Letter Match Game
+/games/language/turkish/grade2/reading/fluency → Fluency Game
+```
+
+
+#### Öğretmen Routes (apps/teacher)
+
+```typescript
+/teacher                             → TeacherDashboard
+/teacher/classes                     → ClassList
+/teacher/classes/:classId            → ClassDetail
+/teacher/students                    → StudentList
+/teacher/students/:studentId         → StudentDetail
+/teacher/assignments                 → AssignmentList
+/teacher/assignments/create          → CreateAssignment
+/teacher/analytics                   → Analytics
+/teacher/content                     → ContentManagement
+/teacher/tools                       → TeacherTools
+```
+
+#### Admin Routes (apps/admin)
+
+```typescript
+/admin                               → AdminDashboard
+/admin/schools                       → SchoolList
+/admin/schools/:schoolId             → SchoolDetail
+/admin/teachers                      → TeacherList
+/admin/teachers/:teacherId           → TeacherDetail
+/admin/students                      → StudentList
+/admin/students/:studentId           → StudentDetail
+/admin/analytics                     → SystemAnalytics
+/admin/settings                      → SystemSettings
+/admin/reports                       → Reports
+```
+
+### Route Guard Stratejisi
+
+```typescript
+// Protected Route Component
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  roles?: UserRole[];
+  redirectTo?: string;
 }
 
-export interface LeaderboardFilter {
-  scope: 'GLOBAL' | 'SCHOOL' | 'CLASSROOM';
-  period: 'ALL_TIME' | 'WEEKLY' | 'MONTHLY';
-  gradeLevel?: number;
-  gameId?: string;
+function ProtectedRoute({ children, roles, redirectTo = '/login' }: ProtectedRouteProps) {
+  const { isAuthenticated, user, isLoading } = useAuthStore();
+
+  if (isLoading) return <LoadingFallback />;
+  if (!isAuthenticated) return <Navigate to={redirectTo} />;
+  if (roles && user && !roles.includes(user.role)) return <Navigate to="/" />;
+  
+  return <Suspense fallback={<LoadingFallback />}>{children}</Suspense>;
+}
+```
+
+**Koruma Seviyeleri**:
+1. **Public**: Herkes erişebilir (login, register)
+2. **Authenticated**: Giriş yapmış kullanıcılar
+3. **Role-Based**: Belirli roller (STUDENT, TEACHER, ADMIN)
+4. **Permission-Based**: Özel izinler (gelecek için)
+
+## Feature-Based Architecture
+
+### Micro Frontends (Oyun Kategorileri)
+
+#### math-games Micro Frontend
+
+```mermaid
+graph TD
+    A[math-games/] --> B[grade1/]
+    A --> C[grade2/]
+    A --> D[grade3/]
+    A --> E[grade4/]
+    A --> F[grade5/]
+    A --> G[grade6/]
+    A --> H[grade7/]
+    A --> I[grade8/]
+    
+    B --> J[Toplama/Çıkarma]
+    B --> K[Sayılar]
+    B --> L[Geometri]
+    
+    C --> M[Çarpma/Bölme]
+    C --> N[Kesirler]
+    C --> O[Ölçme]
+```
+
+**Klasör Yapısı**:
+```
+micro-frontends/math-games/
+├── src/
+│   ├── games/
+│   │   ├── grade1/
+│   │   │   ├── addition/
+│   │   │   │   ├── AdditionGame.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── subtraction/
+│   │   │   ├── numbers/
+│   │   │   └── index.ts
+│   │   ├── grade2/
+│   │   │   ├── multiplication/
+│   │   │   ├── division/
+│   │   │   ├── fractions/
+│   │   │   └── index.ts
+│   │   └── ... (grade3-8)
+│   ├── components/
+│   │   ├── MathGameCard.tsx
+│   │   ├── MathGamePlayer.tsx
+│   │   └── MathGameMenu.tsx
+│   ├── hooks/
+│   │   ├── useMathGame.ts
+│   │   └── useMathProgress.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── MathGamesRouter.tsx
+│   └── index.ts
+├── package.json
+├── vite.config.ts
+└── module-federation.config.ts
+```
+
+**Exposed Modules**:
+```typescript
+// module-federation.config.ts
+exposes: {
+  './MathGamesRouter': './src/MathGamesRouter.tsx',
+  './Grade1': './src/games/grade1/index.ts',
+  './Grade2': './src/games/grade2/index.ts',
+  './Grade3': './src/games/grade3/index.ts',
+  './Grade4': './src/games/grade4/index.ts',
+  './Grade5': './src/games/grade5/index.ts',
+  './Grade6': './src/games/grade6/index.ts',
+  './Grade7': './src/games/grade7/index.ts',
+  './Grade8': './src/games/grade8/index.ts',
+}
+```
+
+#### logic-games Micro Frontend
+
+```mermaid
+graph TD
+    A[logic-games/] --> B[sudoku/]
+    A --> C[puzzle/]
+    A --> D[memory/]
+    A --> E[two-player/]
+    
+    B --> F[Easy/Medium/Hard]
+    C --> G[Jigsaw/Sliding]
+    D --> H[Card/Pattern]
+    E --> I[TicTacToe/Connect4]
+```
+
+**Klasör Yapısı**:
+```
+micro-frontends/logic-games/
+├── src/
+│   ├── games/
+│   │   ├── sudoku/
+│   │   │   ├── SudokuGame.tsx
+│   │   │   ├── SudokuSolver.ts
+│   │   │   └── index.ts
+│   │   ├── puzzle/
+│   │   │   ├── JigsawPuzzle.tsx
+│   │   │   ├── SlidingPuzzle.tsx
+│   │   │   └── index.ts
+│   │   ├── memory/
+│   │   │   ├── CardMemoryGame.tsx
+│   │   │   ├── PatternMemoryGame.tsx
+│   │   │   └── index.ts
+│   │   └── two-player/
+│   │       ├── TicTacToe.tsx
+│   │       ├── Connect4.tsx
+│   │       └── index.ts
+│   ├── components/
+│   │   ├── LogicGameCard.tsx
+│   │   └── LogicGamePlayer.tsx
+│   ├── hooks/
+│   │   └── useLogicGame.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── LogicGamesRouter.tsx
+│   └── index.ts
+├── package.json
+├── vite.config.ts
+└── module-federation.config.ts
+```
+
+**Exposed Modules**:
+```typescript
+// module-federation.config.ts
+exposes: {
+  './LogicGamesRouter': './src/LogicGamesRouter.tsx',
+  './Sudoku': './src/games/sudoku/index.ts',
+  './Puzzle': './src/games/puzzle/index.ts',
+  './Memory': './src/games/memory/index.ts',
+  './TwoPlayer': './src/games/two-player/index.ts',
+}
+```
+
+#### language-games Micro Frontend
+
+```mermaid
+graph TD
+    A[language-games/] --> B[turkish/]
+    A --> C[english/]
+    
+    B --> D[grade1/]
+    B --> E[grade2/]
+    B --> F[grade3-8/]
+    
+    D --> G[letters/]
+    D --> H[syllables/]
+    D --> I[words/]
+    D --> J[reading/]
+    
+    E --> K[reading/]
+    E --> L[writing/]
+    E --> M[grammar/]
+    E --> N[vocabulary/]
+    
+    C --> O[grade1-8/]
+```
+
+**Klasör Yapısı**:
+```
+micro-frontends/language-games/
+├── src/
+│   ├── games/
+│   │   ├── turkish/
+│   │   │   ├── grade1/
+│   │   │   │   ├── letters/
+│   │   │   │   │   ├── LetterMatchGame.tsx
+│   │   │   │   │   ├── VowelConsonantGame.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── syllables/
+│   │   │   │   ├── words/
+│   │   │   │   ├── reading/
+│   │   │   │   └── index.ts
+│   │   │   ├── grade2/
+│   │   │   │   ├── reading/
+│   │   │   │   ├── writing/
+│   │   │   │   ├── grammar/
+│   │   │   │   ├── vocabulary/
+│   │   │   │   └── index.ts
+│   │   │   └── ... (grade3-8)
+│   │   └── english/
+│   │       ├── grade1/
+│   │       ├── grade2/
+│   │       └── ... (grade3-8)
+│   ├── components/
+│   │   ├── LanguageGameCard.tsx
+│   │   └── LanguageGamePlayer.tsx
+│   ├── hooks/
+│   │   └── useLanguageGame.ts
+│   ├── types/
+│   │   └── index.ts
+│   ├── LanguageGamesRouter.tsx
+│   └── index.ts
+├── package.json
+├── vite.config.ts
+└── module-federation.config.ts
+```
+
+**Exposed Modules**:
+```typescript
+// module-federation.config.ts
+exposes: {
+  './LanguageGamesRouter': './src/LanguageGamesRouter.tsx',
+  './TurkishGrade1': './src/games/turkish/grade1/index.ts',
+  './TurkishGrade2': './src/games/turkish/grade2/index.ts',
+  './TurkishGrade3': './src/games/turkish/grade3/index.ts',
+  './TurkishGrade4': './src/games/turkish/grade4/index.ts',
+  './TurkishGrade5': './src/games/turkish/grade5/index.ts',
+  './TurkishGrade6': './src/games/turkish/grade6/index.ts',
+  './TurkishGrade7': './src/games/turkish/grade7/index.ts',
+  './TurkishGrade8': './src/games/turkish/grade8/index.ts',
+  './EnglishGrade1': './src/games/english/grade1/index.ts',
+  './EnglishGrade2': './src/games/english/grade2/index.ts',
+  // ... diğer grade'ler
+}
+```
+
+### Host App Features (apps/web)
+
+#### Games Feature (Koordinasyon)
+
+```mermaid
+graph TD
+    A[apps/web/features/games/] --> B[MicroFrontendLoader]
+    A --> C[GameBrowser]
+    A --> D[GameCategoryMenu]
+    
+    B --> E[math-games MF]
+    B --> F[logic-games MF]
+    B --> G[language-games MF]
+    
+    C --> H[Tüm Oyunları Listele]
+    D --> I[Kategori Seçimi]
+```
+
+**Klasör Yapısı**:
+```
+apps/web/src/features/games/
+├── components/
+│   ├── GameBrowser.tsx          # Tüm oyunları listeler
+│   ├── GameCategoryMenu.tsx     # Kategori seçim menüsü
+│   ├── MicroFrontendLoader.tsx  # Micro frontend yükleme
+│   └── GameCard.tsx             # Oyun kartı
+├── hooks/
+│   ├── useGameNavigation.ts     # Oyun navigasyonu
+│   └── useGameProgress.ts       # Oyun ilerlemesi
+├── types/
+│   └── index.ts
+├── routes.tsx                   # Game routing
+└── index.ts
+```
+
+**MicroFrontendLoader Implementation**:
+```typescript
+// apps/web/src/features/games/components/MicroFrontendLoader.tsx
+import { lazy, Suspense } from 'react';
+import { LoadingSpinner } from '@egitim-galaksisi/ui';
+import { ErrorBoundary } from '@egitim-galaksisi/ui';
+
+const MathGamesRouter = lazy(() => import('mathGames/MathGamesRouter'));
+const LogicGamesRouter = lazy(() => import('logicGames/LogicGamesRouter'));
+const LanguageGamesRouter = lazy(() => import('languageGames/LanguageGamesRouter'));
+
+interface MicroFrontendLoaderProps {
+  category: 'math' | 'logic' | 'language';
+}
+
+export function MicroFrontendLoader({ category }: MicroFrontendLoaderProps) {
+  const getRouter = () => {
+    switch (category) {
+      case 'math':
+        return <MathGamesRouter />;
+      case 'logic':
+        return <LogicGamesRouter />;
+      case 'language':
+        return <LanguageGamesRouter />;
+      default:
+        return <div>Kategori bulunamadı</div>;
+    }
+  };
+
+  return (
+    <ErrorBoundary fallback={<div>Oyun yüklenemedi</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
+        {getRouter()}
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+```
+
+**Game Routes**:
+```typescript
+// apps/web/src/features/games/routes.tsx
+import { Routes, Route } from 'react-router-dom';
+import { GameBrowser } from './components/GameBrowser';
+import { GameCategoryMenu } from './components/GameCategoryMenu';
+import { MicroFrontendLoader } from './components/MicroFrontendLoader';
+
+export function GameRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<GameBrowser />} />
+      <Route path="/math/*" element={<MicroFrontendLoader category="math" />} />
+      <Route path="/logic/*" element={<MicroFrontendLoader category="logic" />} />
+      <Route path="/language/*" element={<MicroFrontendLoader category="language" />} />
+    </Routes>
+  );
 }
 ```
 
 
-## Doğruluk Özellikleri (Correctness Properties)
-
-*Bir özellik (property), bir sistemin tüm geçerli yürütmelerinde doğru olması gereken bir karakteristik veya davranıştır - esasen, sistemin ne yapması gerektiği hakkında resmi bir ifadedir. Özellikler, insan tarafından okunabilir spesifikasyonlar ile makine tarafından doğrulanabilir doğruluk garantileri arasında köprü görevi görür.*
-
-
-### Özellik Yansıması (Property Reflection)
-
-Prework analizini gözden geçirerek, aşağıdaki redundancy'leri tespit ettim:
-
-**Birleştirilebilir Özellikler:**
-
-1. **Workspace Oluşturma (1.1-1.4)**: Tüm workspace'lerin oluşturulması tek bir özellikte birleştirilebilir
-2. **Feature Modül Oluşturma (2.1-2.4)**: Tüm feature modüllerinin oluşturulması tek bir özellikte birleştirilebilir
-3. **Modül Koruma (11.1-11.12)**: Tüm modül bileşenlerinin korunması tek bir özellikte birleştirilebilir
-4. **Tasarım Koruma (6.1, 6.2, 6.4, 6.6, 6.7)**: Tüm tasarım öğelerinin korunması tek bir özellikte birleştirilebilir
-5. **Store Koruma (13.1-13.3, 13.6, 13.7)**: Tüm store fonksiyonalitesinin korunması tek bir özellikte birleştirilebilir
-6. **API Service Koruma (14.2-14.4, 14.7)**: Tüm API service'lerin korunması tek bir özellikte birleştirilebilir
-7. **Workspace Import (9.3-9.4)**: Paket import'larının çalışması tek bir özellikte birleştirilebilir
-
-**Çıkarılacak Özellikler:**
-
-- Test edilemez özellikler (no): 3.6, 4.6, 5.7, 6.3, 6.5, 7.1-7.4, 8.2, 10.7
-- Dokümantasyon ve planlama (example): 8.1, 8.3, 8.5, 8.6, 15.1, 15.8
-
-### Özellik 1: Workspace Yapısı Bütünlüğü
-
-*Her* monorepo workspace'i (apps/web, apps/teacher, apps/admin, packages/ui, packages/game-engine, packages/shared, packages/mock-data) için, workspace oluşturulduktan sonra gerekli tüm dosyalar (package.json, tsconfig.json, src/ dizini) mevcut olmalı ve workspace root package.json'da doğru şekilde yapılandırılmalıdır.
-
-**Doğrular: Gereksinimler 1.1, 1.2, 1.3, 1.4, 1.6, 3.1, 4.1**
-
-### Özellik 2: İşlevsellik Koruma
-
-*Her* mevcut özellik (oyunlar, dersler, dashboard'lar, profil, leaderboard) için, migrasyon sonrası özellik aynı input'larla aynı output'u üretmelidir.
-
-**Doğrular: Gereksinimler 1.5, 5.4**
-
-### Özellik 3: TypeScript Path Alias Çözümleme
-
-*Her* workspace arası import için, TypeScript path alias'ları doğru şekilde çözümlenmeli ve derleme hatası oluşmamalıdır.
-
-**Doğrular: Gereksinimler 1.7, 9.7**
-
-### Özellik 4: Barrel Export Tutarlılığı
-
-*Her* feature modülü için, index.ts dosyası mevcut olmalı ve tüm public bileşenler/fonksiyonlar export edilmelidir.
-
-**Doğrular: Gereksinimler 2.5, 2.6**
-
-### Özellik 5: Circular Dependency Yokluğu
-
-*Her* feature modülü ve workspace için, dependency graph'ta circular dependency bulunmamalıdır.
-
-**Doğrular: Gereksinimler 2.7, 9.6**
-
-### Özellik 6: Scoring Tutarlılığı
-
-*Her* oyun için, aynı performans metrikleri (doğru cevap sayısı, süre, zorluk) verildiğinde, scoring fonksiyonu aynı skoru üretmelidir.
-
-**Doğrular: Gereksinimler 3.3**
-
-### Özellik 7: Level Progression Monotonluğu
-
-*Her* oyun için, level progression fonksiyonu monoton artan olmalıdır (level n'den level n+1'e geçiş her zaman daha yüksek bir level numarası üretmelidir).
-
-**Doğrular: Gereksinimler 3.4**
-
-### Özellik 8: Tema Renk Koruma
-
-*Her* renk değeri (gameTheme, colorSchemes) için, migrasyon sonrası değer legacy kod ile aynı olmalıdır.
-
-**Doğrular: Gereksinimler 4.2, 6.1**
-
-### Özellik 9: Component Props Tip Güvenliği
-
-*Her* UI bileşeni için, TypeScript interface tanımlanmış olmalı ve tüm props tip güvenli olmalıdır.
-
-**Doğrular: Gereksinimler 4.8**
-
-### Özellik 10: Tasarım Öğesi Koruma
-
-*Her* CSS class, icon, emoji, responsive breakpoint, font özelliği için, migrasyon sonrası değer legacy kod ile aynı olmalıdır.
-
-**Doğrular: Gereksinimler 6.2, 6.4, 6.6, 6.7**
-
-### Özellik 11: Bağımsız Kategori Import
-
-*Her* oyun kategorisi (math-games, logic-games, language-games) için, kategori bağımsız olarak import edilebilmeli ve diğer kategorilere bağımlı olmamalıdır.
-
-**Doğrular: Gereksinimler 5.5**
-
-### Özellik 12: Runtime Hata Yokluğu
-
-*Her* kod değişikliği sonrası, uygulama çalıştırıldığında runtime hatası oluşmamalıdır.
-
-**Doğrular: Gereksinimler 7.5**
-
-### Özellik 13: Import Statement Standardizasyonu
-
-*Her* dosya için, import statement'lar alfabetik sırada ve tutarlı formatta (absolute imports önce, relative imports sonra) olmalıdır.
-
-**Doğrular: Gereksinimler 7.6**
-
-### Özellik 14: Production Code Temizliği
-
-*Her* production build için, console.log statement'ları bulunmamalıdır.
-
-**Doğrular: Gereksinimler 7.7**
-
-### Özellik 15: Test Başarı Oranı Koruma
-
-*Her* migrasyon fazı sonrası, tüm mevcut testler çalıştırıldığında başarı oranı %100 olmalıdır.
-
-**Doğrular: Gereksinimler 8.4**
-
-### Özellik 16: Rollback İdempotency
-
-*Her* migrasyon fazı için, rollback mekanizması çalıştırıldığında sistem önceki çalışır duruma dönmeli ve rollback'i tekrar çalıştırmak aynı sonucu üretmelidir.
-
-**Doğrular: Gereksinimler 8.7**
-
-### Özellik 17: Workspace Protocol Kullanımı
-
-*Her* internal package referansı için, package.json'da workspace protocol (workspace:*) kullanılmalıdır.
-
-**Doğrular: Gereksinimler 9.2**
-
-### Özellik 18: Workspace Dependency Çözümleme
-
-*Her* workspace için, build işlemi çalıştırıldığında tüm workspace dependency'leri doğru şekilde çözümlenmeli ve build başarılı olmalıdır.
-
-**Doğrular: Gereksinimler 9.5**
-
-### Özellik 19: Shared Package Import
-
-*Her* uygulama (web, teacher, admin) için, shared package'lar (ui, game-engine) import edilebilmeli ve kullanılabilmelidir.
-
-**Doğrular: Gereksinimler 9.3, 9.4**
-
-### Özellik 20: Hot Module Replacement
-
-*Her* workspace için, development mode'da dosya değişikliği yapıldığında HMR çalışmalı ve sayfa yenilenmeden değişiklik görünmelidir.
-
-**Doğrular: Gereksinimler 10.2**
-
-### Özellik 21: Concurrent Development
-
-*Her* workspace için, dev server concurrent olarak çalıştırılabilmeli ve birbirini etkilememeli.
-
-**Doğrular: Gereksinimler 10.5**
-
-### Özellik 22: Modül Bileşen Koruma
-
-*Her* mevcut modül (Academic, Fast Reading, First Aid, Focus, Language, Learning, Logic Games, Memory, Reading, Stories, Teacher Tools) için, tüm bileşenler migrasyon sonrası mevcut olmalı ve çalışmalıdır.
-
-**Doğrular: Gereksinimler 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7, 11.8, 11.9, 11.10, 11.12**
-
-### Özellik 23: Grade-Level Yapı Koruma
-
-*Her* modül için, grade-level subdivisions (grade1, grade2, ..., grade8) yapısı korunmalıdır.
-
-**Doğrular: Gereksinimler 11.11**
-
-### Özellik 24: Route Path Koruma
-
-*Her* mevcut route için, migrasyon sonrası aynı path ile erişilebilir olmalıdır.
-
-**Doğrular: Gereksinimler 12.1**
-
-### Özellik 25: Role-Based Routing
-
-*Her* kullanıcı rolü (STUDENT, TEACHER, ADMIN, PARENT) için, sadece yetkili olduğu route'lara erişebilmelidir.
-
-**Doğrular: Gereksinimler 12.2, 12.7**
-
-### Özellik 26: Protected Route Koruma
-
-*Her* protected route için, authentication check çalışmalı ve yetkisiz erişim engellenmelidir.
-
-**Doğrular: Gereksinimler 12.3**
-
-### Özellik 27: Lazy Loading Koruma
-
-*Her* route component için, lazy loading çalışmalı ve component sadece route'a gidildiğinde yüklenmelidir.
-
-**Doğrular: Gereksinimler 12.4**
-
-### Özellik 28: Route Component Eşitliği
-
-*Her* route için, migrasyon sonrası render edilen component legacy kod ile aynı olmalıdır.
-
-**Doğrular: Gereksinimler 12.5**
-
-### Özellik 29: Route Parameter Koruma
-
-*Her* route için, route parametreleri ve query string'ler doğru şekilde parse edilmeli ve component'e iletilmelidir.
-
-**Doğrular: Gereksinimler 12.6**
-
-### Özellik 30: Store Fonksiyonalite Koruma
-
-*Her* store (authStore, gameStore, uiStore) için, tüm action'lar, selector'lar ve persistence logic migrasyon sonrası aynı şekilde çalışmalıdır.
-
-**Doğrular: Gereksinimler 13.1, 13.2, 13.3, 13.6, 13.7**
-
-### Özellik 31: Store Interface Tutarlılığı
-
-*Her* store kullanan component için, store interface migrasyon sonrası legacy kod ile aynı olmalıdır.
-
-**Doğrular: Gereksinimler 13.5**
-
-### Özellik 32: API Service Koruma
-
-*Her* API service fonksiyonu (auth, game, user, leaderboard, vb.) için, migrasyon sonrası aynı input'larla aynı output'u üretmelidir ve error handling/retry logic korunmalıdır.
-
-**Doğrular: Gereksinimler 14.2, 14.3, 14.4, 14.7**
-
-### Özellik 33: Service Interface Tutarlılığı
-
-*Her* API service kullanan component için, service interface migrasyon sonrası legacy kod ile aynı olmalıdır.
-
-**Doğrular: Gereksinimler 14.5**
-
-### Özellik 34: Route Erişilebilirlik
-
-*Her* route için, migrasyon sonrası route erişilebilir olmalı ve 404 hatası dönmemelidir.
-
-**Doğrular: Gereksinimler 15.2**
-
-### Özellik 35: Oyun Oynanabilirlik
-
-*Her* oyun için, migrasyon sonrası oyun başlatılabilmeli, oynanabilmeli ve tamamlanabilmelidir.
-
-**Doğrular: Gereksinimler 15.3**
-
-### Özellik 36: Ders Erişilebilirlik
-
-*Her* ders için, migrasyon sonrası ders erişilebilir olmalı ve içerik görüntülenebilmelidir.
-
-**Doğrular: Gereksinimler 15.4**
-
-### Özellik 37: Responsive Tasarım
-
-*Her* sayfa için, farklı ekran boyutlarında (mobile, tablet, desktop) doğru şekilde render edilmelidir.
-
-**Doğrular: Gereksinimler 15.5**
-
-### Özellik 38: Authentication Çalışması
-
-*Her* authentication işlemi (login, register, logout) için, migrasyon sonrası işlem başarılı olmalı ve kullanıcı durumu doğru şekilde güncellenmelidir.
-
-**Doğrular: Gereksinimler 15.6**
-
-### Özellik 39: API Entegrasyon Çalışması
-
-*Her* API entegrasyonu için, migrasyon sonrası API çağrıları başarılı olmalı ve doğru response dönmelidir.
-
-**Doğrular: Gereksinimler 15.7**
-
-### Özellik 40: Build Size Kontrolü
-
-Migrasyon sonrası build output size, legacy kod build size'ından %20'den fazla büyük olmamalıdır.
-
-**Doğrular: Gereksinimler 15.9**
-
-### Özellik 41: Performans Koruma
-
-*Her* kritik user flow (sayfa yükleme, oyun başlatma, navigation) için, migrasyon sonrası performans legacy kod ile karşılaştırıldığında %10'dan fazla düşmemelidir.
-
-**Doğrular: Gereksinimler 15.10**
-
+### Lessons Feature
+
+```
+features/lessons/
+├── components/         # Ortak lesson components
+│   ├── LessonCard.tsx
+│   ├── SubjectMenu.tsx
+│   └── GradeMenu.tsx
+├── turkish/           # Türkçe dersleri
+│   ├── grade1/
+│   │   ├── TurkishGrade1Menu.tsx
+│   │   └── index.ts
+│   ├── grade2/
+│   └── index.ts
+├── math/              # Matematik dersleri
+├── science/           # Fen bilgisi
+├── english/           # İngilizce
+├── AcademicDashboard.tsx
+├── index.ts
+└── routes.tsx
+```
+
+### Dashboard Feature
+
+```
+features/dashboard/
+├── components/
+│   ├── StatsCard.tsx
+│   ├── RecentGames.tsx
+│   ├── ProgressChart.tsx
+│   └── Achievements.tsx
+├── StudentDashboard.tsx
+├── TeacherDashboard.tsx
+├── AdminDashboard.tsx
+├── ParentDashboard.tsx
+├── index.ts
+└── routes.tsx
+```
 
 ## Hata Yönetimi
 
-### Migrasyon Hataları
+### Hata Senaryoları
 
-**Workspace Oluşturma Hataları:**
-- **Hata**: Workspace dizini oluşturulamıyor
-- **Çözüm**: Dosya sistemi izinlerini kontrol et, gerekirse sudo ile çalıştır
-- **Rollback**: Oluşturulan dizinleri sil
+#### Senaryo 1: Oyun Yükleme Hatası
 
-**Dependency Çözümleme Hataları:**
-- **Hata**: Workspace dependency'leri çözümlenemiyor
-- **Çözüm**: package.json'da workspace protocol'ü kontrol et, npm/yarn cache'i temizle
-- **Rollback**: package.json'u önceki haline döndür
+**Durum**: Oyun bileşeni yüklenemediğinde
+**Yanıt**: ErrorBoundary ile yakalama, kullanıcıya hata mesajı gösterme
+**Kurtarma**: Ana menüye dönüş butonu, hata raporlama
 
-**TypeScript Derleme Hataları:**
-- **Hata**: TypeScript path alias'ları çözümlenemiyor
-- **Çözüm**: tsconfig.json'da paths yapılandırmasını kontrol et
-- **Rollback**: tsconfig.json'u önceki haline döndür
-
-**Import Path Hataları:**
-- **Hata**: Bileşen import'ları çalışmıyor
-- **Çözüm**: Barrel export'ları kontrol et, import path'leri güncelle
-- **Rollback**: Import path'leri eski haline döndür
-
-### Runtime Hataları
-
-**Component Render Hataları:**
-- **Hata**: Component render edilemiyor
-- **Çözüm**: ErrorBoundary ile yakala, fallback UI göster
-- **Logging**: Sentry/LogRocket ile hata logla
-
-**State Management Hataları:**
-- **Hata**: Store action'ları çalışmıyor
-- **Çözüm**: Store interface'ini kontrol et, action'ları test et
-- **Logging**: Redux DevTools ile state değişikliklerini izle
-
-**API Hataları:**
-- **Hata**: API çağrıları başarısız oluyor
-- **Çözüm**: Retry logic kullan, fallback data göster
-- **Logging**: API response'ları logla
-
-### Build Hataları
-
-**Vite Build Hataları:**
-- **Hata**: Build işlemi başarısız oluyor
-- **Çözüm**: vite.config.ts'yi kontrol et, dependency'leri güncelle
-- **Rollback**: vite.config.ts'yi önceki haline döndür
-
-**TypeScript Compilation Hataları:**
-- **Hata**: TypeScript derleme hatası
-- **Çözüm**: Tip hatalarını düzelt, any kullanımını azalt
-- **Rollback**: Değişiklikleri geri al
-
-### Rollback Stratejisi
-
-Her migrasyon fazı için rollback prosedürü:
-
-1. **Git Checkpoint**: Her faz öncesi git commit oluştur
-2. **Backup**: Kritik dosyaları yedekle (package.json, tsconfig.json, vite.config.ts)
-3. **Rollback Script**: Otomatik rollback script'i hazırla
-4. **Validation**: Rollback sonrası validation testleri çalıştır
-
-**Rollback Komutu:**
-```bash
-npm run rollback:phase-<N>
+```typescript
+<ErrorBoundary
+  fallback={<GameErrorFallback />}
+  onError={(error) => logError(error)}
+>
+  <GamePlayer gameId={gameId} />
+</ErrorBoundary>
 ```
+
+#### Senaryo 2: Route Bulunamadı
+
+**Durum**: Geçersiz route'a erişim
+**Yanıt**: 404 sayfası gösterme
+**Kurtarma**: Ana sayfaya yönlendirme, popüler oyunlar önerme
+
+#### Senaryo 3: Yetki Hatası
+
+**Durum**: Yetkisiz route'a erişim
+**Yanıt**: 403 sayfası veya login'e yönlendirme
+**Kurtarma**: Giriş yapma veya yetkili sayfaya yönlendirme
+
+#### Senaryo 4: API Hatası
+
+**Durum**: Backend API çağrısı başarısız
+**Yanıt**: Toast notification ile hata mesajı
+**Kurtarma**: Retry mekanizması, offline mode
 
 ## Test Stratejisi
 
-### Dual Testing Yaklaşımı
+### Unit Testing Yaklaşımı
 
-Bu projede hem unit testler hem de property-based testler kullanılacaktır. Her iki yaklaşım da birbirini tamamlar ve kapsamlı test coverage sağlar.
+**Test Edilecek Bileşenler**:
+- Shared utilities (validation, date, storage)
+- Custom hooks (useGameEngine, useGameProgress)
+- Game engine fonksiyonları
+- Route guards
 
-**Unit Testler:**
-- Belirli örnekleri test eder
-- Edge case'leri test eder
-- Entegrasyon noktalarını test eder
-- Hata durumlarını test eder
+**Test Araçları**:
+- Vitest (unit testing)
+- React Testing Library (component testing)
+- MSW (API mocking)
 
-**Property-Based Testler:**
-- Evrensel özellikleri test eder
-- Geniş input aralığını test eder
-- Randomizasyon ile beklenmeyen durumları yakalar
-- Minimum 100 iterasyon ile çalışır
+**Test Coverage Hedefi**: %80+
 
-### Property-Based Testing Konfigürasyonu
-
-**Kütüphane Seçimi:** fast-check (JavaScript/TypeScript için)
-
-**Kurulum:**
-```bash
-npm install --save-dev fast-check @types/fast-check
-```
-
-**Test Yapılandırması:**
+**Örnek Test Senaryoları**:
 ```typescript
-import fc from 'fast-check';
+// Game Engine Tests
+describe('GameEngine', () => {
+  it('should initialize game with config', () => {});
+  it('should update score correctly', () => {});
+  it('should handle level progression', () => {});
+  it('should calculate stars based on score', () => {});
+});
 
-// Her property test minimum 100 iterasyon ile çalışır
-fc.assert(
-  fc.property(
-    fc.string(),
-    (input) => {
-      // Test logic
-    }
-  ),
-  { numRuns: 100 }
-);
-```
+// Route Guard Tests
+describe('ProtectedRoute', () => {
+  it('should redirect to login if not authenticated', () => {});
+  it('should allow access for authenticated users', () => {});
+  it('should check role permissions', () => {});
+});
 
-**Test Tagging:**
-Her property test, design document'teki özelliğe referans verir:
-
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 2: İşlevsellik Koruma
- * 
- * Her mevcut özellik için, migrasyon sonrası özellik aynı input'larla
- * aynı output'u üretmelidir.
- */
-test('Property 2: Functionality preservation', () => {
-  fc.assert(
-    fc.property(
-      fc.record({
-        gameId: fc.string(),
-        userId: fc.string(),
-        score: fc.integer({ min: 0, max: 100 }),
-      }),
-      (input) => {
-        const legacyOutput = legacyGameEngine.calculateScore(input);
-        const newOutput = newGameEngine.calculateScore(input);
-        expect(newOutput).toEqual(legacyOutput);
-      }
-    ),
-    { numRuns: 100 }
-  );
+// Validation Tests
+describe('ValidationUtils', () => {
+  it('should validate email format', () => {});
+  it('should validate password strength', () => {});
+  it('should validate username format', () => {});
 });
 ```
 
-### Test Kategorileri
 
-#### 1. Workspace Yapısı Testleri
+### Integration Testing Yaklaşımı
 
-**Unit Testler:**
+**Test Edilecek Akışlar**:
+- Kullanıcı giriş/kayıt akışı
+- Oyun oynama akışı (başlat → oyna → bitir → skor kaydet)
+- Ders içeriği gezinme
+- Profil güncelleme
+- Sıralama tablosu görüntüleme
+
+**Test Araçları**:
+- Playwright (E2E testing)
+- Cypress (alternatif)
+
+**Örnek Integration Test**:
 ```typescript
-describe('Workspace Structure', () => {
-  test('should have apps directory', () => {
-    expect(fs.existsSync('apps')).toBe(true);
-  });
-
-  test('should have packages directory', () => {
-    expect(fs.existsSync('packages')).toBe(true);
-  });
-
-  test('should have web workspace', () => {
-    expect(fs.existsSync('apps/web')).toBe(true);
-    expect(fs.existsSync('apps/web/package.json')).toBe(true);
-  });
-});
-```
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 1: Workspace Yapısı Bütünlüğü
- */
-test('Property 1: Workspace structure integrity', () => {
-  const workspaces = ['apps/web', 'apps/teacher', 'apps/admin', 
-                      'packages/ui', 'packages/game-engine'];
-  
-  workspaces.forEach(workspace => {
-    expect(fs.existsSync(workspace)).toBe(true);
-    expect(fs.existsSync(`${workspace}/package.json`)).toBe(true);
-    expect(fs.existsSync(`${workspace}/tsconfig.json`)).toBe(true);
-    expect(fs.existsSync(`${workspace}/src`)).toBe(true);
-  });
-});
-```
-
-#### 2. İşlevsellik Koruma Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 2: İşlevsellik Koruma
- */
-test('Property 2: Functionality preservation', () => {
-  fc.assert(
-    fc.property(
-      fc.record({
-        correctAnswers: fc.integer({ min: 0, max: 10 }),
-        totalQuestions: fc.integer({ min: 1, max: 10 }),
-        timeBonus: fc.integer({ min: 0, max: 50 }),
-        difficultyMultiplier: fc.float({ min: 1, max: 3 }),
-      }),
-      (input) => {
-        const legacyScore = legacyCalculateScore(
-          input.correctAnswers,
-          input.totalQuestions,
-          input.timeBonus,
-          input.difficultyMultiplier
-        );
-        const newScore = newCalculateScore(
-          input.correctAnswers,
-          input.totalQuestions,
-          input.timeBonus,
-          input.difficultyMultiplier
-        );
-        expect(newScore).toBe(legacyScore);
-      }
-    ),
-    { numRuns: 100 }
-  );
-});
-```
-
-#### 3. TypeScript Path Alias Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 3: TypeScript Path Alias Çözümleme
- */
-test('Property 3: TypeScript path alias resolution', () => {
-  const imports = [
-    '@egitim-galaksisi/ui',
-    '@egitim-galaksisi/game-engine',
-    '@egitim-galaksisi/shared',
-    '@egitim-galaksisi/mock-data',
-  ];
-
-  imports.forEach(importPath => {
-    expect(() => require(importPath)).not.toThrow();
-  });
-});
-```
-
-#### 4. Circular Dependency Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 5: Circular Dependency Yokluğu
- */
-test('Property 5: No circular dependencies', () => {
-  const madge = require('madge');
-  
-  const result = madge('apps/web/src', {
-    fileExtensions: ['ts', 'tsx'],
-  }).then((res) => {
-    const circular = res.circular();
-    expect(circular).toHaveLength(0);
-  });
-});
-```
-
-#### 5. Scoring Tutarlılığı Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 6: Scoring Tutarlılığı
- */
-test('Property 6: Scoring consistency', () => {
-  fc.assert(
-    fc.property(
-      fc.integer({ min: 0, max: 100 }),
-      fc.integer({ min: 1, max: 100 }),
-      fc.integer({ min: 0, max: 50 }),
-      fc.float({ min: 1, max: 3 }),
-      (correct, total, bonus, multiplier) => {
-        const score1 = calculateScore(correct, total, bonus, multiplier);
-        const score2 = calculateScore(correct, total, bonus, multiplier);
-        expect(score1).toBe(score2);
-      }
-    ),
-    { numRuns: 100 }
-  );
-});
-```
-
-#### 6. Tema Renk Koruma Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 8: Tema Renk Koruma
- */
-test('Property 8: Theme color preservation', () => {
-  const legacyTheme = require('../legacy/styles/gameTheme');
-  const newTheme = require('@egitim-galaksisi/ui/theme/gameTheme');
-
-  // Test all color values
-  expect(newTheme.gameTheme.background).toBe(legacyTheme.gameTheme.background);
-  expect(newTheme.gameTheme.outerCard).toBe(legacyTheme.gameTheme.outerCard);
-  expect(newTheme.gameTheme.exitButton).toBe(legacyTheme.gameTheme.exitButton);
-
-  // Test color schemes
-  Object.keys(legacyTheme.colorSchemes).forEach(color => {
-    expect(newTheme.colorSchemes[color]).toEqual(legacyTheme.colorSchemes[color]);
-  });
-});
-```
-
-#### 7. Route Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 24: Route Path Koruma
- */
-test('Property 24: Route path preservation', () => {
-  const legacyRoutes = extractRoutesFromAppRouter('../legacy/AppRouter.tsx');
-  const newRoutes = extractRoutesFromAppRouter('apps/web/src/routes/index.tsx');
-
-  legacyRoutes.forEach(route => {
-    expect(newRoutes).toContain(route);
-  });
-});
-```
-
-#### 8. Store Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 30: Store Fonksiyonalite Koruma
- */
-test('Property 30: Store functionality preservation', () => {
-  fc.assert(
-    fc.property(
-      fc.record({
-        email: fc.emailAddress(),
-        password: fc.string({ minLength: 8 }),
-      }),
-      async (credentials) => {
-        const legacyStore = createLegacyAuthStore();
-        const newStore = createNewAuthStore();
-
-        await legacyStore.login(credentials.email, credentials.password);
-        await newStore.login(credentials.email, credentials.password);
-
-        expect(newStore.user).toEqual(legacyStore.user);
-        expect(newStore.isAuthenticated).toBe(legacyStore.isAuthenticated);
-      }
-    ),
-    { numRuns: 100 }
-  );
-});
-```
-
-#### 9. Performance Testleri
-
-**Property Test:**
-```typescript
-/**
- * Feature: monorepo-architecture-migration
- * Property 41: Performans Koruma
- */
-test('Property 41: Performance preservation', () => {
-  const criticalFlows = [
-    { name: 'Page Load', fn: () => loadPage('/') },
-    { name: 'Game Start', fn: () => startGame('math-addition-1') },
-    { name: 'Navigation', fn: () => navigate('/games') },
-  ];
-
-  criticalFlows.forEach(flow => {
-    const legacyTime = measurePerformance(flow.fn, 'legacy');
-    const newTime = measurePerformance(flow.fn, 'new');
+describe('Game Playing Flow', () => {
+  it('should complete full game flow', async () => {
+    // 1. Login
+    await page.goto('/login');
+    await page.fill('[name="username"]', 'testuser');
+    await page.fill('[name="password"]', 'password123');
+    await page.click('button[type="submit"]');
     
-    const degradation = ((newTime - legacyTime) / legacyTime) * 100;
-    expect(degradation).toBeLessThan(10);
+    // 2. Navigate to game
+    await page.click('text=Oyunlar');
+    await page.click('text=Türkçe');
+    await page.click('text=1. Sınıf');
+    await page.click('text=Harf Eşleştirme');
+    
+    // 3. Play game
+    await page.waitForSelector('.game-container');
+    // ... game interactions
+    
+    // 4. Complete game
+    await page.click('text=Bitir');
+    await expect(page.locator('.score')).toBeVisible();
+    
+    // 5. Verify score saved
+    await page.goto('/profile');
+    await expect(page.locator('.total-score')).toContainText('100');
   });
 });
 ```
 
-### Test Coverage Hedefleri
+## Performans Değerlendirmeleri
 
-- **Unit Test Coverage**: Minimum %80
-- **Property Test Coverage**: Tüm kritik özellikler için minimum 1 property test
-- **Integration Test Coverage**: Tüm feature modülleri için minimum 1 integration test
-- **E2E Test Coverage**: Tüm kritik user flow'lar için minimum 1 E2E test
+### Performans Hedefleri
 
-### Continuous Integration
+**Sayfa Yükleme Süreleri**:
+- İlk yükleme (FCP): < 1.5s
+- Etkileşime hazır (TTI): < 3s
+- Oyun başlatma: < 500ms
+- Route değişimi: < 200ms
 
-**GitHub Actions Workflow:**
-```yaml
-name: CI
+**Bundle Size Hedefleri**:
+- Ana bundle: < 200KB (gzipped)
+- Feature chunks: < 50KB (gzipped)
+- Shared packages: < 100KB (gzipped)
 
-on: [push, pull_request]
+### Optimizasyon Stratejileri
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - run: npm install
-      - run: npm run test:unit
-      - run: npm run test:property
-      - run: npm run test:integration
-      - run: npm run build
+**1. Code Splitting**:
+```typescript
+// Lazy loading ile route-based splitting
+const GamePlayer = lazy(() => import('./features/games/GamePlayer'));
+const TurkishGrade1Menu = lazy(() => import('./features/lessons/turkish/grade1'));
+
+// Component-level splitting
+const HeavyComponent = lazy(() => import('./components/HeavyComponent'));
 ```
 
-### Test Komutları
+**2. Asset Optimization**:
+- Image lazy loading
+- WebP format kullanımı
+- SVG sprite sheets
+- Font subsetting
 
-```json
-{
-  "scripts": {
-    "test": "npm run test:unit && npm run test:property",
-    "test:unit": "vitest run --coverage",
-    "test:property": "vitest run --config vitest.property.config.ts",
-    "test:integration": "vitest run --config vitest.integration.config.ts",
-    "test:e2e": "playwright test",
-    "test:watch": "vitest watch"
+**3. Caching Stratejisi**:
+```typescript
+// Service Worker ile offline support
+// Cache-first strategy for static assets
+// Network-first strategy for API calls
+// Stale-while-revalidate for game data
+```
+
+**4. Bundle Optimization**:
+```typescript
+// vite.config.ts
+export default {
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'game-engine': ['@egitim-galaksisi/game-engine'],
+          'ui': ['@egitim-galaksisi/ui'],
+        }
+      }
+    }
   }
 }
 ```
 
-## Migrasyon Adımları
+**5. Rendering Optimization**:
+- React.memo kullanımı
+- useMemo ve useCallback hooks
+- Virtual scrolling (react-window)
+- Debounce/throttle
 
-### Faz 1: Monorepo Yapısı Oluşturma (1-2 gün)
+## Güvenlik Değerlendirmeleri
 
-**Hedef**: Temel monorepo yapısını oluştur
+### Güvenlik Gereksinimleri
 
-**Adımlar:**
-1. Root package.json oluştur ve workspace'leri yapılandır
-2. apps/ ve packages/ dizinlerini oluştur
-3. Her workspace için temel yapıyı oluştur (package.json, tsconfig.json, src/)
-4. Root tsconfig.json ve vite.config.ts oluştur
-5. Workspace dependency'lerini yapılandır
+**1. Kimlik Doğrulama**:
+- JWT token tabanlı authentication
+- Refresh token mekanizması
+- Token expiration (15 dakika access, 7 gün refresh)
+- Secure cookie storage
 
-**Validation:**
-- Tüm workspace'ler oluşturuldu mu?
-- package.json workspace yapılandırması doğru mu?
-- TypeScript derleme çalışıyor mu?
+**2. Yetkilendirme**:
+- Role-based access control (RBAC)
+- Route-level guards
+- API-level permissions
+- Resource ownership validation
 
-**Rollback**: Git checkpoint'e dön
+**3. Veri Güvenliği**:
+- HTTPS zorunluluğu
+- XSS koruması (React default)
+- CSRF token kullanımı
+- SQL injection koruması (ORM kullanımı)
+- Input validation (client + server)
 
-### Faz 2: packages/ui Oluşturma (2-3 gün)
+**4. Güvenli Depolama**:
+```typescript
+// Hassas verileri localStorage'da saklamama
+// Token'ları httpOnly cookie'de saklama
+// Şifreleri asla client-side'da saklama
+```
 
-**Hedef**: Tasarım sistemi paketini oluştur
+**5. API Güvenliği**:
+- Rate limiting
+- Request validation
+- Error message sanitization
+- CORS configuration
 
-**Adımlar:**
-1. packages/ui workspace'ini oluştur
-2. styles/gameTheme.ts'yi packages/ui/src/theme/'ye taşı
-3. components/common/ bileşenlerini packages/ui/src/components/'e taşı
-4. components/core/ bileşenlerini packages/ui/src/components/'e taşı
-5. Barrel export'ları oluştur (index.ts)
-6. TypeScript tiplerini tanımla
-7. Storybook kurulumu (opsiyonel)
+### Tehdit Modeli
 
-**Validation:**
-- Tüm renk değerleri korundu mu?
-- Tüm bileşenler export ediliyor mu?
-- TypeScript tipleri tanımlı mı?
+**Potansiyel Tehditler**:
+1. Yetkisiz erişim (çözüm: authentication + authorization)
+2. XSS saldırıları (çözüm: React escaping + CSP headers)
+3. CSRF saldırıları (çözüm: CSRF tokens)
+4. Man-in-the-middle (çözüm: HTTPS)
+5. Brute force (çözüm: rate limiting + captcha)
 
-**Rollback**: packages/ui'yi sil, dosyaları eski konumlarına geri taşı
+### Güvenlik Best Practices
 
-### Faz 3: packages/game-engine Oluşturma (2-3 gün)
+```typescript
+// 1. Input Sanitization
+function sanitizeInput(input: string): string {
+  return input.trim().replace(/[<>]/g, '');
+}
 
-**Hedef**: Oyun motoru paketini oluştur
+// 2. Secure API Calls
+async function secureApiCall(endpoint: string, data: any) {
+  const token = getAccessToken();
+  return fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': getCsrfToken(),
+    },
+    body: JSON.stringify(data),
+  });
+}
 
-**Adımlar:**
-1. packages/game-engine workspace'ini oluştur
-2. GameTemplate bileşenini taşı
-3. useGameState hook'unu oluştur
-4. Scoring utilities'i oluştur
-5. Level progression logic'i oluştur
-6. Timer ve countdown utilities'i oluştur
-7. Barrel export'ları oluştur
+// 3. Route Protection
+<ProtectedRoute roles={['TEACHER', 'ADMIN']}>
+  <TeacherDashboard />
+</ProtectedRoute>
+```
 
-**Validation:**
-- GameTemplate çalışıyor mu?
-- Scoring logic tutarlı mı?
-- Level progression monoton mu?
 
-**Rollback**: packages/game-engine'i sil, dosyaları eski konumlarına geri taşı
-
-### Faz 4: packages/mock-data Oluşturma (1-2 gün)
-
-**Hedef**: Mock data paketini oluştur
-
-**Adımlar:**
-1. packages/mock-data workspace'ini oluştur
-2. API contract interface'lerini oluştur
-3. Mock data'ları oluştur (games, users, leaderboard)
-4. Data generator'ları oluştur
-5. services/mockData.ts'yi taşı ve güncelle
-6. Barrel export'ları oluştur
-
-**Validation:**
-- Tüm API contract'ları tanımlı mı?
-- Mock data'lar doğru formatta mı?
-- Generator'lar çalışıyor mu?
-
-**Rollback**: packages/mock-data'yı sil, dosyaları eski konumlarına geri taşı
-
-### Faz 5: Feature Modüllerini Organize Etme (3-5 gün)
-
-**Hedef**: Feature-based modül yapısını oluştur
-
-**Adımlar:**
-1. apps/web/src/features/ dizinini oluştur
-2. components/academic/ → features/games/math-games/ (grade-level yapısını koru)
-3. components/logic-games/ → features/games/logic-games/
-4. components/turkish/ → features/games/language-games/turkish/
-5. components/fast-reading/ → features/fast-reading/
-6. components/focus/ → features/focus/
-7. components/learning/ → features/learning/
-8. components/language/ → features/language/
-9. components/life-skills/ → features/life-skills/
-10. components/teacher-tools/ → features/teacher-tools/
-11. components/stories/ → features/stories/
-12. Her feature için barrel export'ları oluştur
-13. Her feature için routes.tsx oluştur
-
-**Validation:**
-- Tüm bileşenler taşındı mı?
-- Grade-level yapısı korundu mu?
-- Barrel export'lar çalışıyor mu?
-- Circular dependency yok mu?
-
-**Rollback**: features/ dizinini sil, dosyaları components/'e geri taşı
-
-### Faz 6: App.tsx'i Parçalama (2-3 gün)
-
-**Hedef**: 6000+ satırlık App.tsx'i parçala
-
-**Adımlar:**
-1. apps/web/src/routes/ dizinini oluştur
-2. routes/index.tsx oluştur (ana routing)
-3. routes/ProtectedRoute.tsx oluştur
-4. routes/DashboardRouter.tsx oluştur
-5. Her feature için routes.tsx oluştur
-6. App.tsx'i sadece routing içerecek şekilde güncelle
-7. Tüm game import'larını kaldır
-8. Switch-case yapısını route-based yapıya dönüştür
-
-**Validation:**
-- Tüm route'lar çalışıyor mu?
-- Lazy loading çalışıyor mu?
-- Protected route'lar çalışıyor mu?
-- Role-based routing çalışıyor mu?
-
-**Rollback**: App.tsx'i eski haline döndür, routes/ dizinini sil
-
-### Faz 7: Store ve Services Organize Etme (1-2 gün)
-
-**Hedef**: State management ve API services'i organize et
-
-**Adımlar:**
-1. stores/ dizinini apps/web/src/stores/'a taşı
-2. services/ dizinini apps/web/src/services/'a taşı
-3. Her feature için gerekli store'ları feature içine taşı
-4. API service'leri domain'e göre organize et
-5. Barrel export'ları oluştur
-
-**Validation:**
-- Tüm store'lar çalışıyor mu?
-- API service'ler çalışıyor mu?
-- Store persistence çalışıyor mu?
-
-**Rollback**: stores/ ve services/'i root'a geri taşı
-
-### Faz 8: apps/teacher ve apps/admin Oluşturma (2-3 gün)
-
-**Hedef**: Teacher ve admin uygulamalarını oluştur
-
-**Adımlar:**
-1. apps/teacher workspace'ini oluştur
-2. apps/admin workspace'ini oluştur
-3. Ortak bileşenleri packages/ui'den kullan
-4. Teacher-specific feature'ları taşı
-5. Admin-specific feature'ları taşı
-6. Her app için routing yapılandır
-
-**Validation:**
-- Teacher app çalışıyor mu?
-- Admin app çalışıyor mu?
-- Shared package'lar kullanılıyor mu?
-
-**Rollback**: apps/teacher ve apps/admin'i sil
-
-### Faz 9: Kod Temizleme ve Optimizasyon (2-3 gün)
-
-**Hedef**: Gereksiz kodu temizle ve optimize et
-
-**Adımlar:**
-1. Kullanılmayan bileşenleri tespit et ve kaldır
-2. Kullanılmayan dependency'leri kaldır
-3. Duplicate code'u shared utilities'e taşı
-4. Commented-out code'u kaldır
-5. Import statement'ları standardize et
-6. console.log'ları kaldır
-7. ESLint ve Prettier yapılandır
-
-**Validation:**
-- Runtime hataları yok mu?
-- Build başarılı mı?
-- Linter hataları yok mu?
-
-**Rollback**: Git checkpoint'e dön
-
-### Faz 10: Test ve Doğrulama (3-5 gün)
-
-**Hedef**: Kapsamlı test ve doğrulama yap
-
-**Adımlar:**
-1. Unit testler yaz
-2. Property-based testler yaz
-3. Integration testler yaz
-4. E2E testler yaz
-5. Tüm route'ları manuel test et
-6. Tüm oyunları manuel test et
-7. Tüm dersleri manuel test et
-8. Farklı ekran boyutlarında test et
-9. Farklı tarayıcılarda test et
-10. Performance testleri yap
-11. Build size'ı karşılaştır
-
-**Validation:**
-- Tüm testler geçiyor mu?
-- Tüm özellikler çalışıyor mu?
-- Performance kabul edilebilir mi?
-- Build size kabul edilebilir mi?
-
-**Rollback**: Kritik hata varsa önceki faza dön
-
-### Faz 11: Dokümantasyon ve Deployment (1-2 gün)
-
-**Hedef**: Dokümantasyon tamamla ve deployment hazırlığı yap
-
-**Adımlar:**
-1. README.md güncelle
-2. CONTRIBUTING.md oluştur
-3. ARCHITECTURE.md oluştur
-4. API dokümantasyonu oluştur
-5. Component dokümantasyonu oluştur (Storybook)
-6. Deployment script'leri oluştur
-7. CI/CD pipeline'ı yapılandır
-8. Production build test et
-
-**Validation:**
-- Dokümantasyon eksiksiz mi?
-- Deployment script'leri çalışıyor mu?
-- CI/CD pipeline çalışıyor mu?
-
-**Rollback**: N/A (dokümantasyon fazı)
-
-## Deployment Stratejisi
+## Bağımlılıklar
 
 ### Development Environment
 
-```bash
-# Tüm workspace'leri development mode'da çalıştır
-npm run dev
+**Docker Compose Yapılandırması**:
 
-# Sadece web app'i çalıştır
-npm run dev:web
+Tüm micro frontend'leri ve host app'i birlikte çalıştırmak için Docker Compose kullanılır.
 
-# Sadece teacher app'i çalıştır
-npm run dev:teacher
+```yaml
+# docker-compose.yml
+version: '3.8'
 
-# Sadece admin app'i çalıştır
-npm run dev:admin
+services:
+  host:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./apps/web:/app/apps/web
+      - ./packages:/app/packages
+      - /app/node_modules
+    environment:
+      - VITE_MATH_GAMES_URL=http://localhost:5001
+      - VITE_LOGIC_GAMES_URL=http://localhost:5002
+      - VITE_LANGUAGE_GAMES_URL=http://localhost:5003
+    depends_on:
+      - math-games
+      - logic-games
+      - language-games
+
+  math-games:
+    build:
+      context: .
+      dockerfile: micro-frontends/math-games/Dockerfile.dev
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./micro-frontends/math-games:/app/micro-frontends/math-games
+      - ./packages:/app/packages
+      - /app/node_modules
+    environment:
+      - PORT=5001
+
+  logic-games:
+    build:
+      context: .
+      dockerfile: micro-frontends/logic-games/Dockerfile.dev
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./micro-frontends/logic-games:/app/micro-frontends/logic-games
+      - ./packages:/app/packages
+      - /app/node_modules
+    environment:
+      - PORT=5002
+
+  language-games:
+    build:
+      context: .
+      dockerfile: micro-frontends/language-games/Dockerfile.dev
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./micro-frontends/language-games:/app/micro-frontends/language-games
+      - ./packages:/app/packages
+      - /app/node_modules
+    environment:
+      - PORT=5003
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile.dev
+    ports:
+      - "5010:5010"
+    volumes:
+      - ./apps/admin:/app/apps/admin
+      - ./packages:/app/packages
+      - /app/node_modules
+
+  teacher:
+    build:
+      context: .
+      dockerfile: apps/teacher/Dockerfile.dev
+    ports:
+      - "5020:5020"
+    volumes:
+      - ./apps/teacher:/app/apps/teacher
+      - ./packages:/app/packages
+      - /app/node_modules
 ```
 
-### Production Build
+**Development Scripts**:
 
-```bash
-# Tüm workspace'leri build et
-npm run build
-
-# Sadece web app'i build et
-npm run build:web
-
-# Build output'u test et
-npm run preview:web
-```
-
-### Deployment
-
-**Vercel Deployment:**
 ```json
+// package.json (root)
 {
-  "builds": [
-    {
-      "src": "apps/web/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ]
+  "scripts": {
+    "dev": "docker-compose up",
+    "dev:host": "cd apps/web && npm run dev",
+    "dev:math": "cd micro-frontends/math-games && npm run dev",
+    "dev:logic": "cd micro-frontends/logic-games && npm run dev",
+    "dev:language": "cd micro-frontends/language-games && npm run dev",
+    "dev:admin": "cd apps/admin && npm run dev",
+    "dev:teacher": "cd apps/teacher && npm run dev",
+    "dev:all": "concurrently \"npm:dev:*\"",
+    "build": "turbo run build",
+    "build:host": "cd apps/web && npm run build",
+    "build:math": "cd micro-frontends/math-games && npm run build",
+    "build:logic": "cd micro-frontends/logic-games && npm run build",
+    "build:language": "cd micro-frontends/language-games && npm run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules"
+  }
 }
 ```
 
-**Docker Deployment:**
-```dockerfile
-FROM node:18-alpine
+### Monorepo Bağımlılıkları
 
-WORKDIR /app
-
-COPY package*.json ./
-COPY apps/web/package*.json ./apps/web/
-COPY packages/*/package*.json ./packages/*/
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build:web
-
-EXPOSE 3000
-
-CMD ["npm", "run", "preview:web"]
+**Root Level**:
+```json
+{
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@originjs/vite-plugin-federation": "^1.3.0",
+    "concurrently": "^8.2.0",
+    "depcheck": "^1.4.0",
+    "eslint": "^8.50.0",
+    "husky": "^8.0.0",
+    "jscpd": "^3.5.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "ts-prune": "^0.10.0",
+    "turbo": "^1.10.0",
+    "typescript": "^5.2.0",
+    "unimported": "^1.31.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
 ```
+
+### apps/web Bağımlılıkları
+
+```json
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "zustand": "^4.4.0",
+    "@egitim-galaksisi/game-engine": "workspace:*",
+    "@egitim-galaksisi/ui": "workspace:*",
+    "@egitim-galaksisi/shared": "workspace:*",
+    "@egitim-galaksisi/mock-data": "workspace:*"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
+  }
+}
+```
+
+### Micro Frontend Bağımlılıkları
+
+**math-games, logic-games, language-games**:
+```json
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "@egitim-galaksisi/game-engine": "workspace:*",
+    "@egitim-galaksisi/ui": "workspace:*",
+    "@egitim-galaksisi/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "tailwindcss": "^3.3.0",
+    "vite": "^5.0.0"
+  }
+}
+```
+
+### packages/game-engine Bağımlılıkları
+
+```json
+{
+  "dependencies": {
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  }
+}
+```
+
+### packages/ui Bağımlılıkları
+
+```json
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
+```
+
+### packages/shared Bağımlılıkları
+
+```json
+{
+  "dependencies": {
+    "date-fns": "^2.30.0",
+    "zod": "^3.22.0"
+  }
+}
+```
+
+### Bağımlılık Yönetimi
+
+**Workspace Yapısı**:
+```json
+// package.json (root)
+{
+  "name": "egitim-galaksisi",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "micro-frontends/*"
+  ],
+  "scripts": {
+    "dev": "docker-compose up",
+    "dev:all": "concurrently \"npm:dev:*\"",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  }
+}
+```
+
+**Turbo Configuration**:
+```json
+// turbo.json
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}
+```
+
+## Migration Stratejisi
+
+### Faz 1: Hazırlık (1 hafta)
+
+**Hedefler**:
+- Monorepo yapısını kurma
+- Shared packages oluşturma
+- Micro frontends dizin yapısını oluşturma
+- Build sistemi kurulumu
+
+**Adımlar**:
+1. Turbo monorepo yapısını kurma
+2. packages/game-engine oluşturma
+3. packages/ui oluşturma
+4. packages/shared oluşturma
+5. packages/mock-data oluşturma
+6. micro-frontends/ dizini oluşturma
+7. Module Federation yapılandırması
+8. Build ve dev scriptlerini yapılandırma
+
+**Başarı Kriterleri**:
+- Tüm packages başarıyla build oluyor
+- Micro frontends dizin yapısı hazır
+- Dev server çalışıyor
+- Workspace bağımlılıkları çözülüyor
+- Module Federation yapılandırması tamamlandı
+
+### Faz 2: Routing Standardizasyonu (2 hafta)
+
+**Hedefler**:
+- Tüm switch/case routing'i kaldırma
+- React Router'a tam geçiş
+- Route yapısını standardize etme
+
+**Adımlar**:
+1. AppRouter.tsx'i genişletme
+2. Her feature için routes.tsx oluşturma
+3. Switch/case kodlarını route'lara dönüştürme
+4. Route guards ekleme
+5. Lazy loading implementasyonu
+
+**Başarı Kriterleri**:
+- App.tsx'te switch/case kalmadı
+- Tüm oyunlar route-based
+- Lazy loading çalışıyor
+- Route guards aktif
+
+### Faz 3: Component Migration (3 hafta)
+
+**Hedefler**:
+- components/ klasörünü features/'a taşıma
+- Oyunları micro frontend'lere taşıma
+- Feature-based organizasyon
+- Kod tekrarını azaltma
+
+**Adımlar**:
+1. components/academic/math/ → micro-frontends/math-games/ taşıma
+2. components/logic-games/ → micro-frontends/logic-games/ taşıma
+3. components/academic/turkish/ → micro-frontends/language-games/turkish/ taşıma
+4. components/academic/english/ → micro-frontends/language-games/english/ taşıma
+5. components/fast-reading/ → features/fast-reading/ taşıma
+6. Ortak componentleri packages/ui'ya taşıma
+7. Import path'lerini güncelleme
+8. Module Federation expose yapılandırması
+
+**Başarı Kriterleri**:
+- components/ klasörü boş
+- Tüm oyunlar micro frontend'lerde
+- Tüm componentler features/ altında
+- Import path'leri doğru
+- Hiçbir broken import yok
+- Micro frontend'ler bağımsız çalışıyor
+
+
+### Faz 4: Micro Frontends Kurulumu (2 hafta)
+
+**Hedefler**:
+- Micro frontend'leri yapılandırma
+- Module Federation kurulumu
+- Bağımsız build ve deploy pipeline'ları
+- Host app entegrasyonu
+
+**Adımlar**:
+1. math-games micro frontend kurulumu
+   - Vite + Module Federation yapılandırması
+   - Exposed modules tanımlama
+   - Shared dependencies yapılandırması
+   - Bağımsız dev server (port 5001)
+2. logic-games micro frontend kurulumu
+   - Vite + Module Federation yapılandırması
+   - Exposed modules tanımlama
+   - Shared dependencies yapılandırması
+   - Bağımsız dev server (port 5002)
+3. language-games micro frontend kurulumu
+   - Vite + Module Federation yapılandırması
+   - Exposed modules tanımlama
+   - Shared dependencies yapılandırması
+   - Bağımsız dev server (port 5003)
+4. Host app (apps/web) Module Federation yapılandırması
+   - Remote'ları tanımlama
+   - MicroFrontendLoader component'i oluşturma
+   - Routing entegrasyonu
+5. Docker Compose yapılandırması
+   - Tüm micro frontend'leri birlikte çalıştırma
+   - Development environment setup
+6. CI/CD pipeline'ları
+   - Her micro frontend için ayrı build job
+   - CDN deployment yapılandırması
+   - Versioning stratejisi
+
+**Başarı Kriterleri**:
+- Her micro frontend bağımsız çalışıyor
+- Host app micro frontend'leri yükleyebiliyor
+- Module Federation çalışıyor
+- Shared dependencies singleton olarak yükleniyor
+- Docker Compose ile tüm sistem ayağa kalkıyor
+- CI/CD pipeline'ları çalışıyor
+
+### Faz 5: App Separation (2 hafta)
+
+**Hedefler**:
+- apps/admin yapısını tamamlama
+- apps/teacher yapısını tamamlama
+- Role-based routing
+
+**Adımlar**:
+1. Admin dashboard'u geliştirme
+2. Teacher dashboard'u geliştirme
+3. Role-based route guards
+4. Shared components kullanımı
+5. API integration
+
+**Başarı Kriterleri**:
+- 3 ayrı app çalışıyor
+- Role-based routing aktif
+- Her app kendi domain'inde
+- Shared packages kullanılıyor
+
+### Faz 6: Testing & Optimization (2 hafta)
+
+**Hedefler**:
+- Test coverage artırma
+- Performance optimization
+- Bundle size optimization
+
+**Adımlar**:
+1. Unit testler yazma
+2. Integration testler yazma
+3. Bundle analysis
+4. Code splitting optimization
+5. Performance monitoring
+
+**Başarı Kriterleri**:
+- %80+ test coverage
+- Bundle size < 200KB
+- FCP < 1.5s
+- TTI < 3s
+
+### Faz 7: Kod Temizleme ve Optimizasyon (2 hafta)
+
+**Hedefler**:
+- Kullanılmayan dosyaları temizleme
+- Kod kalitesini artırma
+- Bundle size optimizasyonu
+- Performans iyileştirmeleri
+
+**Adımlar**:
+
+**7.1 Kullanılmayan Bileşenleri Tespit ve Kaldırma**:
+- Tüm .tsx/.ts dosyalarını tara
+- Import edilmeyen bileşenleri bul
+- Kullanılmayan bileşenleri sil
+- Gereksiz export'ları kaldır
+
+**Temizlenecek Dosyalar**:
+```
+components/                          # Tamamen kaldırılacak
+├── academic/                        # → micro-frontends/ veya features/lessons/
+├── logic-games/                     # → micro-frontends/logic-games/
+├── fast-reading/                    # → features/fast-reading/
+├── focus/                           # → features/focus/
+├── learning/                        # → features/learning/
+├── language/                        # → features/language/
+├── first-aid/                       # → features/life-skills/first-aid/
+├── traffic/                         # → features/life-skills/traffic/
+├── hygiene/                         # → features/life-skills/hygiene/
+├── digital/                         # → features/life-skills/digital/
+├── financial/                       # → features/life-skills/financial/
+├── teacher-tools/                   # → features/teacher-tools/
+├── stories/                         # → features/stories/
+└── common/                          # → packages/ui/ veya kaldır
+
+App.tsx (eski versiyon)              # Yedekle ve kaldır
+AppRouter.tsx (eski versiyon)        # Yeni versiyon ile değiştir
+```
+
+**7.2 Kullanılmayan Dependency'leri Kaldırma**:
+- package.json'ları kontrol et
+- Kullanılmayan npm paketlerini tespit et
+- `npm-check` veya `depcheck` kullan
+- Gereksiz dependency'leri kaldır
+
+**Kontrol Edilecek Package'lar**:
+```bash
+# Her workspace için
+cd apps/web && npx depcheck
+cd apps/admin && npx depcheck
+cd apps/teacher && npx depcheck
+cd micro-frontends/math-games && npx depcheck
+cd micro-frontends/logic-games && npx depcheck
+cd micro-frontends/language-games && npx depcheck
+```
+
+**7.3 Duplicate Code Consolidation**:
+- Duplicate code'u tespit et (jscpd kullan)
+- Shared utilities'e taşı
+- packages/shared/src/utils/'e ekle
+- Ortak logic'i extract et
+
+**Duplicate Code Alanları**:
+- Game initialization logic
+- Score calculation logic
+- Timer logic
+- Animation logic
+- Sound effect logic
+- Validation logic
+
+**7.4 Commented-Out Code Kaldırma**:
+- Tüm dosyaları tara
+- Commented-out code block'larını bul ve kaldır
+- TODO/FIXME comment'lerini issue'ya dönüştür
+- Gereksiz console.log'ları kaldır
+
+**Regex Pattern'ler**:
+```regex
+// Commented code blocks
+/\/\*[\s\S]*?\*\//g
+/\/\/.*$/gm
+
+// Console statements
+/console\.(log|debug|info|warn|error)\(.*\);?/g
+```
+
+**7.5 Import Statement Standardizasyonu**:
+- Tüm dosyalarda import'ları alfabetik sırala
+- Absolute imports önce, relative imports sonra
+- Unused import'ları kaldır
+- Import grouping uygula
+
+**Import Sırası**:
+```typescript
+// 1. External dependencies
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// 2. Internal packages
+import { Button } from '@egitim-galaksisi/ui';
+import { useGameEngine } from '@egitim-galaksisi/game-engine';
+
+// 3. Features
+import { useAuthStore } from '@/stores/authStore';
+
+// 4. Relative imports
+import { GameCard } from './GameCard';
+import type { GameProps } from './types';
+```
+
+**7.6 ESLint ve Prettier Yapılandırması**:
+- Root .eslintrc.js oluştur
+- Monorepo için ESLint kuralları ekle
+- Prettier yapılandırması
+- Pre-commit hooks (husky + lint-staged)
+
+**ESLint Rules**:
+```javascript
+// .eslintrc.js
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier'
+  ],
+  rules: {
+    'no-console': 'warn',
+    'no-unused-vars': 'error',
+    '@typescript-eslint/no-explicit-any': 'error',
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off'
+  }
+};
+```
+
+**7.7 TypeScript Strict Mode**:
+- tsconfig.json'da strict: true yap
+- Tip hatalarını düzelt
+- any kullanımını azalt
+- Type safety iyileştirmeleri
+
+**Strict Mode Ayarları**:
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true
+  }
+}
+```
+
+**7.8 Bundle Size Optimization**:
+- Bundle analyzer çalıştır
+- Büyük dependency'leri tespit et
+- Tree shaking yapılandırması
+- Code splitting optimization
+
+**Bundle Analysis**:
+```bash
+# Her app için
+npm run build -- --analyze
+
+# Hedefler
+# - Main bundle: < 200KB (gzipped)
+# - Feature chunks: < 50KB (gzipped)
+# - Micro frontend bundles: < 150KB (gzipped)
+```
+
+**7.9 Asset Optimization**:
+- Image optimization (WebP conversion)
+- SVG optimization
+- Font subsetting
+- Lazy loading images
+
+**7.10 Dead Code Elimination**:
+- Unused exports tespit et
+- Unused functions kaldır
+- Unused types kaldır
+- Tree shaking doğrula
+
+**Tools**:
+```bash
+# Unused exports
+npx ts-prune
+
+# Dead code
+npx unimported
+```
+
+**Başarı Kriterleri**:
+- components/ klasörü tamamen kaldırıldı
+- Kullanılmayan dependency'ler kaldırıldı
+- Duplicate code %5'ten az
+- Console.log statement'ları kaldırıldı
+- Import'lar standardize edildi
+- ESLint hata sayısı 0
+- TypeScript strict mode aktif
+- Bundle size hedefleri karşılandı
+- Tüm asset'ler optimize edildi
+
+### Faz 8: Deployment & Monitoring (1 hafta)
+
+**Hedefler**:
+- Production deployment
+- Monitoring kurulumu
+- Documentation
+
+**Adımlar**:
+1. Production build
+2. Deployment pipeline
+3. Error tracking (Sentry)
+4. Analytics (Google Analytics)
+5. Documentation tamamlama
+
+**Başarı Kriterleri**:
+- Production'da çalışıyor
+- Monitoring aktif
+- Documentation tamamlandı
+- Rollback planı hazır
+
+## Migration Checklist
+
+### Pre-Migration
+
+- [ ] Mevcut kod backup'ı alındı
+- [ ] Git branch oluşturuldu (feature/monorepo-migration)
+- [ ] Takım bilgilendirildi
+- [ ] Migration planı onaylandı
+
+### Faz 1: Hazırlık
+
+- [ ] Turbo monorepo kuruldu
+- [ ] packages/game-engine oluşturuldu
+- [ ] packages/ui oluşturuldu
+- [ ] packages/shared oluşturuldu
+- [ ] packages/mock-data oluşturuldu
+- [ ] micro-frontends/ dizini oluşturuldu
+- [ ] Module Federation plugin kuruldu
+- [ ] Build scripts yapılandırıldı
+- [ ] Dev environment test edildi
+- [ ] Docker Compose yapılandırıldı
+
+### Faz 2: Routing
+
+- [ ] AppRouter.tsx genişletildi
+- [ ] Feature routes oluşturuldu
+- [ ] Switch/case kaldırıldı
+- [ ] Route guards eklendi
+- [ ] Lazy loading implementasyonu
+- [ ] Route testleri yazıldı
+
+### Faz 3: Components
+
+- [ ] components/academic/math/ → micro-frontends/math-games/ taşındı
+- [ ] components/logic-games/ → micro-frontends/logic-games/ taşındı
+- [ ] components/academic/turkish/ → micro-frontends/language-games/turkish/ taşındı
+- [ ] components/academic/english/ → micro-frontends/language-games/english/ taşındı
+- [ ] components/fast-reading/ → features/fast-reading/ taşındı
+- [ ] Ortak componentler packages/ui'da
+- [ ] Import path'leri güncellendi
+- [ ] Component testleri yazıldı
+- [ ] components/ klasörü tamamen kaldırıldı
+
+### Faz 4: Micro Frontends
+
+- [ ] math-games micro frontend kuruldu
+- [ ] logic-games micro frontend kuruldu
+- [ ] language-games micro frontend kuruldu
+- [ ] Module Federation yapılandırması tamamlandı
+- [ ] Host app entegrasyonu tamamlandı
+- [ ] Bağımsız dev server'lar çalışıyor
+- [ ] Docker Compose ile tüm sistem çalışıyor
+- [ ] CI/CD pipeline'ları kuruldu
+
+### Faz 5: Apps
+
+- [ ] apps/admin tamamlandı
+- [ ] apps/teacher tamamlandı
+- [ ] Role-based routing aktif
+- [ ] API integration tamamlandı
+- [ ] App testleri yazıldı
+
+### Faz 6: Testing & Optimization
+
+- [ ] Unit testler yazıldı (%80+ coverage)
+- [ ] Integration testler yazıldı
+- [ ] Micro frontend testleri yazıldı
+- [ ] Bundle analysis yapıldı
+- [ ] Performance optimization
+- [ ] Accessibility testleri
+
+### Faz 7: Kod Temizleme
+
+- [ ] components/ klasörü tamamen kaldırıldı
+- [ ] Kullanılmayan bileşenler silindi
+- [ ] Kullanılmayan dependency'ler kaldırıldı
+- [ ] Duplicate code consolidate edildi
+- [ ] Commented-out code kaldırıldı
+- [ ] Import statement'ları standardize edildi
+- [ ] Console.log'lar kaldırıldı
+- [ ] ESLint yapılandırıldı (0 hata)
+- [ ] Prettier yapılandırıldı
+- [ ] TypeScript strict mode aktif
+- [ ] Bundle size optimize edildi
+- [ ] Asset'ler optimize edildi
+- [ ] Dead code elimination tamamlandı
+
+### Faz 8: Deployment
+
+- [ ] Production build başarılı (tüm apps + micro frontends)
+- [ ] Deployment pipeline kuruldu
+- [ ] CDN deployment yapılandırıldı (micro frontends)
+- [ ] Monitoring aktif
+- [ ] Documentation tamamlandı
+- [ ] Rollback planı hazır
+
+## Risk Analizi ve Azaltma Stratejileri
+
+### Micro Frontend Migration Stratejisi
+
+**Aşamalı Geçiş Planı**:
+
+1. **Faz 1: Hazırlık ve Altyapı** (1 hafta)
+   - Micro frontend dizin yapısını oluştur
+   - Module Federation yapılandırması
+   - Development environment kurulumu
+
+2. **Faz 2: İlk Micro Frontend (math-games)** (1 hafta)
+   - Matematik oyunlarını taşı
+   - Module Federation test et
+   - Host app entegrasyonu
+   - Production'a deploy et
+
+3. **Faz 3: İkinci Micro Frontend (logic-games)** (1 hafta)
+   - Mantık oyunlarını taşı
+   - Paralel deployment test et
+   - Monitoring ve logging
+
+4. **Faz 4: Üçüncü Micro Frontend (language-games)** (1 hafta)
+   - Dil oyunlarını taşı
+   - Tüm micro frontend'leri birlikte test et
+   - Performance optimization
+
+**Oyun Taşıma Önceliği**:
+
+```
+Öncelik 1 (İlk taşınacaklar):
+- math-games/grade1-2 (basit oyunlar, az bağımlılık)
+- logic-games/sudoku (bağımsız oyun)
+
+Öncelik 2 (Orta):
+- math-games/grade3-5
+- logic-games/puzzle, memory
+- language-games/turkish/grade1-2
+
+Öncelik 3 (Son):
+- math-games/grade6-8 (karmaşık oyunlar)
+- language-games/turkish/grade3-8
+- language-games/english (tüm grade'ler)
+- logic-games/two-player (multiplayer logic)
+```
+
+**Rollback Stratejisi**:
+
+Her micro frontend için:
+1. Önceki versiyon CDN'de tutulur
+2. Host app'te version switching mekanizması
+3. Feature flag ile yeni/eski versiyon seçimi
+4. Monitoring ile hata tespit edilirse otomatik rollback
+
+```typescript
+// apps/web/src/config/microFrontendConfig.ts
+export const microFrontendConfig = {
+  mathGames: {
+    url: process.env.VITE_MATH_GAMES_URL,
+    fallbackUrl: process.env.VITE_MATH_GAMES_FALLBACK_URL,
+    version: '1.0.0',
+    enabled: true,
+  },
+  logicGames: {
+    url: process.env.VITE_LOGIC_GAMES_URL,
+    fallbackUrl: process.env.VITE_LOGIC_GAMES_FALLBACK_URL,
+    version: '1.0.0',
+    enabled: true,
+  },
+  languageGames: {
+    url: process.env.VITE_LANGUAGE_GAMES_URL,
+    fallbackUrl: process.env.VITE_LANGUAGE_GAMES_FALLBACK_URL,
+    version: '1.0.0',
+    enabled: true,
+  },
+};
+```
+
+**Monitoring ve Alerting**:
+
+Her micro frontend için:
+- Load time monitoring
+- Error rate tracking
+- User interaction tracking
+- Performance metrics
+
+```typescript
+// Micro frontend load monitoring
+const loadMicroFrontend = async (name: string, url: string) => {
+  const startTime = performance.now();
+  
+  try {
+    await import(url);
+    const loadTime = performance.now() - startTime;
+    
+    // Log to monitoring service
+    analytics.track('micro_frontend_loaded', {
+      name,
+      loadTime,
+      success: true,
+    });
+    
+    if (loadTime > 3000) {
+      // Alert if load time > 3s
+      alerting.warn(`Slow micro frontend load: ${name} (${loadTime}ms)`);
+    }
+  } catch (error) {
+    analytics.track('micro_frontend_load_failed', {
+      name,
+      error: error.message,
+    });
+    
+    // Try fallback
+    await import(microFrontendConfig[name].fallbackUrl);
+  }
+};
+```
+
+## Risk Analizi ve Azaltma Stratejileri
+
+### Risk 1: Migration Sırasında Downtime
+
+**Olasılık**: Orta
+**Etki**: Yüksek
+
+**Azaltma Stratejisi**:
+- Feature branch'te çalışma
+- Staging environment'ta test
+- Gradual rollout
+- Rollback planı hazırlama
+
+### Risk 2: Broken Dependencies
+
+**Olasılık**: Yüksek
+**Etki**: Orta
+
+**Azaltma Stratejisi**:
+- Workspace bağımlılıklarını dikkatli yönetme
+- TypeScript ile type checking
+- Automated tests
+- Import path validation
+
+### Risk 3: Performance Degradation
+
+**Olasılık**: Orta
+**Etki**: Orta
+
+**Azaltma Stratejisi**:
+- Performance monitoring
+- Bundle size tracking
+- Lazy loading
+- Code splitting
+- Regular performance audits
+
+### Risk 4: User Experience Disruption
+
+**Olasılık**: Düşük
+**Etki**: Yüksek
+
+**Azaltma Stratejisi**:
+- Gradual migration
+- Feature flags
+- User testing
+- Feedback collection
+- Quick rollback capability
+
+### Risk 5: Micro Frontend Load Failures
+
+**Olasılık**: Orta
+**Etki**: Yüksek
+
+**Azaltma Stratejisi**:
+- Fallback URL'ler
+- Error boundaries
+- Graceful degradation
+- CDN redundancy
+- Load time monitoring
+- Automatic retry mechanism
+
+### Risk 6: Shared Dependency Conflicts
+
+**Olasılık**: Orta
+**Etki**: Orta
+
+**Azaltma Stratejisi**:
+- Singleton pattern (Module Federation)
+- Version pinning
+- Peer dependency management
+- Regular dependency audits
+- Automated dependency updates
+
+### Risk 7: Build Pipeline Complexity
+
+**Olasılık**: Yüksek
+**Etki**: Orta
+
+**Azaltma Stratejisi**:
+- Turbo monorepo caching
+- Parallel builds
+- Incremental builds
+- Build time monitoring
+- CI/CD optimizationbility
+
+## Başarı Metrikleri
+
+### Teknik Metrikler
+
+**Kod Kalitesi**:
+- Test coverage: %80+
+- TypeScript strict mode: Aktif
+- ESLint errors: 0
+- Bundle size: < 200KB (gzipped)
+
+**Performance**:
+- FCP: < 1.5s
+- TTI: < 3s
+- Lighthouse score: > 90
+- Route change: < 200ms
+
+**Maintainability**:
+- Cyclomatic complexity: < 10
+- Code duplication: < 5%
+- Documentation coverage: %100
+
+### İş Metrikleri
+
+**Geliştirme Hızı**:
+- Yeni feature ekleme süresi: -50%
+- Bug fix süresi: -40%
+- Code review süresi: -30%
+
+**Kullanıcı Deneyimi**:
+- Sayfa yükleme süresi: -60%
+- Hata oranı: -80%
+- Kullanıcı memnuniyeti: +40%
 
 ## Sonuç
 
-Bu tasarım dokümanı, Eğitim Galaksisi uygulamasının monolitik yapıdan modern monorepo mimarisine dönüşümü için kapsamlı bir plan sunmaktadır. Dönüşüm, 11 faz halinde gerçekleştirilecek ve her faz bağımsız olarak test edilebilir ve geri alınabilir olacaktır.
+Bu tasarım belgesi, Eğitim Galaksisi projesinin monolitik yapıdan modern monorepo mimarisine geçişini detaylı olarak tanımlar. Hedef mimari:
 
-Migrasyon sonrası:
-- Kod tabanı daha organize ve sürdürülebilir olacak
-- Feature'lar bağımsız modüller halinde yönetilebilecek
-- Shared package'lar kod tekrarını azaltacak
-- Build ve development süreçleri optimize edilecek
-- Test coverage artacak
-- Deployment esnekliği sağlanacak
+1. **Modüler Yapı**: Feature-based architecture ile bakımı kolay kod
+2. **Standardize Routing**: React Router ile tutarlı navigasyon
+3. **Shared Packages**: Kod tekrarını önleyen ortak kütüphaneler
+4. **Scalable Architecture**: Kolayca genişletilebilir yapı
+5. **Better DX**: Geliştiriciler için daha iyi deneyim
 
-Tüm bu değişiklikler yapılırken, mevcut tasarım, renkler ve kullanıcı deneyimi korunacak ve hiçbir özellik kaybedilmeyecektir.
+Migration 6 fazda, toplam 11 haftada tamamlanacak. Her faz sonunda başarı kriterleri kontrol edilecek ve bir sonraki faza geçilecek.

@@ -19,7 +19,7 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
     square: { name: 'Kare', pieces: ['⬜', '⬜', '⬜', '⬜'], emoji: '🟦' },
     triangle: { name: 'Üçgen', pieces: ['🔺', '🔺', '🔺'], emoji: '🔺' },
     rectangle: { name: 'Dikdörtgen', pieces: ['▬', '▬', '▬', '▬', '▬', '▬'], emoji: '🟪' },
-    circle: { name: 'Daire', pieces: ['◯', '◯', '◯', '◯'], emoji: '🔵' }
+    circle: { name: 'Daire', pieces: ['◯', '◯', '◯', '◯'], emoji: '🔵' },
   };
 
   useEffect(() => {
@@ -30,17 +30,17 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
     const shapeKeys = Object.keys(shapes);
     const target = shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
     setTargetShape(target);
-    
+
     const correctPieces = shapes[target as keyof typeof shapes].pieces;
     const allPieces = [...correctPieces];
-    
+
     // Add some wrong pieces
-    shapeKeys.forEach(key => {
+    shapeKeys.forEach((key) => {
       if (key !== target) {
         allPieces.push(...shapes[key as keyof typeof shapes].pieces.slice(0, 2));
       }
     });
-    
+
     setPieces(allPieces.sort(() => Math.random() - 0.5));
     setSelectedPieces([]);
     setFeedback('');
@@ -49,18 +49,18 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
   const handlePieceClick = (piece: string, index: number) => {
     const newSelected = [...selectedPieces, piece];
     setSelectedPieces(newSelected);
-    
+
     const correctPieces = shapes[targetShape as keyof typeof shapes].pieces;
-    
+
     if (newSelected.length === correctPieces.length) {
       const isCorrect = newSelected.every((p, i) => correctPieces.includes(p));
-      
+
       if (isCorrect && newSelected.length === correctPieces.length) {
         const points = 10 + level * 5;
         setScore(score + points);
         setFeedback('🎉 Harika! Şekli tamamladın!');
         setShowCelebration(true);
-        
+
         setTimeout(() => {
           setShowCelebration(false);
           if (level < 5) {
@@ -86,8 +86,8 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <button 
-            onClick={onExit} 
+          <button
+            onClick={onExit}
             className="px-6 py-3 bg-red-600/90 hover:bg-red-500/90 text-white rounded-xl font-bold transition-all transform hover:scale-105"
           >
             ← Çıkış
@@ -113,7 +113,7 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
           {/* İç Kart - Turuncu/Amber Gradient */}
           <div className="bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 rounded-2xl p-8 md:p-12 mb-8">
             <div className="flex justify-between items-center mb-6">
-              <button 
+              <button
                 onClick={() => setShowRules(true)}
                 className="px-4 py-2 bg-orange-700/40 hover:bg-orange-600/40 border-2 border-orange-300 text-white rounded-xl font-bold transition-all transform hover:scale-105"
               >
@@ -137,7 +137,9 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
               </p>
               <div className="flex flex-wrap justify-center gap-3 min-h-[100px] bg-orange-700/40 rounded-2xl p-4 border-2 border-orange-300">
                 {selectedPieces.map((piece, idx) => (
-                  <div key={idx} className="text-6xl">{piece}</div>
+                  <div key={idx} className="text-6xl">
+                    {piece}
+                  </div>
                 ))}
               </div>
             </div>
@@ -157,9 +159,13 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
             </div>
 
             {feedback && (
-              <div className={`mt-8 text-center text-2xl font-black p-6 rounded-xl ${
-                feedback.includes('Harika') ? 'bg-green-500/90 border-2 border-green-300 text-white' : 'bg-red-500/90 border-2 border-red-300 text-white'
-              }`}>
+              <div
+                className={`mt-8 text-center text-2xl font-black p-6 rounded-xl ${
+                  feedback.includes('Harika')
+                    ? 'bg-green-500/90 border-2 border-green-300 text-white'
+                    : 'bg-red-500/90 border-2 border-red-300 text-white'
+                }`}
+              >
                 {feedback}
               </div>
             )}
@@ -180,10 +186,21 @@ const ShapeBuilderGame: React.FC<Props> = ({ onComplete, onExit }) => {
             <div className="text-5xl mb-4">🏗️</div>
             <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Nasıl Oynanır?</h3>
             <ul className="text-white/90 text-left space-y-3 mb-8 text-sm md:text-base">
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">1.</span> Hedef şekli oluşturmak için doğru parçaları seç</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">2.</span> Yanlış parçalar seçersen tekrar başlarsın</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">3.</span> Şekli tamamla ve puan kazan!</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">4.</span> 5 seviyeyi tamamla ve kazanan sen ol!</li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">1.</span> Hedef şekli oluşturmak için
+                doğru parçaları seç
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">2.</span> Yanlış parçalar seçersen
+                tekrar başlarsın
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">3.</span> Şekli tamamla ve puan kazan!
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">4.</span> 5 seviyeyi tamamla ve kazanan
+                sen ol!
+              </li>
             </ul>
             <button
               onClick={() => setShowRules(false)}

@@ -31,7 +31,7 @@ export default function SimulationEngine({ dataset, onComplete, onExit }: GameEn
 
   const handleAction = () => {
     setShowFeedback(true);
-    setCompletedSteps(prev => [...prev, step.id]);
+    setCompletedSteps((prev) => [...prev, step.id]);
 
     setTimeout(() => {
       if (isLastStep) {
@@ -46,7 +46,7 @@ export default function SimulationEngine({ dataset, onComplete, onExit }: GameEn
         };
         onComplete(results);
       } else {
-        setCurrentStep(prev => prev + 1);
+        setCurrentStep((prev) => prev + 1);
         setShowFeedback(false);
       }
     }, 2000);
@@ -72,7 +72,9 @@ export default function SimulationEngine({ dataset, onComplete, onExit }: GameEn
         {/* Progress */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-white/60 mb-2">
-            <span>Adım {currentStep + 1} / {simData.steps.length}</span>
+            <span>
+              Adım {currentStep + 1} / {simData.steps.length}
+            </span>
             <span>{Math.round(((currentStep + 1) / simData.steps.length) * 100)}%</span>
           </div>
           <div className="h-3 bg-white/10 rounded-full overflow-hidden">
@@ -86,9 +88,7 @@ export default function SimulationEngine({ dataset, onComplete, onExit }: GameEn
         {/* Step Card */}
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
           {/* Step Image */}
-          {step.image && (
-            <div className="text-8xl text-center mb-6">{step.image}</div>
-          )}
+          {step.image && <div className="text-8xl text-center mb-6">{step.image}</div>}
 
           {/* Step Title */}
           <h2 className="text-2xl font-bold text-white mb-4">{step.title}</h2>
@@ -123,8 +123,8 @@ export default function SimulationEngine({ dataset, onComplete, onExit }: GameEn
                 completedSteps.includes(s.id)
                   ? 'bg-green-500 text-white'
                   : i === currentStep
-                  ? 'bg-teal-500 text-white'
-                  : 'bg-white/10 text-white/40'
+                    ? 'bg-teal-500 text-white'
+                    : 'bg-white/10 text-white/40'
               }`}
             >
               {i + 1}

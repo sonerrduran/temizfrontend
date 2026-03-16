@@ -19,7 +19,7 @@ const SHAPE_EMOJIS: Record<ShapeType, string> = {
   triangle: '🔺',
   rectangle: '🟩',
   pentagon: '⬟',
-  hexagon: '⬡'
+  hexagon: '⬡',
 };
 
 const SHAPE_NAMES: Record<ShapeType, string> = {
@@ -28,7 +28,7 @@ const SHAPE_NAMES: Record<ShapeType, string> = {
   triangle: 'Üçgen',
   rectangle: 'Dikdörtgen',
   pentagon: 'Beşgen',
-  hexagon: 'Altıgen'
+  hexagon: 'Altıgen',
 };
 
 const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
@@ -46,9 +46,16 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
 
   const generateCards = () => {
     const pairCount = Math.min(4 + level, 8);
-    const shapes: ShapeType[] = ['circle', 'square', 'triangle', 'rectangle', 'pentagon', 'hexagon'];
+    const shapes: ShapeType[] = [
+      'circle',
+      'square',
+      'triangle',
+      'rectangle',
+      'pentagon',
+      'hexagon',
+    ];
     const selectedShapes = shapes.slice(0, pairCount);
-    
+
     const cardPairs: Card[] = [];
     selectedShapes.forEach((shape, idx) => {
       cardPairs.push(
@@ -65,31 +72,29 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
   const handleCardClick = (cardId: number) => {
     if (flippedCards.length === 2) return;
     if (flippedCards.includes(cardId)) return;
-    if (cards.find(c => c.id === cardId)?.matched) return;
+    if (cards.find((c) => c.id === cardId)?.matched) return;
 
     const newFlipped = [...flippedCards, cardId];
     setFlippedCards(newFlipped);
 
-    const newCards = cards.map(c =>
-      c.id === cardId ? { ...c, flipped: true } : c
-    );
+    const newCards = cards.map((c) => (c.id === cardId ? { ...c, flipped: true } : c));
     setCards(newCards);
 
     if (newFlipped.length === 2) {
       setMoves(moves + 1);
       const [first, second] = newFlipped;
-      const firstCard = cards.find(c => c.id === first);
-      const secondCard = cards.find(c => c.id === second);
+      const firstCard = cards.find((c) => c.id === first);
+      const secondCard = cards.find((c) => c.id === second);
 
       if (firstCard?.shape === secondCard?.shape) {
         setTimeout(() => {
-          setCards(prev => prev.map(c =>
-            c.id === first || c.id === second ? { ...c, matched: true } : c
-          ));
+          setCards((prev) =>
+            prev.map((c) => (c.id === first || c.id === second ? { ...c, matched: true } : c))
+          );
           setFlippedCards([]);
           setScore(score + 10);
 
-          if (cards.filter(c => !c.matched).length === 2) {
+          if (cards.filter((c) => !c.matched).length === 2) {
             setTimeout(() => {
               if (level < 5) {
                 setLevel(level + 1);
@@ -101,9 +106,9 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
         }, 500);
       } else {
         setTimeout(() => {
-          setCards(prev => prev.map(c =>
-            c.id === first || c.id === second ? { ...c, flipped: false } : c
-          ));
+          setCards((prev) =>
+            prev.map((c) => (c.id === first || c.id === second ? { ...c, flipped: false } : c))
+          );
           setFlippedCards([]);
         }, 1000);
       }
@@ -179,7 +184,7 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
           {/* İç Kart - Teal/Cyan Gradient */}
           <div className="bg-gradient-to-br from-teal-500 via-cyan-500 to-teal-600 rounded-2xl p-8 md:p-12 mb-8">
             <div className="flex justify-between items-center mb-6">
-              <button 
+              <button
                 onClick={() => setShowRules(true)}
                 className="px-4 py-2 bg-teal-700/40 hover:bg-teal-600/40 border-2 border-teal-300 text-white rounded-xl font-bold transition-all transform hover:scale-105"
               >
@@ -188,8 +193,10 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
             </div>
 
             {/* Cards Grid */}
-            <div className={`grid gap-4 ${cards.length <= 8 ? 'grid-cols-4' : cards.length <= 12 ? 'grid-cols-4 md:grid-cols-6' : 'grid-cols-4 md:grid-cols-8'}`}>
-              {cards.map(card => (
+            <div
+              className={`grid gap-4 ${cards.length <= 8 ? 'grid-cols-4' : cards.length <= 12 ? 'grid-cols-4 md:grid-cols-6' : 'grid-cols-4 md:grid-cols-8'}`}
+            >
+              {cards.map((card) => (
                 <button
                   key={card.id}
                   onClick={() => handleCardClick(card.id)}
@@ -198,8 +205,8 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
                     card.matched
                       ? 'bg-green-500/40 border-2 border-green-300 scale-95 opacity-50'
                       : card.flipped
-                      ? 'bg-teal-700/40 border-2 border-teal-300 scale-105'
-                      : 'bg-teal-800/40 border-2 border-teal-300 hover:scale-105 hover:bg-teal-700/40'
+                        ? 'bg-teal-700/40 border-2 border-teal-300 scale-105'
+                        : 'bg-teal-800/40 border-2 border-teal-300 hover:scale-105 hover:bg-teal-700/40'
                   } disabled:cursor-not-allowed`}
                 >
                   {card.flipped || card.matched ? SHAPE_EMOJIS[card.shape] : '❓'}
@@ -217,10 +224,19 @@ const ShapeMatchingGame: React.FC<ShapeMatchingGameProps> = ({ onBack }) => {
             <div className="text-5xl mb-4">🔷</div>
             <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Nasıl Oynanır?</h3>
             <ul className="text-white/90 text-left space-y-3 mb-8 text-sm md:text-base">
-              <li className="flex gap-2"><span className="text-teal-400 font-bold">1.</span> Kartlara tıklayarak şekilleri aç</li>
-              <li className="flex gap-2"><span className="text-teal-400 font-bold">2.</span> Aynı şekilleri eşleştir</li>
-              <li className="flex gap-2"><span className="text-teal-400 font-bold">3.</span> Her eşleşme puan kazandırır</li>
-              <li className="flex gap-2"><span className="text-teal-400 font-bold">4.</span> Tüm kartları eşleştir ve seviyeyi tamamla!</li>
+              <li className="flex gap-2">
+                <span className="text-teal-400 font-bold">1.</span> Kartlara tıklayarak şekilleri aç
+              </li>
+              <li className="flex gap-2">
+                <span className="text-teal-400 font-bold">2.</span> Aynı şekilleri eşleştir
+              </li>
+              <li className="flex gap-2">
+                <span className="text-teal-400 font-bold">3.</span> Her eşleşme puan kazandırır
+              </li>
+              <li className="flex gap-2">
+                <span className="text-teal-400 font-bold">4.</span> Tüm kartları eşleştir ve
+                seviyeyi tamamla!
+              </li>
             </ul>
             <button
               onClick={() => setShowRules(false)}

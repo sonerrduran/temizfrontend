@@ -9,15 +9,15 @@ export * from './contracts/user';
 export * from './contracts/lesson';
 export * from './contracts/leaderboard';
 
-// Data
-export * from './data/games';
-export * from './data/users';
-export * from './data/leaderboard';
+// Data (raw data arrays)
+export { mockGames, mockGameCategories } from './data/games';
+export { mockUsers, mockStudents, mockTeachers, mockParents, mockAdmins, mockPasswords } from './data/users';
+export { mockLeaderboardEntries, mockAchievements, mockBadges, mockStreaks } from './data/leaderboard';
 
 // Generators
 export * from './generators/userGenerator';
 export * from './generators/gameGenerator';
 
-// Services
+// Services (these include the async helper functions)
 export * from './services/mockGameService';
 export * from './services/mockUserService';

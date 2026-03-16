@@ -446,9 +446,7 @@ export function getPopularGames(limit: number = 10): Game[] {
  * Öne çıkan oyunları döndürür
  */
 export function getFeaturedGames(limit: number = 5): Game[] {
-  return mockGames
-    .filter((game) => game.isFeatured)
-    .slice(0, limit);
+  return mockGames.filter((game) => game.isFeatured).slice(0, limit);
 }
 
 /**

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import GameTemplate, { QuestionCard, AnswerButton, FeedbackMessage } from '../../../../common/GameTemplate';
+import GameTemplate, {
+  QuestionCard,
+  AnswerButton,
+  FeedbackMessage,
+} from '../../../../common/GameTemplate';
 
 interface ColorMatchGameProps {
   onBack: () => void;
@@ -24,7 +28,7 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ onBack }) => {
     { name: 'PINK', color: '#EC4899', turkish: 'Pembe' },
     { name: 'BLACK', color: '#1F2937', turkish: 'Siyah' },
     { name: 'WHITE', color: '#F3F4F6', turkish: 'Beyaz' },
-    { name: 'BROWN', color: '#92400E', turkish: 'Kahverengi' }
+    { name: 'BROWN', color: '#92400E', turkish: 'Kahverengi' },
   ];
 
   useEffect(() => {
@@ -43,10 +47,10 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ onBack }) => {
     setCurrentColor(color);
 
     const wrongOptions = colors
-      .filter(c => c.name !== color.name)
+      .filter((c) => c.name !== color.name)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
-      .map(c => c.name);
+      .map((c) => c.name);
 
     const allOptions = [color.name, ...wrongOptions].sort(() => Math.random() - 0.5);
     setOptions(allOptions);
@@ -85,7 +89,7 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ onBack }) => {
       <QuestionCard colorScheme="green">
         <div className="text-center">
           <p className="text-2xl font-bold text-white mb-6">What color is this?</p>
-          <div 
+          <div
             className="w-48 h-48 mx-auto rounded-3xl shadow-2xl border-8 border-white/30"
             style={{ backgroundColor: currentColor.color }}
           ></div>
@@ -110,7 +114,11 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ onBack }) => {
 
       {showFeedback && (
         <FeedbackMessage
-          message={selectedAnswer === currentColor.name ? '🎉 Correct! Great job!' : `❌ Wrong! It's ${currentColor.name}`}
+          message={
+            selectedAnswer === currentColor.name
+              ? '🎉 Correct! Great job!'
+              : `❌ Wrong! It's ${currentColor.name}`
+          }
           isCorrect={selectedAnswer === currentColor.name}
         />
       )}

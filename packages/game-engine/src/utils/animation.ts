@@ -31,16 +31,13 @@ export interface AnimationConfig {
  * @param config - Animasyon konfigürasyonu
  * @returns CSS sınıf adı
  */
-export function getAnimationClass(
-  type: AnimationType,
-  config: AnimationConfig = {}
-): string {
+export function getAnimationClass(type: AnimationType, config: AnimationConfig = {}): string {
   const { direction } = config;
-  
+
   if (direction && (type === 'slideIn' || type === 'slideOut')) {
     return `animate-${type}-${direction}`;
   }
-  
+
   return `animate-${type}`;
 }
 
@@ -50,12 +47,7 @@ export function getAnimationClass(
  * @returns CSS stil objesi
  */
 export function getAnimationStyle(config: AnimationConfig = {}): Record<string, string | number> {
-  const {
-    duration = 300,
-    delay = 0,
-    easing = 'ease-in-out',
-    iterations = 1,
-  } = config;
+  const { duration = 300, delay = 0, easing = 'ease-in-out', iterations = 1 } = config;
 
   return {
     animationDuration: `${duration}ms`,
@@ -70,10 +62,7 @@ export function getAnimationStyle(config: AnimationConfig = {}): Record<string, 
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function fadeIn(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function fadeIn(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'fadeIn', config);
 }
 
@@ -82,10 +71,7 @@ export function fadeIn(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function fadeOut(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function fadeOut(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'fadeOut', config);
 }
 
@@ -122,10 +108,7 @@ export function slideOut(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function bounce(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function bounce(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'bounce', config);
 }
 
@@ -134,10 +117,7 @@ export function bounce(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function shake(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function shake(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'shake', { ...config, duration: 500 });
 }
 
@@ -146,10 +126,7 @@ export function shake(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function pulse(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function pulse(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'pulse', config);
 }
 
@@ -158,10 +135,7 @@ export function pulse(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function flip(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function flip(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'flip', { ...config, duration: 600 });
 }
 
@@ -170,10 +144,7 @@ export function flip(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function zoom(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function zoom(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'zoom', config);
 }
 
@@ -182,10 +153,7 @@ export function zoom(
  * @param element - HTML element
  * @param config - Animasyon konfigürasyonu
  */
-export function rotate(
-  element: HTMLElement,
-  config: AnimationConfig = {}
-): Promise<void> {
+export function rotate(element: HTMLElement, config: AnimationConfig = {}): Promise<void> {
   return animate(element, 'rotate', { ...config, duration: 600 });
 }
 
@@ -303,7 +271,7 @@ export async function staggerAnimate(
  */
 export function createConfetti(container: HTMLElement, count: number = 50): void {
   const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
-  
+
   for (let i = 0; i < count; i++) {
     const confetti = document.createElement('div');
     confetti.className = 'confetti';
@@ -318,9 +286,9 @@ export function createConfetti(container: HTMLElement, count: number = 50): void
       transform: rotate(${Math.random() * 360}deg);
       animation: confetti-fall ${2 + Math.random() * 3}s linear forwards;
     `;
-    
+
     container.appendChild(confetti);
-    
+
     // Animasyon bitince temizle
     setTimeout(() => {
       confetti.remove();
@@ -342,12 +310,12 @@ export function createParticles(
   count: number = 10
 ): void {
   const container = document.body;
-  
+
   for (let i = 0; i < count; i++) {
     const particle = document.createElement('div');
     const angle = (Math.PI * 2 * i) / count;
     const velocity = 50 + Math.random() * 50;
-    
+
     particle.className = 'particle';
     particle.style.cssText = `
       position: fixed;
@@ -362,9 +330,9 @@ export function createParticles(
       --tx: ${Math.cos(angle) * velocity}px;
       --ty: ${Math.sin(angle) * velocity}px;
     `;
-    
+
     container.appendChild(particle);
-    
+
     // Animasyon bitince temizle
     setTimeout(() => {
       particle.remove();

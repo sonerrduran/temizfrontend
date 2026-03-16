@@ -6,18 +6,18 @@ const prompts = [
   {
     title: 'Sihirli Orman',
     starter: 'Bir gün ormanda yürürken sihirli bir kapı buldum...',
-    keywords: ['macera', 'sihir', 'keşif']
+    keywords: ['macera', 'sihir', 'keşif'],
   },
   {
     title: 'Uzay Yolculuğu',
     starter: 'Roketim uzaya fırladığında, pencereden dünyayı gördüm...',
-    keywords: ['uzay', 'gezegen', 'yıldız']
+    keywords: ['uzay', 'gezegen', 'yıldız'],
   },
   {
     title: 'Konuşan Hayvan',
     starter: 'Sabah uyandığımda kedimin benimle konuştuğunu fark ettim...',
-    keywords: ['hayvan', 'konuşma', 'sürpriz']
-  }
+    keywords: ['hayvan', 'konuşma', 'sürpriz'],
+  },
 ];
 
 export default function StoryWritingGame() {
@@ -29,7 +29,10 @@ export default function StoryWritingGame() {
 
   const handleStoryChange = (text: string) => {
     setStory(text);
-    const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+    const words = text
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 0);
     setWordCount(words.length);
   };
 
@@ -72,7 +75,10 @@ export default function StoryWritingGame() {
                   <p className="text-gray-600 text-sm mb-4">{prompt.starter}</p>
                   <div className="flex flex-wrap gap-2">
                     {prompt.keywords.map((keyword, i) => (
-                      <span key={i} className="px-2 py-1 bg-white rounded-full text-xs text-gray-600">
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-white rounded-full text-xs text-gray-600"
+                      >
                         {keyword}
                       </span>
                     ))}

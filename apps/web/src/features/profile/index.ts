@@ -1,6 +1,7 @@
 /**
  * Profile Feature
- * Profil modülü
+ * Barrel export for profile components
  */
 
-export { ProfilePage } from './ProfilePage';
+export { default as ProfilePage } from './ProfilePage';
+export { ProfileRoutes } from './routes';

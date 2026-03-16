@@ -12,37 +12,32 @@ const texts = [
           'Güneşin hareketi',
           'Doğanın değişmez kuralları',
           'Doğu ve batı yönleri',
-          'Gün ve gece'
+          'Gün ve gece',
         ],
-        correct: 1
+        correct: 1,
       },
       {
         question: 'Metnin türü nedir?',
         options: ['Bilgilendirici', 'Öyküleyici', 'Tartışmacı', 'Betimleyici'],
-        correct: 0
-      }
-    ]
+        correct: 0,
+      },
+    ],
   },
   {
     text: 'Kitap okumak insanın hayal gücünü geliştirir. Ayrıca kelime dağarcığını zenginleştirir ve farklı dünyaları tanıma fırsatı verir.',
     questions: [
       {
         question: 'Metnin konusu nedir?',
-        options: [
-          'Hayal gücü',
-          'Kitap okumanın faydaları',
-          'Kelime dağarcığı',
-          'Farklı dünyalar'
-        ],
-        correct: 1
+        options: ['Hayal gücü', 'Kitap okumanın faydaları', 'Kelime dağarcığı', 'Farklı dünyalar'],
+        correct: 1,
       },
       {
         question: 'Metinde kaç fayda sayılmıştır?',
         options: ['1', '2', '3', '4'],
-        correct: 2
-      }
-    ]
-  }
+        correct: 2,
+      },
+    ],
+  },
 ];
 
 export default function TextAnalysisGame() {
@@ -130,12 +125,12 @@ export default function TextAnalysisGame() {
                     selectedAnswer === null
                       ? 'bg-gray-100 hover:bg-gray-200'
                       : selectedAnswer === index
-                      ? index === question.correct
-                        ? 'bg-green-100 border-2 border-green-500'
-                        : 'bg-red-100 border-2 border-red-500'
-                      : index === question.correct
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-gray-100'
+                        ? index === question.correct
+                          ? 'bg-green-100 border-2 border-green-500'
+                          : 'bg-red-100 border-2 border-red-500'
+                        : index === question.correct
+                          ? 'bg-green-100 border-2 border-green-500'
+                          : 'bg-gray-100'
                   }`}
                 >
                   {option}
@@ -145,7 +140,8 @@ export default function TextAnalysisGame() {
           </div>
 
           <div className="mt-6 text-center text-gray-600">
-            Metin {currentText + 1}/{texts.length} - Soru {currentQuestion + 1}/{text.questions.length}
+            Metin {currentText + 1}/{texts.length} - Soru {currentQuestion + 1}/
+            {text.questions.length}
           </div>
         </div>
       </div>

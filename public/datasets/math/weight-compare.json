@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "weight"
-    ],
+    "tags": ["math", "weight"],
     "description": "Weight Compare oyunu",
     "icon": "🔢"
   },

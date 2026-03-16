@@ -2,26 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { GameUIProps } from '../../../engine/types/game.types';
 import { AnimalCountLogic } from './game.logic';
 
-export const AnimalCountGame: React.FC<GameUIProps> = ({
-  config,
-  logic,
-  onComplete,
-  onExit,
-}) => {
+export const AnimalCountGame: React.FC<GameUIProps> = ({ config, logic, onComplete, onExit }) => {
   const gameLogic = logic as AnimalCountLogic;
   const [, forceUpdate] = useState({});
-  
-
-  
 
   const handleAnswer = (answer: any) => {
     const result = gameLogic.handleAnswer(answer);
     const state = gameLogic.getState();
-    
+
     if (state.isComplete) {
       onComplete(state.score);
     }
-    
+
     forceUpdate({});
   };
 
@@ -45,10 +37,12 @@ export const AnimalCountGame: React.FC<GameUIProps> = ({
 
         <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8">
           <div className="text-center text-white">
-            <p className="text-2xl mb-4">Soru {state.currentQuestion + 1} / {state.totalQuestions}</p>
-            
+            <p className="text-2xl mb-4">
+              Soru {state.currentQuestion + 1} / {state.totalQuestions}
+            </p>
+
             <p className="text-lg mb-4">Seviye: {state.level}</p>
-            
+
             <div className="mt-8">
               <button
                 onClick={() => handleAnswer(true)}

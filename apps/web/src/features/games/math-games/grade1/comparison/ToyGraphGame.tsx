@@ -21,7 +21,7 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
     { emoji: '⚽', name: 'Top' },
     { emoji: '🎮', name: 'Oyun' },
     { emoji: '🪀', name: 'Yoyo' },
-    { emoji: '🎲', name: 'Zar' }
+    { emoji: '🎲', name: 'Zar' },
   ];
 
   useEffect(() => {
@@ -33,9 +33,9 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
     const selectedToys = [...toyData]
       .sort(() => Math.random() - 0.5)
       .slice(0, numToys)
-      .map(toy => ({
+      .map((toy) => ({
         ...toy,
-        count: Math.floor(Math.random() * (5 + level * 2)) + 1
+        count: Math.floor(Math.random() * (5 + level * 2)) + 1,
       }));
 
     setToys(selectedToys);
@@ -47,7 +47,7 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
     if (questionType < 0.33) {
       // Which toy has most?
-      const maxToy = selectedToys.reduce((max, toy) => toy.count > max.count ? toy : max);
+      const maxToy = selectedToys.reduce((max, toy) => (toy.count > max.count ? toy : max));
       answer = maxToy.count;
       questionText = `${maxToy.name} kaç tane?`;
     } else if (questionType < 0.66) {
@@ -100,19 +100,22 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
     }
   };
 
-  const maxCount = Math.max(...toys.map(t => t.count));
+  const maxCount = Math.max(...toys.map((t) => t.count));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 p-4 md:p-8 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
-          <div key={i} className="absolute text-6xl opacity-10 animate-float"
+          <div
+            key={i}
+            className="absolute text-6xl opacity-10 animate-float"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
-            }}>
+              animationDuration: `${5 + Math.random() * 10}s`,
+            }}
+          >
             🧸
           </div>
         ))}
@@ -120,7 +123,10 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <button onClick={onExit} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          <button
+            onClick={onExit}
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"
+          >
             ← Çıkış
           </button>
           <div className="flex gap-4">
@@ -149,7 +155,7 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
               {toys.map((toy, idx) => (
                 <div key={idx} className="flex flex-col items-center gap-2 flex-1">
                   <div className="text-white text-sm font-bold text-center">{toy.count}</div>
-                  <div 
+                  <div
                     className="w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-t-xl transition-all duration-500 flex items-end justify-center pb-2"
                     style={{ height: `${(toy.count / maxCount) * 100}%`, minHeight: '40px' }}
                   >
@@ -178,9 +184,11 @@ const ToyGraphGame: React.FC<Props> = ({ onComplete, onExit }) => {
           </div>
 
           {feedback && (
-            <div className={`mt-8 text-center text-3xl font-black ${
-              feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'
-            }`}>
+            <div
+              className={`mt-8 text-center text-3xl font-black ${
+                feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'
+              }`}
+            >
               {feedback}
             </div>
           )}

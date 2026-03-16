@@ -14,7 +14,7 @@ export interface GameTemplateProps {
 
 /**
  * Standart Oyun Şablonu
- * 
+ *
  * Tasarım Standardı:
  * - Ana arka plan: Koyu lacivert (her oyunda aynı)
  * - Dış kart: Koyu lacivert (her oyunda aynı)
@@ -40,17 +40,19 @@ export const GameTemplate: React.FC<GameTemplateProps> = ({
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           {/* Sol: Çıkış Butonu */}
-          <button 
-            onClick={onExit} 
+          <button
+            onClick={onExit}
             className={`px-6 py-3 ${gameTheme.exitButton} text-white rounded-xl font-bold transition-all transform hover:scale-105`}
           >
             ← Çıkış
           </button>
-          
+
           {/* Sağ: Seviye ve Puan */}
           <div className="flex gap-4">
             <div className={`px-6 py-3 ${gameTheme.header.container}`}>
-              <span className={gameTheme.header.text}>Seviye: {level}/{maxLevel}</span>
+              <span className={gameTheme.header.text}>
+                Seviye: {level}/{maxLevel}
+              </span>
             </div>
             <div className={`px-6 py-3 ${gameTheme.header.container}`}>
               <span className={gameTheme.header.text}>⭐ {score}</span>
@@ -67,9 +69,7 @@ export const GameTemplate: React.FC<GameTemplateProps> = ({
         </div>
 
         {/* Dış Kart - Lacivert (Sabit) */}
-        <div className={`${gameTheme.outerCard} p-8`}>
-          {children}
-        </div>
+        <div className={`${gameTheme.outerCard} p-8`}>{children}</div>
       </div>
     </div>
   );
@@ -79,17 +79,13 @@ export const GameTemplate: React.FC<GameTemplateProps> = ({
  * İç Kart - Oyun Kutusu Rengi
  * Oyun içeriği için kullanılır
  */
-export const InnerCard: React.FC<{ 
+export const InnerCard: React.FC<{
   children: React.ReactNode;
   colorScheme?: ColorSchemeName;
 }> = ({ children, colorScheme = 'green' }) => {
   const colors = colorSchemes[colorScheme];
-  
-  return (
-    <div className={`${colors.innerCard} rounded-2xl p-8 md:p-12 mb-8`}>
-      {children}
-    </div>
-  );
+
+  return <div className={`${colors.innerCard} rounded-2xl p-8 md:p-12 mb-8`}>{children}</div>;
 };
 
 /**
@@ -102,7 +98,7 @@ export const GameButton: React.FC<{
   colorScheme?: ColorSchemeName;
 }> = ({ children, onClick, disabled = false, colorScheme = 'green' }) => {
   const colors = colorSchemes[colorScheme];
-  
+
   return (
     <button
       onClick={onClick}
@@ -124,27 +120,23 @@ export const GameBox: React.FC<{
   className?: string;
 }> = ({ children, colorScheme = 'green', className = '' }) => {
   const colors = colorSchemes[colorScheme];
-  
-  return (
-    <div className={`${colors.box} p-4 md:p-5 rounded-2xl ${className}`}>
-      {children}
-    </div>
-  );
+
+  return <div className={`${colors.box} p-4 md:p-5 rounded-2xl ${className}`}>{children}</div>;
 };
 
 /**
  * Feedback Mesajı
  */
-export const FeedbackMessage: React.FC<{ 
-  message: string; 
+export const FeedbackMessage: React.FC<{
+  message: string;
   isCorrect: boolean;
 }> = ({ message, isCorrect }) => {
   return (
-    <div className={`mt-8 p-6 rounded-2xl text-center font-bold text-2xl ${
-      isCorrect 
-        ? gameTheme.feedback.correct
-        : gameTheme.feedback.incorrect
-    }`}>
+    <div
+      className={`mt-8 p-6 rounded-2xl text-center font-bold text-2xl ${
+        isCorrect ? gameTheme.feedback.correct : gameTheme.feedback.incorrect
+      }`}
+    >
       {message}
     </div>
   );
@@ -153,17 +145,13 @@ export const FeedbackMessage: React.FC<{
 /**
  * Soru Kartı
  */
-export const QuestionCard: React.FC<{ 
+export const QuestionCard: React.FC<{
   children: React.ReactNode;
   colorScheme?: ColorSchemeName;
 }> = ({ children, colorScheme = 'green' }) => {
   const colors = colorSchemes[colorScheme];
-  
-  return (
-    <div className={`${colors.innerCard} rounded-2xl p-8 md:p-12 mb-8`}>
-      {children}
-    </div>
-  );
+
+  return <div className={`${colors.innerCard} rounded-2xl p-8 md:p-12 mb-8`}>{children}</div>;
 };
 
 /**
@@ -177,7 +165,7 @@ export const AnswerButton: React.FC<{
   className?: string;
 }> = ({ children, onClick, disabled = false, colorScheme = 'green', className = '' }) => {
   const colors = colorSchemes[colorScheme];
-  
+
   return (
     <button
       onClick={onClick}

@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "number"
-    ],
+    "tags": ["math", "number"],
     "description": "Number Comparison oyunu",
     "icon": "🔢"
   },

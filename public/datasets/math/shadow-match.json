@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "shadow"
-    ],
+    "tags": ["math", "shadow"],
     "description": "Shadow Match oyunu",
     "icon": "🔢"
   },

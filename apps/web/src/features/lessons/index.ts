@@ -4,6 +4,7 @@
  */
 
 export { default as AcademicDashboard } from './AcademicDashboard';
+export { LessonRoutes } from './routes';
 
 // Subject exports
 export * from './science';

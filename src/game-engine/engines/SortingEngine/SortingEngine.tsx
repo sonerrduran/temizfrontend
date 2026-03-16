@@ -22,19 +22,19 @@ export default function SortingEngine({ dataset, onComplete, onExit }: GameEngin
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     const dragIndex = parseInt(e.dataTransfer.getData('text/html'));
-    
+
     if (dragIndex === dropIndex) return;
 
     const newItems = [...items];
     const [draggedItem] = newItems.splice(dragIndex, 1);
     newItems.splice(dropIndex, 0, draggedItem);
-    
+
     setItems(newItems);
   };
 
   const handleCheck = () => {
     const isCorrect = items.every((item, index) => {
-      const correctItem = sortingData.items.find(i => i.id === item.id);
+      const correctItem = sortingData.items.find((i) => i.id === item.id);
       return correctItem && correctItem.order === index;
     });
 

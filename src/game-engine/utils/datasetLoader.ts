@@ -15,7 +15,7 @@ export async function loadDataset(path: string): Promise<Dataset> {
   try {
     // Load from public/datasets/ folder
     const response = await fetch(`/datasets/${path}`);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to load dataset: ${path}`);
     }
@@ -63,5 +63,5 @@ export function clearDatasetCache() {
  * Preload datasets for better performance
  */
 export async function preloadDatasets(paths: string[]): Promise<void> {
-  await Promise.all(paths.map(path => loadDataset(path)));
+  await Promise.all(paths.map((path) => loadDataset(path)));
 }

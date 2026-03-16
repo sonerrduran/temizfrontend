@@ -62,43 +62,43 @@ export default function MemoryEngine({ dataset, onComplete, onExit }: GameEngine
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [first, second] = flippedCards;
-      const firstCard = cards.find(c => c.id === first);
-      const secondCard = cards.find(c => c.id === second);
+      const firstCard = cards.find((c) => c.id === first);
+      const secondCard = cards.find((c) => c.id === second);
 
       if (firstCard && secondCard && firstCard.pairId === secondCard.pairId) {
         // Match found
-        setMatchedPairs(prev => [...prev, firstCard.pairId]);
-        setCards(prev => prev.map(c => 
-          c.pairId === firstCard.pairId ? { ...c, isMatched: true } : c
-        ));
+        setMatchedPairs((prev) => [...prev, firstCard.pairId]);
+        setCards((prev) =>
+          prev.map((c) => (c.pairId === firstCard.pairId ? { ...c, isMatched: true } : c))
+        );
       }
 
       // Flip back after delay
       setTimeout(() => {
-        setCards(prev => prev.map(c => 
-          flippedCards.includes(c.id) && !c.isMatched ? { ...c, isFlipped: false } : c
-        ));
+        setCards((prev) =>
+          prev.map((c) =>
+            flippedCards.includes(c.id) && !c.isMatched ? { ...c, isFlipped: false } : c
+          )
+        );
         setFlippedCards([]);
       }, 1000);
     }
   }, [flippedCards]);
 
   const handleCardClick = (cardId: string) => {
-    const card = cards.find(c => c.id === cardId);
+    const card = cards.find((c) => c.id === cardId);
     if (!card || card.isFlipped || card.isMatched || flippedCards.length >= 2) return;
 
-    setCards(prev => prev.map(c => 
-      c.id === cardId ? { ...c, isFlipped: true } : c
-    ));
-    setFlippedCards(prev => [...prev, cardId]);
-    
+    setCards((prev) => prev.map((c) => (c.id === cardId ? { ...c, isFlipped: true } : c)));
+    setFlippedCards((prev) => [...prev, cardId]);
+
     if (flippedCards.length === 1) {
-      setMoves(prev => prev + 1);
+      setMoves((prev) => prev + 1);
     }
   };
 
-  const gridSize = memoryData.config.gridSize === '4x4' ? 4 : 
-                   memoryData.config.gridSize === '4x6' ? 6 : 6;
+  const gridSize =
+    memoryData.config.gridSize === '4x4' ? 4 : memoryData.config.gridSize === '4x6' ? 6 : 6;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
@@ -132,10 +132,10 @@ export default function MemoryEngine({ dataset, onComplete, onExit }: GameEngine
         </div>
 
         {/* Cards Grid */}
-        <div 
+        <div
           className="grid gap-4"
-          style={{ 
-            gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))` 
+          style={{
+            gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
           }}
         >
           {cards.map((card) => (

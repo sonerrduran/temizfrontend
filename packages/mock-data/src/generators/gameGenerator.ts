@@ -90,17 +90,14 @@ export function generateMockGame(
 /**
  * Birden fazla mock oyun üretir
  */
-export function generateMockGames(
-  count: number,
-  category?: GameCategoryType
-): Game[] {
+export function generateMockGames(count: number, category?: GameCategoryType): Game[] {
   const games: Game[] = [];
   const categories: GameCategoryType[] = ['math', 'logic', 'language', 'memory', 'speed', 'puzzle'];
-  
+
   for (let i = 0; i < count; i++) {
     const gameCategory = category || categories[Math.floor(Math.random() * categories.length)];
     games.push(generateMockGame(gameCategory));
   }
-  
+
   return games;
 }

@@ -3,7 +3,7 @@
  * Barrel export for all game engine components
  */
 
-export { 
+export {
   GameTemplate,
   InnerCard,
   GameButton,
@@ -11,5 +11,5 @@ export {
   FeedbackMessage,
   QuestionCard,
   AnswerButton,
-  type GameTemplateProps 
+  type GameTemplateProps,
 } from './GameTemplate';

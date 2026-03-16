@@ -1,0 +1,49 @@
+name: Deploy Logic Games
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'micro-frontends/logic-games/**'
+      - 'packages/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy to CDN
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build:logic-games
+        env:
+          VITE_PUBLIC_PATH: ${{ secrets.CDN_BASE_URL }}/logic-games/latest/
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+      - name: Deploy to S3
+        run: |
+          VERSION=$(node -p "require('./micro-frontends/logic-games/package.json').version")
+          aws s3 sync micro-frontends/logic-games/dist s3://egitim-galaksisi-logic-games/v$VERSION/ --delete
+          aws s3 sync micro-frontends/logic-games/dist s3://egitim-galaksisi-logic-games/latest/ --delete
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.LOGIC_GAMES_DISTRIBUTION_ID }} \
+            --paths "/latest/*" "/v*"

@@ -15,13 +15,7 @@ export interface GameMetadata {
   tags: string[];
 }
 
-export type GameCategory = 
-  | 'math'
-  | 'logic'
-  | 'language'
-  | 'memory'
-  | 'speed'
-  | 'puzzle';
+export type GameCategory = 'math' | 'logic' | 'language' | 'memory' | 'speed' | 'puzzle';
 
 export interface GameNavigationState {
   currentGame: string | null;

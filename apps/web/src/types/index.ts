@@ -3,7 +3,7 @@ export enum Difficulty {
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
   HARD = 'HARD',
-  VERY_HARD = 'VERY_HARD'
+  VERY_HARD = 'VERY_HARD',
 }
 
 export enum GameMode {
@@ -11,7 +11,7 @@ export enum GameMode {
   SINGLE_PLAYER = 'SINGLE_PLAYER',
   TWO_PLAYER = 'TWO_PLAYER',
   PRACTICE = 'PRACTICE',
-  CHALLENGE = 'CHALLENGE'
+  CHALLENGE = 'CHALLENGE',
 }
 
 export interface UserStats {

@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "big"
-    ],
+    "tags": ["math", "big"],
     "description": "Big Small Race oyunu",
     "icon": "🔢"
   },

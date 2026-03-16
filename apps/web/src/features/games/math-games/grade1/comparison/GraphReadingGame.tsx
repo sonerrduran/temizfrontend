@@ -19,7 +19,7 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
     { name: 'Bisiklet', emoji: '🚲' },
     { name: 'Otobüs', emoji: '🚌' },
     { name: 'Uçak', emoji: '✈️' },
-    { name: 'Gemi', emoji: '🚢' }
+    { name: 'Gemi', emoji: '🚢' },
   ];
 
   useEffect(() => {
@@ -28,8 +28,10 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
   const generateLevel = () => {
     const numItems = Math.min(3 + Math.floor(level / 2), 4);
-    const selected = [...itemData].sort(() => Math.random() - 0.5).slice(0, numItems)
-      .map(item => ({ ...item, count: Math.floor(Math.random() * (8 + level * 2)) + 1 }));
+    const selected = [...itemData]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, numItems)
+      .map((item) => ({ ...item, count: Math.floor(Math.random() * (8 + level * 2)) + 1 }));
 
     setItems(selected);
 
@@ -38,11 +40,11 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
     let questionText = '';
 
     if (questionType < 0.3) {
-      const maxItem = selected.reduce((max, item) => item.count > max.count ? item : max);
+      const maxItem = selected.reduce((max, item) => (item.count > max.count ? item : max));
       answer = maxItem.name;
       questionText = 'En çok hangi araç var?';
     } else if (questionType < 0.6) {
-      const minItem = selected.reduce((min, item) => item.count < min.count ? item : min);
+      const minItem = selected.reduce((min, item) => (item.count < min.count ? item : min));
       answer = minItem.name;
       questionText = 'En az hangi araç var?';
     } else if (questionType < 0.8) {
@@ -69,7 +71,10 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
       }
       setOptions([answer, ...wrongOptions].sort(() => Math.random() - 0.5));
     } else {
-      const wrongOptions = selected.filter(item => item.name !== answer).map(item => item.name).slice(0, 2);
+      const wrongOptions = selected
+        .filter((item) => item.name !== answer)
+        .map((item) => item.name)
+        .slice(0, 2);
       setOptions([answer, ...wrongOptions].sort(() => Math.random() - 0.5));
     }
 
@@ -99,10 +104,19 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
     <div className="min-h-screen bg-gradient-to-br from-cyan-900 via-blue-900 to-indigo-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <button onClick={onExit} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold">← Çıkış</button>
+          <button
+            onClick={onExit}
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold"
+          >
+            ← Çıkış
+          </button>
           <div className="flex gap-4">
-            <div className="px-6 py-3 bg-white/10 rounded-xl"><span className="text-white font-black">Seviye: {level}/5</span></div>
-            <div className="px-6 py-3 bg-yellow-500/90 rounded-xl"><span className="text-white font-black">⭐ {score}</span></div>
+            <div className="px-6 py-3 bg-white/10 rounded-xl">
+              <span className="text-white font-black">Seviye: {level}/5</span>
+            </div>
+            <div className="px-6 py-3 bg-yellow-500/90 rounded-xl">
+              <span className="text-white font-black">⭐ {score}</span>
+            </div>
           </div>
         </div>
 
@@ -116,9 +130,11 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
               {items.map((item, idx) => (
                 <div key={idx} className="flex flex-col items-center gap-2 flex-1">
                   <div className="text-white text-xl font-bold">{item.count}</div>
-                  <div 
+                  <div
                     className="bg-gradient-to-t from-blue-500 to-cyan-400 w-full rounded-t-xl flex items-end justify-center pb-2 transition-all duration-500"
-                    style={{ height: `${(item.count / Math.max(...items.map(i => i.count))) * 100}%` }}
+                    style={{
+                      height: `${(item.count / Math.max(...items.map((i) => i.count))) * 100}%`,
+                    }}
                   >
                     <span className="text-3xl">{item.emoji}</span>
                   </div>
@@ -134,14 +150,23 @@ const GraphReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
           <div className="grid grid-cols-3 gap-6">
             {options.map((option, idx) => (
-              <button key={idx} onClick={() => handleAnswer(option)}
-                className="h-24 bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-2xl font-black text-4xl">
+              <button
+                key={idx}
+                onClick={() => handleAnswer(option)}
+                className="h-24 bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-2xl font-black text-4xl"
+              >
                 {option}
               </button>
             ))}
           </div>
 
-          {feedback && <div className={`mt-8 text-center text-3xl font-black ${feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'}`}>{feedback}</div>}
+          {feedback && (
+            <div
+              className={`mt-8 text-center text-3xl font-black ${feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'}`}
+            >
+              {feedback}
+            </div>
+          )}
         </div>
       </div>
     </div>

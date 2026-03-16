@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "direction"
-    ],
+    "tags": ["math", "direction"],
     "description": "Direction Match oyunu",
     "icon": "🔢"
   },

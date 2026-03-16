@@ -7,16 +7,8 @@ interface BadgeProps {
   children: React.ReactNode;
 }
 
-export const Badge: React.FC<BadgeProps> = ({
-  variant = 'primary',
-  className = '',
-  children,
-}) => {
-  return (
-    <span className={`${getBadgeClass(variant)} ${className}`}>
-      {children}
-    </span>
-  );
+export const Badge: React.FC<BadgeProps> = ({ variant = 'primary', className = '', children }) => {
+  return <span className={`${getBadgeClass(variant)} ${className}`}>{children}</span>;
 };
 
 export default Badge;

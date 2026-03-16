@@ -1,8 +1,7 @@
 /**
  * Grade 6 Math Games
- * 6. Sýnýf Matematik Oyunlarý
+ * 6. Sï¿½nï¿½f Matematik Oyunlarï¿½
  */
 
 export { default as MathGrade6 } from './MathGrade6';
 export { default as MathGrade6Menu } from './MathGrade6Menu';
-

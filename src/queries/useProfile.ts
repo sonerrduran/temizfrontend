@@ -9,7 +9,7 @@ export function useProfileStats(userId?: string) {
     queryKey: ['profile', 'stats', userId],
     queryFn: async () => {
       const history = await gameService.getGameHistory(userId);
-      
+
       // Calculate stats
       const totalScore = history.reduce((sum: number, game: any) => sum + game.score, 0);
       const gamesPlayed = history.length;

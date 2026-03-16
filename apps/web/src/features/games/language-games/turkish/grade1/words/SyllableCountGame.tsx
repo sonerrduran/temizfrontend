@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import GameTemplate, { QuestionCard, AnswerButton, FeedbackMessage } from '../../../../common/GameTemplate';
+import GameTemplate, {
+  QuestionCard,
+  AnswerButton,
+  FeedbackMessage,
+} from '../../../../common/GameTemplate';
 
 interface SyllableCountGameProps {
   onBack: () => void;
@@ -33,7 +37,7 @@ const SyllableCountGame: React.FC<SyllableCountGameProps> = ({ onBack }) => {
     { word: 'çikolata', syllables: 4 },
     { word: 'kelebek', syllables: 3 },
     { word: 'karınca', syllables: 3 },
-    { word: 'ayakkabı', syllables: 4 }
+    { word: 'ayakkabı', syllables: 4 },
   ];
 
   useEffect(() => {
@@ -45,11 +49,9 @@ const SyllableCountGame: React.FC<SyllableCountGameProps> = ({ onBack }) => {
     setCurrentWord(word);
 
     const correctAnswer = word.syllables;
-    const wrongOptions = [
-      correctAnswer + 1,
-      correctAnswer - 1,
-      correctAnswer + 2
-    ].filter(n => n > 0 && n <= 5);
+    const wrongOptions = [correctAnswer + 1, correctAnswer - 1, correctAnswer + 2].filter(
+      (n) => n > 0 && n <= 5
+    );
 
     const allOptions = [correctAnswer, ...wrongOptions.slice(0, 2)].sort(() => Math.random() - 0.5);
     setOptions(allOptions);
@@ -88,12 +90,8 @@ const SyllableCountGame: React.FC<SyllableCountGameProps> = ({ onBack }) => {
     >
       <QuestionCard colorScheme="cyan">
         <div className="text-center">
-          <p className="text-2xl md:text-3xl font-bold text-white mb-8">
-            Bu kelime kaç heceli?
-          </p>
-          <div className="text-6xl md:text-8xl font-black text-white mb-8">
-            {currentWord.word}
-          </div>
+          <p className="text-2xl md:text-3xl font-bold text-white mb-8">Bu kelime kaç heceli?</p>
+          <div className="text-6xl md:text-8xl font-black text-white mb-8">{currentWord.word}</div>
         </div>
       </QuestionCard>
 

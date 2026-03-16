@@ -1,8 +1,7 @@
 /**
  * Grade 4 Math Games
- * 4. Sýnýf Matematik Oyunlarý
+ * 4. Sï¿½nï¿½f Matematik Oyunlarï¿½
  */
 
 export { default as MathGrade4 } from './MathGrade4';
 export { default as MathGrade4Menu } from './MathGrade4Menu';
-

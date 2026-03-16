@@ -55,14 +55,12 @@ const UppercaseLowercaseGame: React.FC = () => {
     setCurrentPair(randomPair);
 
     // Generate wrong options
-    const wrongOptions = LETTER_PAIRS
-      .filter(p => p.lower !== randomPair.lower)
-      .map(p => p.lower)
+    const wrongOptions = LETTER_PAIRS.filter((p) => p.lower !== randomPair.lower)
+      .map((p) => p.lower)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3);
 
-    const allOptions = [randomPair.lower, ...wrongOptions]
-      .sort(() => Math.random() - 0.5);
+    const allOptions = [randomPair.lower, ...wrongOptions].sort(() => Math.random() - 0.5);
 
     setOptions(allOptions);
     setFeedback(null);
@@ -113,15 +111,11 @@ const UppercaseLowercaseGame: React.FC = () => {
 
         {/* Question */}
         <div className="bg-white rounded-2xl shadow-xl p-12">
-          <p className="text-center text-gray-700 text-xl mb-8">
-            Bu büyük harfin küçüğünü seç:
-          </p>
+          <p className="text-center text-gray-700 text-xl mb-8">Bu büyük harfin küçüğünü seç:</p>
 
           <div className="text-center mb-12">
             <div className="inline-block p-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl shadow-2xl">
-              <div className="text-9xl font-bold text-white">
-                {currentPair.upper}
-              </div>
+              <div className="text-9xl font-bold text-white">{currentPair.upper}</div>
             </div>
           </div>
 
@@ -134,11 +128,12 @@ const UppercaseLowercaseGame: React.FC = () => {
                 disabled={feedback !== null}
                 className={`
                   p-6 text-5xl font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg
-                  ${feedback === 'correct' && option === currentPair.lower
-                    ? 'bg-green-500 text-white'
-                    : feedback === 'wrong' && option === currentPair.lower
-                    ? 'bg-red-500 text-white'
-                    : 'bg-gradient-to-br from-green-100 to-blue-100 hover:from-green-200 hover:to-blue-200'
+                  ${
+                    feedback === 'correct' && option === currentPair.lower
+                      ? 'bg-green-500 text-white'
+                      : feedback === 'wrong' && option === currentPair.lower
+                        ? 'bg-red-500 text-white'
+                        : 'bg-gradient-to-br from-green-100 to-blue-100 hover:from-green-200 hover:to-blue-200'
                   }
                 `}
               >

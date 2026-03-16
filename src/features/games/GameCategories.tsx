@@ -20,7 +20,7 @@ export default function GameCategories({
 }: GameCategoriesProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-      {categories.map(category => (
+      {categories.map((category) => (
         <button
           key={category.id}
           onClick={() => onSelectCategory(category.id)}
@@ -32,14 +32,16 @@ export default function GameCategories({
         >
           {/* Icon */}
           <div className="text-4xl mb-2">{category.icon}</div>
-          
+
           {/* Name */}
           <div className="text-white font-bold mb-1">{category.name}</div>
-          
+
           {/* Count */}
-          <div className={`text-sm ${
-            selectedCategory === category.id ? 'text-white/80' : 'text-white/40'
-          }`}>
+          <div
+            className={`text-sm ${
+              selectedCategory === category.id ? 'text-white/80' : 'text-white/40'
+            }`}
+          >
             {category.count} oyun
           </div>
 

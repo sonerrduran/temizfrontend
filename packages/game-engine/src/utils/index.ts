@@ -7,15 +7,10 @@
 export {
   calculateScore,
   calculateStars,
-  calculateAccuracy,
+  getPerformanceMessage,
   calculateTimeBonus,
-  calculateStreakBonus,
-  calculateDifficultyBonus,
-  calculatePerfectBonus,
+  calculateComboBonus,
   calculateTotalScore,
-  getStarColor,
-  getAccuracyGrade,
-  type ScoreFactors,
 } from './scoring';
 
 // Level progression utilities

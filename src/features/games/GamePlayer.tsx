@@ -9,7 +9,7 @@ export default function GamePlayer() {
   const navigate = useNavigate();
   const [showResults, setShowResults] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  
+
   const { startSession, endSession, currentSession } = useSessionStore();
   const { selectGame, currentGame } = useGameStore();
 
@@ -31,7 +31,7 @@ export default function GamePlayer() {
   const handleComplete = async (score: number) => {
     setFinalScore(score);
     setShowResults(true);
-    
+
     // Save score to backend via session store
     await endSession(score, score, 100); // TODO: Get actual correctAnswers and totalQuestions from game
   };
@@ -55,7 +55,7 @@ export default function GamePlayer() {
           <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-8">
             {finalScore} Puan
           </div>
-          
+
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePlayAgain}
@@ -75,11 +75,5 @@ export default function GamePlayer() {
     );
   }
 
-  return (
-    <GameRenderer
-      gameId={gameId}
-      onComplete={handleComplete}
-      onExit={handleExit}
-    />
-  );
+  return <GameRenderer gameId={gameId} onComplete={handleComplete} onExit={handleExit} />;
 }

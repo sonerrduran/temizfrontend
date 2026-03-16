@@ -95,7 +95,7 @@ export function calculateTimePercentage(elapsed: number, total: number): number 
  */
 export function getTimeColor(remainingSeconds: number, totalSeconds: number): string {
   const percentage = (remainingSeconds / totalSeconds) * 100;
-  
+
   if (percentage > 50) return '#4CAF50'; // Yeşil
   if (percentage > 25) return '#FFC107'; // Sarı
   return '#F44336'; // Kırmızı

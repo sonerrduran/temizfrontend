@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'NineMensMorris',
   description: 'NineMensMorris oyunu',
   version: '1.0.0',
-  
+
   category: 'logic',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'NineMensMorrisGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/nine-mens-morris-/icon.svg',
   },
-  
+
   tags: ['logic'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

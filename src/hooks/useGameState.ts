@@ -36,15 +36,15 @@ export const useGameState = (gameId: string) => {
 
   // Start game
   const startGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPlaying: true, isPaused: false }));
+    setState((prev) => ({ ...prev, isPlaying: true, isPaused: false }));
     setStartTime(Date.now());
   }, []);
 
   // Pause game
   const pauseGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: true }));
+    setState((prev) => ({ ...prev, isPaused: true }));
     if (startTime) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         timeSpent: prev.timeSpent + (Date.now() - startTime),
       }));
@@ -54,13 +54,13 @@ export const useGameState = (gameId: string) => {
 
   // Resume game
   const resumeGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: false }));
+    setState((prev) => ({ ...prev, isPaused: false }));
     setStartTime(Date.now());
   }, []);
 
   // Answer question
   const answerQuestion = useCallback((isCorrect: boolean, points: number = 10) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       totalQuestions: prev.totalQuestions + 1,
       correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
@@ -70,7 +70,7 @@ export const useGameState = (gameId: string) => {
 
   // Complete level
   const completeLevel = useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       level: prev.level + 1,
     }));
@@ -79,11 +79,9 @@ export const useGameState = (gameId: string) => {
   // Complete game
   const completeGame = useCallback(async () => {
     // Calculate final time
-    const finalTime = startTime 
-      ? state.timeSpent + (Date.now() - startTime)
-      : state.timeSpent;
+    const finalTime = startTime ? state.timeSpent + (Date.now() - startTime) : state.timeSpent;
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isPlaying: false,
       isCompleted: true,
@@ -141,7 +139,7 @@ export const useGameState = (gameId: string) => {
     if (!state.isPlaying || state.isPaused || !startTime) return;
 
     const interval = setInterval(() => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         timeSpent: prev.timeSpent + 1000,
       }));

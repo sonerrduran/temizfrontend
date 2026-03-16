@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "color"
-    ],
+    "tags": ["math", "color"],
     "description": "Color Detective oyunu",
     "icon": "🔢"
   },

@@ -31,27 +31,27 @@ export const useGameState = (initialState?: Partial<GameState>): UseGameStateRet
   });
 
   const incrementScore = useCallback((points: number) => {
-    setState(prev => ({ ...prev, score: prev.score + points }));
+    setState((prev) => ({ ...prev, score: prev.score + points }));
   }, []);
 
   const nextLevel = useCallback(() => {
-    setState(prev => ({ ...prev, level: prev.level + 1 }));
+    setState((prev) => ({ ...prev, level: prev.level + 1 }));
   }, []);
 
   const loseLife = useCallback(() => {
-    setState(prev => ({ ...prev, lives: Math.max(0, prev.lives - 1) }));
+    setState((prev) => ({ ...prev, lives: Math.max(0, prev.lives - 1) }));
   }, []);
 
   const startGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPlaying: true, isPaused: false }));
+    setState((prev) => ({ ...prev, isPlaying: true, isPaused: false }));
   }, []);
 
   const pauseGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: true }));
+    setState((prev) => ({ ...prev, isPaused: true }));
   }, []);
 
   const resumeGame = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: false }));
+    setState((prev) => ({ ...prev, isPaused: false }));
   }, []);
 
   const resetGame = useCallback(() => {

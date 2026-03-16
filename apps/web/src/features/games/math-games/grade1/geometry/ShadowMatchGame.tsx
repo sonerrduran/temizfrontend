@@ -23,7 +23,7 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
   const generateRound = () => {
     const shapes: ShapeType[] = ['circle', 'square', 'triangle', 'star', 'heart', 'diamond'];
     const target = shapes[Math.floor(Math.random() * shapes.length)];
-    
+
     const options = [target];
     while (options.length < 4) {
       const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
@@ -31,7 +31,7 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
         options.push(randomShape);
       }
     }
-    
+
     setTargetShape(target);
     setShadowOptions(options.sort(() => Math.random() - 0.5));
     setFeedback('');
@@ -41,7 +41,7 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
     if (shape === targetShape) {
       setFeedback('✅ Doğru!');
       setScore(score + 10);
-      
+
       setTimeout(() => {
         if (round < totalRounds) {
           setRound(round + 1);
@@ -58,27 +58,41 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
 
   const renderColoredShape = (shape: ShapeType) => {
     const size = 120;
-    
+
     switch (shape) {
       case 'circle':
-        return <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-xl" />;
+        return (
+          <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-xl" />
+        );
       case 'square':
-        return <div className="w-32 h-32 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl shadow-xl" />;
+        return (
+          <div className="w-32 h-32 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl shadow-xl" />
+        );
       case 'triangle':
         return (
-          <div style={{
-            width: 0,
-            height: 0,
-            borderLeft: '64px solid transparent',
-            borderRight: '64px solid transparent',
-            borderBottom: '120px solid #10B981',
-            filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))'
-          }} />
+          <div
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: '64px solid transparent',
+              borderRight: '64px solid transparent',
+              borderBottom: '120px solid #10B981',
+              filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))',
+            }}
+          />
         );
       case 'star':
-        return <div className="text-9xl" style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))' }}>⭐</div>;
+        return (
+          <div className="text-9xl" style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))' }}>
+            ⭐
+          </div>
+        );
       case 'heart':
-        return <div className="text-9xl" style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))' }}>❤️</div>;
+        return (
+          <div className="text-9xl" style={{ filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))' }}>
+            ❤️
+          </div>
+        );
       case 'diamond':
         return (
           <div className="relative w-32 h-32">
@@ -96,13 +110,15 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
         return <div className="w-24 h-24 bg-black/80 rounded-xl" />;
       case 'triangle':
         return (
-          <div style={{
-            width: 0,
-            height: 0,
-            borderLeft: '48px solid transparent',
-            borderRight: '48px solid transparent',
-            borderBottom: '90px solid rgba(0,0,0,0.8)'
-          }} />
+          <div
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: '48px solid transparent',
+              borderRight: '48px solid transparent',
+              borderBottom: '90px solid rgba(0,0,0,0.8)',
+            }}
+          />
         );
       case 'star':
         return <div className="text-7xl opacity-80">⭐</div>;
@@ -162,10 +178,12 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
           >
             ← Çıkış
           </button>
-          
+
           <div className="flex gap-4">
             <div className="px-6 py-3 bg-slate-800/80 rounded-xl">
-              <span className="text-white font-black">Tur: {round}/{totalRounds}</span>
+              <span className="text-white font-black">
+                Tur: {round}/{totalRounds}
+              </span>
             </div>
             <div className="px-6 py-3 bg-slate-800/80 rounded-xl">
               <span className="text-white font-black">⭐ {score}</span>
@@ -184,7 +202,7 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
           {/* İç Kart - Gri/Slate Gradient */}
           <div className="bg-gradient-to-br from-slate-500 via-gray-500 to-slate-600 rounded-2xl p-8 md:p-12 mb-8">
             <div className="flex justify-between items-center mb-6">
-              <button 
+              <button
                 onClick={() => setShowRules(true)}
                 className="px-4 py-2 bg-slate-700/40 hover:bg-slate-600/40 border-2 border-slate-300 text-white rounded-xl font-bold transition-all transform hover:scale-105"
               >
@@ -194,7 +212,9 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
 
             {/* Target Shape */}
             <div className="bg-slate-700/40 rounded-2xl p-8 mb-6 border-2 border-slate-300">
-              <h3 className="text-2xl font-black text-white text-center mb-6">Bu Şeklin Gölgesini Bul</h3>
+              <h3 className="text-2xl font-black text-white text-center mb-6">
+                Bu Şeklin Gölgesini Bul
+              </h3>
               <div className="flex justify-center items-center min-h-[150px]">
                 {renderColoredShape(targetShape)}
               </div>
@@ -220,9 +240,13 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
 
         {/* Feedback */}
         {feedback && (
-          <div className={`mt-6 text-center text-3xl font-black p-6 rounded-xl ${
-            feedback.includes('✅') ? 'bg-green-500/90 border-2 border-green-300 text-white' : 'bg-red-500/90 border-2 border-red-300 text-white'
-          }`}>
+          <div
+            className={`mt-6 text-center text-3xl font-black p-6 rounded-xl ${
+              feedback.includes('✅')
+                ? 'bg-green-500/90 border-2 border-green-300 text-white'
+                : 'bg-red-500/90 border-2 border-red-300 text-white'
+            }`}
+          >
             {feedback}
           </div>
         )}
@@ -235,10 +259,22 @@ const ShadowMatchGame: React.FC<ShadowMatchGameProps> = ({ onBack }) => {
             <div className="text-5xl mb-4">🌑</div>
             <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Nasıl Oynanır?</h3>
             <ul className="text-white/90 text-left space-y-3 mb-8 text-sm md:text-base">
-              <li className="flex gap-2"><span className="text-slate-400 font-bold">1.</span> Yukarıda renkli bir şekil göreceksin</li>
-              <li className="flex gap-2"><span className="text-slate-400 font-bold">2.</span> Alttaki gölgelerden doğru olanı bul</li>
-              <li className="flex gap-2"><span className="text-slate-400 font-bold">3.</span> Doğru gölgeyi seçersen puan kazanırsın</li>
-              <li className="flex gap-2"><span className="text-slate-400 font-bold">4.</span> Tüm turları tamamla ve kazanan sen ol!</li>
+              <li className="flex gap-2">
+                <span className="text-slate-400 font-bold">1.</span> Yukarıda renkli bir şekil
+                göreceksin
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-400 font-bold">2.</span> Alttaki gölgelerden doğru olanı
+                bul
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-400 font-bold">3.</span> Doğru gölgeyi seçersen puan
+                kazanırsın
+              </li>
+              <li className="flex gap-2">
+                <span className="text-slate-400 font-bold">4.</span> Tüm turları tamamla ve kazanan
+                sen ol!
+              </li>
             </ul>
             <button
               onClick={() => setShowRules(false)}

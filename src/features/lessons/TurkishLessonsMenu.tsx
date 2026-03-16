@@ -20,7 +20,7 @@ export default function TurkishLessonsMenu() {
       subtitle: 'Alıştırmalarla pekiştir!',
       icon: '🎯',
       gradient: 'from-orange-500 to-red-600',
-      route: '/lessons/turkish/learn'
+      route: '/lessons/turkish/learn',
     },
     {
       id: 'practice',
@@ -28,7 +28,7 @@ export default function TurkishLessonsMenu() {
       subtitle: 'Türkçe becerilerini geliştir!',
       icon: '✏️',
       gradient: 'from-blue-500 to-cyan-600',
-      route: '/lessons/turkish/practice'
+      route: '/lessons/turkish/practice',
     },
     {
       id: 'games',
@@ -36,8 +36,8 @@ export default function TurkishLessonsMenu() {
       subtitle: 'Kelime oyunlarıyla eğlen!',
       icon: '📝',
       gradient: 'from-pink-500 to-rose-600',
-      route: '/games?category=language'
-    }
+      route: '/games?category=language',
+    },
   ];
 
   return (
@@ -45,34 +45,50 @@ export default function TurkishLessonsMenu() {
       <div className="w-full max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="mb-6 px-6 py-2 bg-white/5 text-white rounded-full font-bold border border-white/20 hover:bg-white/10 transition-all text-sm"
           >
             ⬅ GERİ DÖN
           </button>
-          
+
           <h2 className="text-4xl md:text-7xl font-black text-white drop-shadow-2xl mb-4 uppercase">
             TÜRKÇE DÜNYASI
           </h2>
-          
+
           <p className="text-white/80 font-medium max-w-2xl mx-auto text-sm md:text-base mb-6">
             Kelimeler, hikayeler ve dil becerileri! Türkçe yolculuğuna hazır mısın?
           </p>
-          
+
           {/* Grade Selector */}
           <div className="flex justify-center gap-3">
             <div className="bg-white/10 text-white px-4 py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest border border-white/20 flex items-center gap-2">
               <span className="text-white/60">Sınıf:</span>
               <select className="bg-transparent text-white font-bold outline-none cursor-pointer">
-                <option value="1" className="bg-slate-800">1. SINIF</option>
-                <option value="2" className="bg-slate-800">2. SINIF</option>
-                <option value="3" className="bg-slate-800">3. SINIF</option>
-                <option value="4" className="bg-slate-800">4. SINIF</option>
-                <option value="5" className="bg-slate-800">5. SINIF</option>
-                <option value="6" className="bg-slate-800">6. SINIF</option>
-                <option value="7" className="bg-slate-800">7. SINIF</option>
-                <option value="8" className="bg-slate-800">8. SINIF</option>
+                <option value="1" className="bg-slate-800">
+                  1. SINIF
+                </option>
+                <option value="2" className="bg-slate-800">
+                  2. SINIF
+                </option>
+                <option value="3" className="bg-slate-800">
+                  3. SINIF
+                </option>
+                <option value="4" className="bg-slate-800">
+                  4. SINIF
+                </option>
+                <option value="5" className="bg-slate-800">
+                  5. SINIF
+                </option>
+                <option value="6" className="bg-slate-800">
+                  6. SINIF
+                </option>
+                <option value="7" className="bg-slate-800">
+                  7. SINIF
+                </option>
+                <option value="8" className="bg-slate-800">
+                  8. SINIF
+                </option>
               </select>
             </div>
           </div>
@@ -86,7 +102,9 @@ export default function TurkishLessonsMenu() {
               onClick={() => navigate(card.route)}
               className={`group bg-gradient-to-br ${card.gradient} p-6 rounded-[32px] border border-white/10 shadow-xl hover:-translate-y-2 hover:shadow-2xl transition-all text-left relative overflow-hidden h-48`}
             >
-              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform origin-left">{card.icon}</div>
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform origin-left">
+                {card.icon}
+              </div>
               <h3 className="text-white font-black text-xl mb-1 mt-auto">{card.title}</h3>
               <p className="text-white/80 text-xs font-medium relative z-10">{card.subtitle}</p>
 
@@ -95,7 +113,9 @@ export default function TurkishLessonsMenu() {
                 <span className="text-white text-xl font-black">›</span>
               </div>
 
-              <div className="absolute -bottom-10 -right-10 text-9xl opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">{card.icon}</div>
+              <div className="absolute -bottom-10 -right-10 text-9xl opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+                {card.icon}
+              </div>
             </button>
           ))}
         </div>

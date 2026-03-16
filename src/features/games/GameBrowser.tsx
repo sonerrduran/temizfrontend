@@ -6,7 +6,7 @@ import GameCategories from './GameCategories';
 
 export default function GameBrowser() {
   const navigate = useNavigate();
-  
+
   // Use game store
   const {
     games,
@@ -30,22 +30,23 @@ export default function GameBrowser() {
 
     // Category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(game => game.category === selectedCategory);
+      filtered = filtered.filter((game) => game.category === selectedCategory);
     }
 
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(game =>
-        game.name.toLowerCase().includes(query) ||
-        game.tags.some(tag => tag.toLowerCase().includes(query))
+      filtered = filtered.filter(
+        (game) =>
+          game.name.toLowerCase().includes(query) ||
+          game.tags.some((tag) => tag.toLowerCase().includes(query))
       );
     }
 
     // Grade filter
     if (selectedGrade !== null) {
-      filtered = filtered.filter(game =>
-        game.gradeMin <= selectedGrade && game.gradeMax >= selectedGrade
+      filtered = filtered.filter(
+        (game) => game.gradeMin <= selectedGrade && game.gradeMax >= selectedGrade
       );
     }
 
@@ -58,12 +59,42 @@ export default function GameBrowser() {
 
   const categories = [
     { id: 'all', name: 'Tümü', icon: '🎮', count: games.length },
-    { id: 'math', name: 'Matematik', icon: '🔢', count: games.filter(g => g.category === 'math').length },
-    { id: 'logic', name: 'Mantık', icon: '🧩', count: games.filter(g => g.category === 'logic').length },
-    { id: 'language', name: 'Dil', icon: '📚', count: games.filter(g => g.category === 'language').length },
-    { id: 'reading', name: 'Okuma', icon: '📖', count: games.filter(g => g.category === 'reading').length },
-    { id: 'focus', name: 'Odaklanma', icon: '🎯', count: games.filter(g => g.category === 'focus').length },
-    { id: 'learning', name: 'Öğrenme', icon: '🧠', count: games.filter(g => g.category === 'learning').length },
+    {
+      id: 'math',
+      name: 'Matematik',
+      icon: '🔢',
+      count: games.filter((g) => g.category === 'math').length,
+    },
+    {
+      id: 'logic',
+      name: 'Mantık',
+      icon: '🧩',
+      count: games.filter((g) => g.category === 'logic').length,
+    },
+    {
+      id: 'language',
+      name: 'Dil',
+      icon: '📚',
+      count: games.filter((g) => g.category === 'language').length,
+    },
+    {
+      id: 'reading',
+      name: 'Okuma',
+      icon: '📖',
+      count: games.filter((g) => g.category === 'reading').length,
+    },
+    {
+      id: 'focus',
+      name: 'Odaklanma',
+      icon: '🎯',
+      count: games.filter((g) => g.category === 'focus').length,
+    },
+    {
+      id: 'learning',
+      name: 'Öğrenme',
+      icon: '🧠',
+      count: games.filter((g) => g.category === 'learning').length,
+    },
   ];
 
   return (
@@ -71,12 +102,8 @@ export default function GameBrowser() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
-            🎮 Oyun Galaksisi
-          </h1>
-          <p className="text-white/60 text-lg">
-            {filteredGames.length} oyun keşfet ve oyna!
-          </p>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">🎮 Oyun Galaksisi</h1>
+          <p className="text-white/60 text-lg">{filteredGames.length} oyun keşfet ve oyna!</p>
         </div>
 
         {/* Search & Filters */}
@@ -90,9 +117,7 @@ export default function GameBrowser() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-6 py-4 bg-white/10 backdrop-blur-md rounded-2xl text-white placeholder-white/40 border border-white/20 focus:border-purple-500 focus:outline-none text-lg"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl">
-              🔍
-            </div>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl">🔍</div>
           </div>
 
           {/* Grade Filter */}
@@ -107,7 +132,7 @@ export default function GameBrowser() {
             >
               Tüm Seviyeler
             </button>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(grade => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((grade) => (
               <button
                 key={grade}
                 onClick={() => setGrade(grade)}
@@ -140,20 +165,15 @@ export default function GameBrowser() {
           ) : (
             <>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-white">
-                  {filteredGames.length} Oyun
-                </h2>
+                <h2 className="text-2xl font-bold text-white">{filteredGames.length} Oyun</h2>
                 <div className="text-white/40 text-sm">
-                  {selectedCategory !== 'all' && categories.find(c => c.id === selectedCategory)?.name}
+                  {selectedCategory !== 'all' &&
+                    categories.find((c) => c.id === selectedCategory)?.name}
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredGames.map(game => (
-                  <GameCard
-                    key={game.id}
-                    game={game}
-                    onPlay={() => handlePlayGame(game.id)}
-                  />
+                {filteredGames.map((game) => (
+                  <GameCard key={game.id} game={game} onPlay={() => handlePlayGame(game.id)} />
                 ))}
               </div>
             </>

@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'TwoDigitAddition',
   description: 'TwoDigitAddition oyunu',
   version: '1.0.0',
-  
+
   category: 'math',
   gradeMin: 2,
   gradeMax: 3,
   difficulty: 'easy',
-  
+
   component: 'TwoDigitAdditionGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/two-digit-addition-/icon.svg',
   },
-  
+
   tags: ['math'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

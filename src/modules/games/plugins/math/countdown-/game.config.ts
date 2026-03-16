@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'Countdown',
   description: 'Countdown oyunu',
   version: '1.0.0',
-  
+
   category: 'math',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'CountdownGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/countdown-/icon.svg',
   },
-  
+
   tags: ['math'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

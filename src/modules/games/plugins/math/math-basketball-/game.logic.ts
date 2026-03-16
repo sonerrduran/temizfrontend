@@ -13,8 +13,7 @@ export class MathBasketballLogic implements GameLogic {
     currentQuestion: 0,
     totalQuestions: 10,
   };
-  
-  
+
   private timeLeft = 30;
   private correctAnswers = 0;
 
@@ -26,49 +25,42 @@ export class MathBasketballLogic implements GameLogic {
       currentQuestion: 0,
       totalQuestions: 10,
     };
-    
   }
-
-  
 
   handleAnswer(answer: any): GameResult {
     const isCorrect = this.checkAnswer(answer);
-    
+
     if (isCorrect) {
       this.correctAnswers++;
       this.state.score += 10;
     }
-    
+
     this.state.currentQuestion++;
-    
+
     if (this.state.currentQuestion >= this.state.totalQuestions) {
       this.state.isComplete = true;
     }
-    
+
     return {
       isCorrect,
       score: this.state.score,
       feedback: isCorrect ? '✅ Doğru!' : '❌ Yanlış!',
     };
   }
-  
+
   private checkAnswer(answer: any): boolean {
     // Implement answer checking logic
     return true;
   }
-  
-  
-  
-  
+
   getTimeLeft(): number {
     return this.timeLeft;
   }
-  
+
   decrementTime(): void {
     this.timeLeft--;
   }
-  
-  
+
   getCorrectAnswers(): number {
     return this.correctAnswers;
   }
@@ -85,7 +77,7 @@ export class MathBasketballLogic implements GameLogic {
       currentQuestion: 0,
       totalQuestions: 10,
     };
-    
+
     this.timeLeft = 30;
     this.correctAnswers = 0;
   }

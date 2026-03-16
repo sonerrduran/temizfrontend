@@ -1,8 +1,7 @@
 /**
  * Grade 8 Math Games
- * 8. Sýnýf Matematik Oyunlarý
+ * 8. Sï¿½nï¿½f Matematik Oyunlarï¿½
  */
 
 export { default as MathGrade8 } from './MathGrade8';
 export { default as MathGrade8Menu } from './MathGrade8Menu';
-

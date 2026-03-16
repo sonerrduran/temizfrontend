@@ -7,26 +7,26 @@ const metaphors = [
     sentence: 'Güneş gibi parlıyorsun',
     meaning: 'Çok mutlu ve enerjik görünüyorsun',
     options: ['Üzgün görünüyorsun', 'Çok mutlu ve enerjik görünüyorsun', 'Yorgun görünüyorsun'],
-    correct: 1
+    correct: 1,
   },
   {
     sentence: 'Aslan gibi cesur',
     meaning: 'Çok cesur ve korkusuz',
     options: ['Çok korkak', 'Çok cesur ve korkusuz', 'Çok hızlı'],
-    correct: 1
+    correct: 1,
   },
   {
     sentence: 'Kar gibi beyaz',
     meaning: 'Çok temiz ve bembeyaz',
     options: ['Çok kirli', 'Çok temiz ve bembeyaz', 'Çok siyah'],
-    correct: 1
+    correct: 1,
   },
   {
     sentence: 'Kuş gibi hafif',
     meaning: 'Çok hafif ve uçarcasına',
     options: ['Çok ağır', 'Çok hafif ve uçarcasına', 'Çok yavaş'],
-    correct: 1
-  }
+    correct: 1,
+  },
 ];
 
 export default function MetaphorGame() {
@@ -106,12 +106,12 @@ export default function MetaphorGame() {
                   selectedAnswer === null
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : selectedAnswer === index
-                    ? index === question.correct
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-red-100 border-2 border-red-500'
-                    : index === question.correct
-                    ? 'bg-green-100 border-2 border-green-500'
-                    : 'bg-gray-100'
+                      ? index === question.correct
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-red-100 border-2 border-red-500'
+                      : index === question.correct
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-gray-100'
                 }`}
               >
                 {option}

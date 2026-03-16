@@ -27,11 +27,11 @@ export default function LogicPuzzleEngine({ dataset, onComplete, onExit }: GameE
   const handleCellClick = (row: string, col: string) => {
     const key = `${row}-${col}`;
     const current = grid[key];
-    
+
     // Cycle through: empty -> X -> ✓ -> empty
     const next = current === '✓' ? '' : current === 'X' ? '✓' : 'X';
-    
-    setGrid(prev => ({ ...prev, [key]: next }));
+
+    setGrid((prev) => ({ ...prev, [key]: next }));
   };
 
   const handleCheck = () => {
@@ -77,9 +77,7 @@ export default function LogicPuzzleEngine({ dataset, onComplete, onExit }: GameE
               <div className="space-y-3">
                 {puzzleData.clues.map((clue, index) => (
                   <div key={clue.id} className="bg-white/5 rounded-xl p-3">
-                    <div className="text-violet-400 font-bold text-sm mb-1">
-                      İpucu {index + 1}
-                    </div>
+                    <div className="text-violet-400 font-bold text-sm mb-1">İpucu {index + 1}</div>
                     <div className="text-white/80 text-sm">{clue.text}</div>
                   </div>
                 ))}
@@ -91,13 +89,13 @@ export default function LogicPuzzleEngine({ dataset, onComplete, onExit }: GameE
           <div className="lg:col-span-2">
             <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
               <h3 className="text-xl font-bold text-white mb-4">Mantık Tablosu</h3>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr>
                       <th className="p-2 border border-white/20"></th>
-                      {puzzleData.grid.cols.map(col => (
+                      {puzzleData.grid.cols.map((col) => (
                         <th key={col} className="p-2 border border-white/20 text-white text-sm">
                           {col}
                         </th>
@@ -105,19 +103,16 @@ export default function LogicPuzzleEngine({ dataset, onComplete, onExit }: GameE
                     </tr>
                   </thead>
                   <tbody>
-                    {puzzleData.grid.rows.map(row => (
+                    {puzzleData.grid.rows.map((row) => (
                       <tr key={row}>
                         <td className="p-2 border border-white/20 text-white text-sm font-bold">
                           {row}
                         </td>
-                        {puzzleData.grid.cols.map(col => {
+                        {puzzleData.grid.cols.map((col) => {
                           const key = `${row}-${col}`;
                           const value = grid[key] || '';
                           return (
-                            <td
-                              key={col}
-                              className="p-2 border border-white/20"
-                            >
+                            <td key={col} className="p-2 border border-white/20">
                               <button
                                 onClick={() => handleCellClick(row, col)}
                                 className="w-full h-12 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center text-2xl transition-all"

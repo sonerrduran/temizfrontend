@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "correct"
-    ],
+    "tags": ["math", "correct"],
     "description": "Correct Order oyunu",
     "icon": "🔢"
   },

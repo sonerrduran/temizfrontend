@@ -22,20 +22,20 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
         handleAnswer('');
       }
     }, 1000);
-    
+
     return () => clearInterval(timer);
   }, [timeLeft]);
 
   const handleAnswer = (answer: string) => {
     const result = gameLogic.handleAnswer(answer);
     const state = gameLogic.getState();
-    
+
     if (state.isComplete) {
       setShowWin(true);
     } else {
       setTimeLeft(8);
     }
-    
+
     forceUpdate({});
   };
 
@@ -55,7 +55,7 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
 
   const state = gameLogic.getState();
   const currentQ = gameLogic.getCurrentQuestion();
-  
+
   if (!currentQ) return null;
 
   return (
@@ -69,9 +69,7 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
             >
               ⬅ GERİ
             </button>
-            <h2 className="text-2xl md:text-3xl font-black text-white">
-              ⚖️ SAYI KARŞILAŞTIRMA
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-black text-white">⚖️ SAYI KARŞILAŞTIRMA</h2>
             <div className="text-sm font-bold bg-green-500/20 px-4 py-2 rounded-xl">
               Seviye {state.level}
             </div>
@@ -79,7 +77,9 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
 
           <div className="flex justify-center gap-4 mb-6">
             <div className="bg-blue-500/20 px-6 py-3 rounded-xl">
-              <span className="text-blue-300 font-bold">Soru: {state.currentQuestion + 1}/{state.totalQuestions}</span>
+              <span className="text-blue-300 font-bold">
+                Soru: {state.currentQuestion + 1}/{state.totalQuestions}
+              </span>
             </div>
             <div className="bg-red-500/20 px-6 py-3 rounded-xl">
               <span className="text-red-300 font-bold">⏱️ {timeLeft}s</span>
@@ -118,7 +118,7 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
               </div>
 
               <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                <div 
+                <div
                   className="bg-gradient-to-r from-green-500 to-emerald-500 h-full transition-all duration-1000"
                   style={{ width: `${(timeLeft / 8) * 100}%` }}
                 />
@@ -131,7 +131,9 @@ export const NumberComparisonGame: React.FC<GameUIProps> = ({
               <div className="bg-slate-900 p-8 rounded-3xl border-4 border-green-500 text-center animate-in zoom-in">
                 <div className="text-6xl mb-4">🎉</div>
                 <h3 className="text-3xl font-black mb-4 text-green-400">MÜKEMMEL!</h3>
-                <p className="text-xl mb-2">Doğru Cevap: {gameLogic.getCorrectAnswers()}/{state.totalQuestions}</p>
+                <p className="text-xl mb-2">
+                  Doğru Cevap: {gameLogic.getCorrectAnswers()}/{state.totalQuestions}
+                </p>
                 <p className="text-lg mb-6">Toplam Puan: {state.score}</p>
                 <div className="flex gap-4 justify-center">
                   <button

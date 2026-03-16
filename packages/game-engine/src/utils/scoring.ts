@@ -18,10 +18,10 @@ export const calculateScore = (
   difficultyMultiplier: number = 1
 ): number => {
   if (totalQuestions === 0) return 0;
-  
+
   const baseScore = (correctAnswers / totalQuestions) * 100;
   const finalScore = (baseScore + timeBonus) * difficultyMultiplier;
-  
+
   return Math.round(Math.max(0, finalScore));
 };
 
@@ -55,15 +55,12 @@ export const getPerformanceMessage = (score: number): string => {
  * @param timeLimit Süre limiti (saniye)
  * @returns Bonus puan
  */
-export const calculateTimeBonus = (
-  timeSpent: number,
-  timeLimit: number
-): number => {
+export const calculateTimeBonus = (timeSpent: number, timeLimit: number): number => {
   if (timeSpent >= timeLimit) return 0;
-  
+
   const remainingTime = timeLimit - timeSpent;
   const bonusPercentage = (remainingTime / timeLimit) * 100;
-  
+
   return Math.round(bonusPercentage * 0.2); // Max 20 bonus puan
 };
 
@@ -98,6 +95,6 @@ export const calculateTotalScore = (
   const baseScore = calculateScore(correctAnswers, totalQuestions, 0, difficultyMultiplier);
   const timeBonus = calculateTimeBonus(timeSpent, timeLimit);
   const comboBonus = calculateComboBonus(comboCount);
-  
+
   return baseScore + timeBonus + comboBonus;
 };

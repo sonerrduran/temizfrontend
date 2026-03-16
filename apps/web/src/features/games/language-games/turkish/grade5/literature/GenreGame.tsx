@@ -6,28 +6,28 @@ const texts = [
   {
     text: 'Bir varmış bir yokmuş, evvel zaman içinde...',
     genre: 'Masal',
-    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro']
+    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro'],
   },
   {
     text: 'Gökyüzünde yıldızlar parlar\nGece sessizce akar\nRüyalar düşer yollara',
     genre: 'Şiir',
-    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro']
+    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro'],
   },
   {
     text: 'ALİ: Merhaba, nasılsın?\nAYŞE: İyiyim, teşekkür ederim.',
     genre: 'Tiyatro',
-    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro']
+    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro'],
   },
   {
     text: 'Ahmet okula giderken yolda bir köpek buldu. Köpek çok açıkmış gibi görünüyordu.',
     genre: 'Hikaye',
-    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro']
+    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro'],
   },
   {
     text: 'Keloğlan padişahın kızını güldürmek için saraya gitti.',
     genre: 'Masal',
-    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro']
-  }
+    options: ['Masal', 'Şiir', 'Hikaye', 'Tiyatro'],
+  },
 ];
 
 export default function GenreGame() {
@@ -93,14 +93,10 @@ export default function GenreGame() {
           </div>
 
           <div className="mb-8 p-6 bg-indigo-50 rounded-xl">
-            <p className="text-lg text-gray-800 whitespace-pre-wrap leading-relaxed">
-              {text.text}
-            </p>
+            <p className="text-lg text-gray-800 whitespace-pre-wrap leading-relaxed">{text.text}</p>
           </div>
 
-          <p className="text-xl text-gray-700 mb-6 text-center">
-            Bu metin hangi türe aittir?
-          </p>
+          <p className="text-xl text-gray-700 mb-6 text-center">Bu metin hangi türe aittir?</p>
 
           <div className="grid grid-cols-2 gap-4">
             {text.options.map((option, index) => (
@@ -112,12 +108,12 @@ export default function GenreGame() {
                   selectedAnswer === null
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : selectedAnswer === option
-                    ? option === text.genre
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-red-100 border-2 border-red-500'
-                    : option === text.genre
-                    ? 'bg-green-100 border-2 border-green-500'
-                    : 'bg-gray-100'
+                      ? option === text.genre
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-red-100 border-2 border-red-500'
+                      : option === text.genre
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-gray-100'
                 }`}
               >
                 {option}

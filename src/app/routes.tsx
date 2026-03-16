@@ -37,36 +37,54 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 export const router = createBrowserRouter([
   {
     path: '/login',
-    element: <LoginPage />
+    element: <LoginPage />,
   },
   {
     path: '/register',
-    element: <RegisterPage />
+    element: <RegisterPage />,
   },
   {
     path: '/',
-    element: <ProtectedRoute><StudentDashboard /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <StudentDashboard />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/academic',
-    element: <ProtectedRoute><AcademicDashboard /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <AcademicDashboard />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/academic/math',
-    element: <ProtectedRoute><MathMenu /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <MathMenu />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/academic/math/grade1',
-    element: <ProtectedRoute><MathGrade1Menu /></ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <MathGrade1Menu />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/game/:gameId',
-    element: <ProtectedRoute>
-      <DynamicGameLoader gameId="" />
-    </ProtectedRoute>
+    element: (
+      <ProtectedRoute>
+        <DynamicGameLoader gameId="" />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />
-  }
+    element: <Navigate to="/" replace />,
+  },
 ]);

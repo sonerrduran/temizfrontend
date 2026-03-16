@@ -133,7 +133,7 @@ export const mockGames = [
     playCount: 2100,
     avgRating: 4.9,
   },
-  
+
   // Türkçe Oyunları
   {
     id: 'turkish-1',
@@ -173,7 +173,7 @@ export const mockGames = [
     playCount: 720,
     avgRating: 4.5,
   },
-  
+
   // Mantık Oyunları
   {
     id: 'logic-1',
@@ -213,7 +213,7 @@ export const mockGames = [
     playCount: 2800,
     avgRating: 4.8,
   },
-  
+
   // Hızlı Okuma
   {
     id: 'reading-1',
@@ -234,7 +234,7 @@ export const mockGames = [
     playCount: 1500,
     avgRating: 4.7,
   },
-  
+
   // Dikkat Oyunları
   {
     id: 'focus-1',
@@ -257,7 +257,8 @@ export const mockGames = [
   },
 ];
 
-export const mockUsers = [
+export const mockUsers: any[] = [
+  // Test users
   {
     id: '1',
     email: 'student@test.com',
@@ -303,6 +304,160 @@ export const mockUsers = [
     schoolId: 'school-1',
     school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
   },
+  // Students from mock-data
+  {
+    id: 'student-1',
+    email: 'ahmet@example.com',
+    name: 'Ahmet Yılmaz',
+    role: 'STUDENT',
+    gradeLevel: 3,
+    stars: 234,
+    xp: 15420,
+    level: 15,
+    avatar: '👨‍🚀',
+    solvedProblems: 156,
+    streakDays: 5,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'student-2',
+    email: 'ayse@example.com',
+    name: 'Ayşe Demir',
+    role: 'STUDENT',
+    gradeLevel: 4,
+    stars: 287,
+    xp: 18950,
+    level: 18,
+    avatar: '👧',
+    solvedProblems: 203,
+    streakDays: 8,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'student-3',
+    email: 'mehmet@example.com',
+    name: 'Mehmet Kaya',
+    role: 'STUDENT',
+    gradeLevel: 2,
+    stars: 145,
+    xp: 9870,
+    level: 9,
+    avatar: '👦',
+    solvedProblems: 98,
+    streakDays: 3,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  // Teachers
+  {
+    id: 'teacher-1',
+    email: 'zeynep.ozturk@school.com',
+    name: 'Zeynep Öztürk',
+    role: 'TEACHER',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👩‍🏫',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'teacher-2',
+    email: 'ali.celik@school.com',
+    name: 'Ali Çelik',
+    role: 'TEACHER',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👨‍🏫',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'teacher-3',
+    email: 'fatma.yildirim@school.com',
+    name: 'Fatma Yıldırım',
+    role: 'TEACHER',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👩‍🏫',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  // Parents
+  {
+    id: 'parent-1',
+    email: 'mustafa.yilmaz@example.com',
+    name: 'Mustafa Yılmaz',
+    role: 'PARENT',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👨',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'parent-2',
+    email: 'emine.demir@example.com',
+    name: 'Emine Demir',
+    role: 'PARENT',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👩',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  {
+    id: 'parent-3',
+    email: 'hasan.kaya@example.com',
+    name: 'Hasan Kaya',
+    role: 'PARENT',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👨',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
+  // Admin
+  {
+    id: 'admin-1',
+    email: 'admin@egitimgalaksisi.com',
+    name: 'Admin User',
+    role: 'SUPER_ADMIN',
+    gradeLevel: 0,
+    stars: 0,
+    xp: 0,
+    level: 1,
+    avatar: '👑',
+    solvedProblems: 0,
+    streakDays: 0,
+    schoolId: 'school-1',
+    school: { id: 'school-1', name: 'Özel Edirne Koleji', code: 'OEK2024' },
+  },
 ];
 
 export const mockLeaderboard = [
@@ -326,9 +481,27 @@ export const mockDashboardStats = {
     currentStreak: 7,
     longestStreak: 12,
     badges: [
-      { id: '1', name: 'İlk Adım', icon: '🎯', description: 'İlk oyununu tamamladın', earnedAt: '2026-03-01' },
-      { id: '2', name: 'Hızlı Öğrenen', icon: '⚡', description: '10 oyunu 24 saat içinde tamamladın', earnedAt: '2026-03-05' },
-      { id: '3', name: 'Matematik Ustası', icon: '🔢', description: '50 matematik oyunu tamamladın', earnedAt: '2026-03-10' },
+      {
+        id: '1',
+        name: 'İlk Adım',
+        icon: '🎯',
+        description: 'İlk oyununu tamamladın',
+        earnedAt: '2026-03-01',
+      },
+      {
+        id: '2',
+        name: 'Hızlı Öğrenen',
+        icon: '⚡',
+        description: '10 oyunu 24 saat içinde tamamladın',
+        earnedAt: '2026-03-05',
+      },
+      {
+        id: '3',
+        name: 'Matematik Ustası',
+        icon: '🔢',
+        description: '50 matematik oyunu tamamladın',
+        earnedAt: '2026-03-10',
+      },
     ],
     recentGames: [
       { id: 'math-3', name: 'Hızlı Matematik', score: 95, playedAt: '2026-03-14T10:30:00Z' },
@@ -373,8 +546,7 @@ export const mockNotifications = [
 ];
 
 // Mock API delay simulation
-export const mockDelay = (ms: number = 500) => 
-  new Promise(resolve => setTimeout(resolve, ms));
+export const mockDelay = (ms: number = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock API Wrapper
 export const mockData = {
@@ -382,7 +554,7 @@ export const mockData = {
   auth: {
     login: async (email: string, password: string) => {
       await mockDelay();
-      const user = mockUsers.find(u => u.email === email);
+      const user = mockUsers.find((u) => u.email === email);
       if (!user) {
         throw new Error('Kullanıcı bulunamadı');
       }
@@ -427,7 +599,7 @@ export const mockData = {
       }
       // Token'dan user id'yi çıkar
       const userId = token.replace('mock-jwt-token-', '');
-      const user = mockUsers.find(u => u.id === userId) || mockUsers[0];
+      const user = mockUsers.find((u) => u.id === userId) || mockUsers[0];
       return {
         success: true,
         data: user,
@@ -448,17 +620,15 @@ export const mockData = {
     list: async (categoryId?: string, gradeLevel?: number) => {
       await mockDelay();
       let filtered = [...mockGames];
-      
+
       if (categoryId) {
-        filtered = filtered.filter(g => g.categoryId === categoryId);
+        filtered = filtered.filter((g) => g.categoryId === categoryId);
       }
-      
+
       if (gradeLevel) {
-        filtered = filtered.filter(
-          g => g.gradeMin <= gradeLevel && g.gradeMax >= gradeLevel
-        );
+        filtered = filtered.filter((g) => g.gradeMin <= gradeLevel && g.gradeMax >= gradeLevel);
       }
-      
+
       return {
         success: true,
         data: filtered,
@@ -467,7 +637,7 @@ export const mockData = {
 
     detail: async (gameId: string) => {
       await mockDelay();
-      const game = mockGames.find(g => g.id === gameId);
+      const game = mockGames.find((g) => g.id === gameId);
       if (!game) {
         throw new Error('Oyun bulunamadı');
       }

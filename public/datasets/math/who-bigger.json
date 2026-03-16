@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "who"
-    ],
+    "tags": ["math", "who"],
     "description": "Who Bigger oyunu",
     "icon": "🔢"
   },

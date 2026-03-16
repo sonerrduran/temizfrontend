@@ -133,7 +133,7 @@ export const mockGames = [
     playCount: 2100,
     avgRating: 4.9,
   },
-  
+
   // Türkçe Oyunları
   {
     id: 'turkish-1',
@@ -173,7 +173,7 @@ export const mockGames = [
     playCount: 720,
     avgRating: 4.5,
   },
-  
+
   // Mantık Oyunları
   {
     id: 'logic-1',
@@ -213,7 +213,7 @@ export const mockGames = [
     playCount: 2800,
     avgRating: 4.8,
   },
-  
+
   // Hızlı Okuma
   {
     id: 'reading-1',
@@ -234,7 +234,7 @@ export const mockGames = [
     playCount: 1500,
     avgRating: 4.7,
   },
-  
+
   // Dikkat Oyunları
   {
     id: 'focus-1',
@@ -326,9 +326,27 @@ export const mockDashboardStats = {
     currentStreak: 7,
     longestStreak: 12,
     badges: [
-      { id: '1', name: 'İlk Adım', icon: '🎯', description: 'İlk oyununu tamamladın', earnedAt: '2026-03-01' },
-      { id: '2', name: 'Hızlı Öğrenen', icon: '⚡', description: '10 oyunu 24 saat içinde tamamladın', earnedAt: '2026-03-05' },
-      { id: '3', name: 'Matematik Ustası', icon: '🔢', description: '50 matematik oyunu tamamladın', earnedAt: '2026-03-10' },
+      {
+        id: '1',
+        name: 'İlk Adım',
+        icon: '🎯',
+        description: 'İlk oyununu tamamladın',
+        earnedAt: '2026-03-01',
+      },
+      {
+        id: '2',
+        name: 'Hızlı Öğrenen',
+        icon: '⚡',
+        description: '10 oyunu 24 saat içinde tamamladın',
+        earnedAt: '2026-03-05',
+      },
+      {
+        id: '3',
+        name: 'Matematik Ustası',
+        icon: '🔢',
+        description: '50 matematik oyunu tamamladın',
+        earnedAt: '2026-03-10',
+      },
     ],
     recentGames: [
       { id: 'math-3', name: 'Hızlı Matematik', score: 95, playedAt: '2026-03-14T10:30:00Z' },
@@ -373,8 +391,7 @@ export const mockNotifications = [
 ];
 
 // Mock API delay simulation
-export const mockDelay = (ms: number = 500) => 
-  new Promise(resolve => setTimeout(resolve, ms));
+export const mockDelay = (ms: number = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock API Wrapper
 export const mockData = {
@@ -382,7 +399,7 @@ export const mockData = {
   auth: {
     login: async (email: string, password: string) => {
       await mockDelay();
-      const user = mockUsers.find(u => u.email === email);
+      const user = mockUsers.find((u) => u.email === email);
       if (!user) {
         throw new Error('Kullanıcı bulunamadı');
       }
@@ -427,7 +444,7 @@ export const mockData = {
       }
       // Token'dan user id'yi çıkar
       const userId = token.replace('mock-jwt-token-', '');
-      const user = mockUsers.find(u => u.id === userId) || mockUsers[0];
+      const user = mockUsers.find((u) => u.id === userId) || mockUsers[0];
       return {
         success: true,
         data: user,
@@ -448,17 +465,15 @@ export const mockData = {
     list: async (categoryId?: string, gradeLevel?: number) => {
       await mockDelay();
       let filtered = [...mockGames];
-      
+
       if (categoryId) {
-        filtered = filtered.filter(g => g.categoryId === categoryId);
+        filtered = filtered.filter((g) => g.categoryId === categoryId);
       }
-      
+
       if (gradeLevel) {
-        filtered = filtered.filter(
-          g => g.gradeMin <= gradeLevel && g.gradeMax >= gradeLevel
-        );
+        filtered = filtered.filter((g) => g.gradeMin <= gradeLevel && g.gradeMax >= gradeLevel);
       }
-      
+
       return {
         success: true,
         data: filtered,
@@ -467,7 +482,7 @@ export const mockData = {
 
     detail: async (gameId: string) => {
       await mockDelay();
-      const game = mockGames.find(g => g.id === gameId);
+      const game = mockGames.find((g) => g.id === gameId);
       if (!game) {
         throw new Error('Oyun bulunamadı');
       }

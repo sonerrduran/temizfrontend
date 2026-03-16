@@ -21,7 +21,7 @@ export default function SpeedQuizEngine({ dataset, onComplete, onExit }: GameEng
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           handleTimeout();
           return 0;
@@ -47,7 +47,7 @@ export default function SpeedQuizEngine({ dataset, onComplete, onExit }: GameEng
   const handleAnswer = (answerIndex: number) => {
     const isCorrect = answerIndex === currentQuestion.correctAnswer;
     if (isCorrect) {
-      setCorrectAnswers(prev => prev + 1);
+      setCorrectAnswers((prev) => prev + 1);
     }
 
     if (isLastQuestion) {
@@ -58,7 +58,7 @@ export default function SpeedQuizEngine({ dataset, onComplete, onExit }: GameEng
   };
 
   const nextQuestion = () => {
-    setCurrentQuestionIndex(prev => prev + 1);
+    setCurrentQuestionIndex((prev) => prev + 1);
     setTimeLeft(quizData.config.timePerQuestion || 10);
   };
 
@@ -97,7 +97,9 @@ export default function SpeedQuizEngine({ dataset, onComplete, onExit }: GameEng
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="bg-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20">
             <div className="text-white/60 text-sm">Süre</div>
-            <div className={`text-3xl font-black ${timeLeft <= 3 ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+            <div
+              className={`text-3xl font-black ${timeLeft <= 3 ? 'text-red-400 animate-pulse' : 'text-white'}`}
+            >
               {timeLeft}s
             </div>
           </div>

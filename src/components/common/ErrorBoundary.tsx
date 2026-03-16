@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    
+
     this.setState({
       error,
       errorInfo,
@@ -72,9 +72,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <div className="flex items-center gap-3 mb-4">
               <AlertTriangle className="w-8 h-8 text-red-500" />
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Bir Hata Oluştu
-              </h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bir Hata Oluştu</h1>
             </div>
 
             <p className="text-gray-600 dark:text-gray-400 mb-4">

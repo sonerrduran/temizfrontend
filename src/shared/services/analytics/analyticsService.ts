@@ -1,4 +1,4 @@
-type EventName = 
+type EventName =
   | 'GAME_START'
   | 'GAME_END'
   | 'GAME_PAUSE'

@@ -1,0 +1,9 @@
+export { default as TurkishMenu } from './TurkishMenu';
+export { default as TurkishGrade1Menu } from './grade1/TurkishGrade1Menu';
+export { default as TurkishGrade2Menu } from '../../../../../../components/academic/turkish/grade2/TurkishGrade2Menu';
+export { default as TurkishGrade3Menu } from './grade3/TurkishGrade3Menu';
+export { default as TurkishGrade4Menu } from './grade4/TurkishGrade4Menu';
+export { default as TurkishGrade5Menu } from './grade5/TurkishGrade5Menu';
+export { default as TurkishGrade6Menu } from './grade6/TurkishGrade6Menu';
+export { default as TurkishGrade7Menu } from './grade7/TurkishGrade7Menu';
+export { default as TurkishGrade8Menu } from './grade8/TurkishGrade8Menu';

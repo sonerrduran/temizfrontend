@@ -1,8 +1,7 @@
 /**
  * Grade 2 Math Games
- * 2. Sýnýf Matematik Oyunlarý
+ * 2. Sï¿½nï¿½f Matematik Oyunlarï¿½
  */
 
 export { default as MathGrade2 } from './MathGrade2';
 export { default as MathGrade2Menu } from './MathGrade2Menu';
-

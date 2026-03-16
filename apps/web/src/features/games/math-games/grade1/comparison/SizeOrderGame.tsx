@@ -25,9 +25,9 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
     const newItems = Array.from({ length: count }, (_, i) => ({
       id: i,
       size: Math.floor(Math.random() * 80) + 40,
-      emoji
+      emoji,
     })).sort(() => Math.random() - 0.5);
-    
+
     setItems(newItems);
     setSelectedOrder([]);
     setFeedback('');
@@ -35,7 +35,7 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
   const handleItemClick = (id: number) => {
     if (selectedOrder.includes(id)) return;
-    
+
     const newOrder = [...selectedOrder, id];
     setSelectedOrder(newOrder);
 
@@ -46,8 +46,8 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
   const checkAnswer = (order: number[]) => {
     const sortedItems = [...items].sort((a, b) => a.size - b.size);
-    const correctOrder = sortedItems.map(item => item.id);
-    
+    const correctOrder = sortedItems.map((item) => item.id);
+
     const isCorrect = order.every((id, idx) => id === correctOrder[idx]);
 
     if (isCorrect) {
@@ -55,7 +55,7 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
       setScore(score + points);
       setFeedback('🎉 Harika! Doğru sıraladın!');
       setShowCelebration(true);
-      
+
       setTimeout(() => {
         setShowCelebration(false);
         if (level < 5) {
@@ -85,7 +85,7 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
+              animationDuration: `${5 + Math.random() * 10}s`,
             }}
           >
             <span className="text-2xl opacity-20">📏</span>
@@ -126,7 +126,9 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl mb-8">
           <div className="text-center mb-8">
             <p className="text-2xl text-white font-bold">
-              {selectedOrder.length === 0 ? 'En küçüğünden başlayarak sırala!' : `${selectedOrder.length}/${items.length} seçildi`}
+              {selectedOrder.length === 0
+                ? 'En küçüğünden başlayarak sırala!'
+                : `${selectedOrder.length}/${items.length} seçildi`}
             </p>
           </div>
 
@@ -135,20 +137,20 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
             {items.map((item, idx) => {
               const isSelected = selectedOrder.includes(item.id);
               const orderIndex = selectedOrder.indexOf(item.id);
-              
+
               return (
                 <button
                   key={item.id}
                   onClick={() => handleItemClick(item.id)}
                   disabled={isSelected}
                   className={`relative transition-all duration-300 ${
-                    isSelected 
-                      ? 'opacity-50 scale-90' 
+                    isSelected
+                      ? 'opacity-50 scale-90'
                       : 'hover:scale-110 hover:-translate-y-2 cursor-pointer'
                   }`}
                   style={{
                     fontSize: `${item.size}px`,
-                    filter: isSelected ? 'grayscale(50%)' : 'none'
+                    filter: isSelected ? 'grayscale(50%)' : 'none',
                   }}
                 >
                   <span>{item.emoji}</span>
@@ -164,9 +166,11 @@ const SizeOrderGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
           {/* Feedback */}
           {feedback && (
-            <div className={`mt-8 text-center text-2xl font-black ${
-              feedback.includes('Harika') ? 'text-green-400' : 'text-red-400'
-            }`}>
+            <div
+              className={`mt-8 text-center text-2xl font-black ${
+                feedback.includes('Harika') ? 'text-green-400' : 'text-red-400'
+              }`}
+            >
               {feedback}
             </div>
           )}

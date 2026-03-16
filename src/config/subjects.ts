@@ -22,7 +22,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-blue-400 to-blue-600',
     description: 'Sayılar, işlemler ve problem çözme',
     grades: [1, 2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/math'
+    path: '/academic/math',
   },
   {
     id: 'turkish',
@@ -32,7 +32,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-red-400 to-red-600',
     description: 'Okuma, yazma ve dil bilgisi',
     grades: [1, 2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/turkish'
+    path: '/academic/turkish',
   },
   {
     id: 'life-science',
@@ -42,7 +42,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-green-400 to-green-600',
     description: 'Çevremiz ve yaşam becerileri',
     grades: [1, 2, 3],
-    path: '/academic/life-science'
+    path: '/academic/life-science',
   },
   {
     id: 'science',
@@ -52,7 +52,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-purple-400 to-purple-600',
     description: 'Canlılar, madde ve enerji',
     grades: [3, 4, 5, 6, 7, 8],
-    path: '/academic/science'
+    path: '/academic/science',
   },
   {
     id: 'english',
@@ -62,7 +62,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-orange-400 to-orange-600',
     description: 'İngilizce dil becerileri',
     grades: [2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/english'
+    path: '/academic/english',
   },
   {
     id: 'german',
@@ -72,7 +72,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-pink-400 to-pink-600',
     description: 'Almanca dil becerileri',
     grades: [4, 5, 6, 7, 8],
-    path: '/academic/german'
+    path: '/academic/german',
   },
   {
     id: 'social-studies',
@@ -82,7 +82,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-cyan-400 to-cyan-600',
     description: 'Tarih, coğrafya ve vatandaşlık',
     grades: [4, 5, 6, 7],
-    path: '/academic/social-studies'
+    path: '/academic/social-studies',
   },
   {
     id: 'religion',
@@ -92,7 +92,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-lime-400 to-lime-600',
     description: 'İnanç, ibadet ve ahlak',
     grades: [4, 5, 6, 7, 8],
-    path: '/academic/religion'
+    path: '/academic/religion',
   },
   {
     id: 'music',
@@ -102,7 +102,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-violet-400 to-violet-600',
     description: 'Nota, ritim ve şarkı',
     grades: [1, 2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/music'
+    path: '/academic/music',
   },
   {
     id: 'physical-education',
@@ -112,7 +112,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-teal-400 to-teal-600',
     description: 'Spor, oyun ve sağlık',
     grades: [1, 2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/physical-education'
+    path: '/academic/physical-education',
   },
   {
     id: 'visual-arts',
@@ -122,7 +122,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-orange-400 to-red-500',
     description: 'Resim, tasarım ve sanat',
     grades: [1, 2, 3, 4, 5, 6, 7, 8],
-    path: '/academic/visual-arts'
+    path: '/academic/visual-arts',
   },
   {
     id: 'history',
@@ -132,7 +132,7 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-red-500 to-red-700',
     description: 'Kurtuluş Savaşı ve Atatürk',
     grades: [8],
-    path: '/academic/history'
+    path: '/academic/history',
   },
   {
     id: 'informatics',
@@ -142,22 +142,22 @@ export const SUBJECTS: Subject[] = [
     gradient: 'from-indigo-400 to-indigo-600',
     description: 'Kodlama ve dijital beceriler',
     grades: [5, 6, 7, 8],
-    path: '/academic/informatics'
-  }
+    path: '/academic/informatics',
+  },
 ];
 
 /**
  * Sınıfa göre dersleri filtrele
  */
 export const getSubjectsByGrade = (grade: number): Subject[] => {
-  return SUBJECTS.filter(subject => subject.grades.includes(grade));
+  return SUBJECTS.filter((subject) => subject.grades.includes(grade));
 };
 
 /**
  * ID'ye göre ders bul
  */
 export const getSubjectById = (id: string): Subject | undefined => {
-  return SUBJECTS.find(subject => subject.id === id);
+  return SUBJECTS.find((subject) => subject.id === id);
 };
 
 /**

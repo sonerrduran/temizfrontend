@@ -14,9 +14,7 @@ const TurkishAcademicMenu: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-7xl mb-4">{subject.icon}</div>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
-            {subject.name}
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">{subject.name}</h1>
           <p className="text-white/80 text-lg">{subject.description}</p>
         </div>
 

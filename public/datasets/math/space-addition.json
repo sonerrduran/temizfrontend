@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "space"
-    ],
+    "tags": ["math", "space"],
     "description": "Space Addition oyunu",
     "icon": "🔢"
   },
@@ -26,12 +23,7 @@
         "id": "q1",
         "type": "multiple-choice",
         "question": "2 + 2 = ?",
-        "options": [
-          3,
-          4,
-          5,
-          6
-        ],
+        "options": [3, 4, 5, 6],
         "correctAnswer": 1,
         "points": 10
       },
@@ -39,12 +31,7 @@
         "id": "q2",
         "type": "multiple-choice",
         "question": "3 + 3 = ?",
-        "options": [
-          5,
-          6,
-          7,
-          8
-        ],
+        "options": [5, 6, 7, 8],
         "correctAnswer": 1,
         "points": 10
       }

@@ -25,12 +25,12 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       const history = await gameService.getGameHistory(userId);
-      
+
       // Calculate stats
       const totalScore = history.reduce((sum, game) => sum + game.score, 0);
       const gamesPlayed = history.length;
       const averageScore = gamesPlayed > 0 ? Math.round(totalScore / gamesPlayed) : 0;
-      const bestScore = Math.max(...history.map(g => g.score), 0);
+      const bestScore = Math.max(...history.map((g) => g.score), 0);
       const level = Math.floor(totalScore / 1000) + 1;
 
       setStats({
@@ -82,7 +82,9 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
             <div className="text-white/60 text-sm mb-2">Toplam Puan</div>
-            <div className="text-3xl font-black text-white">{stats?.totalScore.toLocaleString()}</div>
+            <div className="text-3xl font-black text-white">
+              {stats?.totalScore.toLocaleString()}
+            </div>
           </div>
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
             <div className="text-white/60 text-sm mb-2">Oynanan Oyun</div>
@@ -103,9 +105,7 @@ export default function ProfilePage() {
           <h2 className="text-2xl font-black text-white mb-6">Son Oyunlar</h2>
           <div className="space-y-4">
             {recentGames.length === 0 ? (
-              <div className="text-center py-12 text-white/60">
-                Henüz oyun oynamadınız
-              </div>
+              <div className="text-center py-12 text-white/60">Henüz oyun oynamadınız</div>
             ) : (
               recentGames.map((game, index) => (
                 <div

@@ -8,26 +8,21 @@ export const generateQuestions = async (
   count: number = 10
 ) => {
   // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   const questions = [];
-  
+
   for (let i = 0; i < count; i++) {
     questions.push({
       id: `q_${Date.now()}_${i}`,
       question: `${mode} sorusu ${i + 1} (${difficulty} seviye, ${grade}. sınıf)`,
-      options: [
-        'A) Birinci şık',
-        'B) İkinci şık',
-        'C) Üçüncü şık',
-        'D) Dördüncü şık'
-      ],
+      options: ['A) Birinci şık', 'B) İkinci şık', 'C) Üçüncü şık', 'D) Dördüncü şık'],
       correctAnswer: Math.floor(Math.random() * 4),
       explanation: 'Bu bir örnek açıklamadır.',
       difficulty,
       grade,
       mode,
-      points: 10
+      points: 10,
     });
   }
 
@@ -38,7 +33,7 @@ export const generateStory = async (
   theme: string,
   length: 'short' | 'medium' | 'long' = 'medium'
 ) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return {
     title: `${theme} Hikayesi`,
@@ -47,23 +42,20 @@ export const generateStory = async (
       {
         question: 'Hikayenin konusu nedir?',
         options: ['A', 'B', 'C', 'D'],
-        correctAnswer: 0
-      }
-    ]
+        correctAnswer: 0,
+      },
+    ],
   };
 };
 
-export const generateExercise = async (
-  type: string,
-  difficulty: string
-) => {
-  await new Promise(resolve => setTimeout(resolve, 500));
+export const generateExercise = async (type: string, difficulty: string) => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return {
     type,
     difficulty,
     content: 'Örnek egzersiz içeriği',
-    instructions: 'Talimatlar burada'
+    instructions: 'Talimatlar burada',
   };
 };
 
@@ -71,5 +63,5 @@ export const generateExercise = async (
 export default {
   generateQuestions,
   generateStory,
-  generateExercise
+  generateExercise,
 };

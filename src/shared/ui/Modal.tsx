@@ -32,13 +32,12 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className={`relative bg-slate-900 rounded-3xl border border-white/20 ${sizes[size]} w-full max-h-[90vh] overflow-hidden animate-in zoom-in`}>
+      <div
+        className={`relative bg-slate-900 rounded-3xl border border-white/20 ${sizes[size]} w-full max-h-[90vh] overflow-hidden animate-in zoom-in`}
+      >
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-white/10">
@@ -53,9 +52,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' }:
         )}
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-          {children}
-        </div>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">{children}</div>
       </div>
     </div>
   );

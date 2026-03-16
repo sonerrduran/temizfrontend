@@ -1,7 +1,9 @@
 /**
  * Auth Feature
- * Barrel export for auth feature
+ * Barrel export for auth components
  */
 
-export { LoginPage } from './LoginPage';
-export { RegisterPage } from './RegisterPage';
+export { default as LoginPage } from './LoginPage';
+export { default as RegisterPage } from './RegisterPage';
+export { navigateByRole } from '@egitim-galaksisi/shared';
+export { AuthRoutes } from './routes';

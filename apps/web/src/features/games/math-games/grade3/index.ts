@@ -1,8 +1,7 @@
 /**
  * Grade 3 Math Games
- * 3. Sýnýf Matematik Oyunlarý
+ * 3. Sï¿½nï¿½f Matematik Oyunlarï¿½
  */
 
 export { default as MathGrade3 } from './MathGrade3';
 export { default as MathGrade3Menu } from './MathGrade3Menu';
-

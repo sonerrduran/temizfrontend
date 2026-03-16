@@ -6,7 +6,7 @@
 import React, { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
-import ErrorBoundary from '../components/core/ErrorBoundary';
+import { ErrorBoundary } from '@egitim-galaksisi/ui';
 
 // Loading Fallback
 const AppLoading = () => (
@@ -21,10 +21,10 @@ const AppLoading = () => (
 
 /**
  * App Component
- * 
+ *
  * Önceki durum: 5,388 satır
  * Yeni durum: 35 satır
- * 
+ *
  * Tüm oyunlar gameRegistry'den dinamik yükleniyor
  */
 function App() {

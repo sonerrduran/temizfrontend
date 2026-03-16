@@ -4,28 +4,31 @@ export interface InputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  type?: 'text' | 'email' | 'password' | 'number';
-  disabled?: boolean;
-  error?: string;
+  type?: string;
   label?: string;
+  error?: string;
+  disabled?: boolean;
+  required?: boolean;
   className?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+const Input: React.FC<InputProps> = ({
   value,
   onChange,
   placeholder,
   type = 'text',
-  disabled = false,
-  error,
   label,
+  error,
+  disabled = false,
+  required = false,
   className = '',
 }) => {
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label className="block text-white font-bold mb-2">
+        <label className="block text-white font-medium mb-2">
           {label}
+          {required && <span className="text-red-400 ml-1">*</span>}
         </label>
       )}
       <input
@@ -34,15 +37,16 @@ export const Input: React.FC<InputProps> = ({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full px-4 py-3 bg-slate-700/50 border ${
-          error ? 'border-red-500' : 'border-slate-600'
-        } rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 ${
-          error ? 'focus:ring-red-500' : 'focus:ring-blue-500'
-        } disabled:opacity-50 disabled:cursor-not-allowed transition-all`}
+        required={required}
+        className={`w-full px-4 py-3 rounded-xl bg-slate-700/50 border ${
+          error ? 'border-red-500' : 'border-white/10'
+        } text-white placeholder-white/50 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
       />
       {error && (
-        <p className="text-red-400 text-sm mt-1">{error}</p>
+        <p className="mt-2 text-red-400 text-sm">{error}</p>
       )}
     </div>
   );
 };
+
+export default Input;

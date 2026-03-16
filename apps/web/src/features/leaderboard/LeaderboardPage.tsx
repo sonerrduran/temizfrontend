@@ -16,16 +16,10 @@ export function LeaderboardPage() {
         <h1>Liderlik Tablosu</h1>
 
         <div className="leaderboard-filters">
-          <button
-            className={scope === 'global' ? 'active' : ''}
-            onClick={() => setScope('global')}
-          >
+          <button className={scope === 'global' ? 'active' : ''} onClick={() => setScope('global')}>
             Global
           </button>
-          <button
-            className={scope === 'school' ? 'active' : ''}
-            onClick={() => setScope('school')}
-          >
+          <button className={scope === 'school' ? 'active' : ''} onClick={() => setScope('school')}>
             Okulum
           </button>
           <button

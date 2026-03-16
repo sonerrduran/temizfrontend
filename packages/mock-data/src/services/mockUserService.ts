@@ -3,7 +3,15 @@
  * Kullanıcı API'si için mock servis
  */
 
-import type { User, UserRole, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, UpdateProfileRequest } from '../contracts/user';
+import type {
+  User,
+  UserRole,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  UpdateProfileRequest,
+} from '../contracts/user';
 import { mockUsers, getUserByEmail, getUserByUsername } from '../data/users';
 
 /**
@@ -25,18 +33,18 @@ function generateToken(): string {
  */
 export async function login(request: LoginRequest): Promise<LoginResponse> {
   await delay(800);
-  
+
   const user = getUserByEmail(request.email);
-  
+
   if (!user) {
     throw new Error('Kullanıcı bulunamadı');
   }
-  
+
   // Mock password check (gerçek uygulamada hash karşılaştırması yapılacak)
   if (request.password !== 'password123') {
     throw new Error('Hatalı şifre');
   }
-  
+
   return {
     user,
     session: {
@@ -54,17 +62,17 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
  */
 export async function register(request: RegisterRequest): Promise<RegisterResponse> {
   await delay(1000);
-  
+
   // Email kontrolü
   if (getUserByEmail(request.email)) {
     throw new Error('Bu email zaten kullanılıyor');
   }
-  
+
   // Username kontrolü
   if (getUserByUsername(request.username)) {
     throw new Error('Bu kullanıcı adı zaten kullanılıyor');
   }
-  
+
   const newUser: User = {
     id: `user-${Date.now()}`,
     username: request.username,
@@ -80,9 +88,9 @@ export async function register(request: RegisterRequest): Promise<RegisterRespon
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  
+
   mockUsers.push(newUser);
-  
+
   return {
     user: newUser,
     session: {
@@ -116,22 +124,22 @@ export async function getUser(userId: string): Promise<User | null> {
  */
 export async function updateProfile(userId: string, updates: UpdateProfileRequest): Promise<User> {
   await delay(600);
-  
+
   const user = mockUsers.find((u) => u.id === userId);
-  
+
   if (!user) {
     throw new Error('Kullanıcı bulunamadı');
   }
-  
+
   if (updates.firstName) user.firstName = updates.firstName;
   if (updates.lastName) user.lastName = updates.lastName;
   if (updates.firstName || updates.lastName) {
     user.fullName = `${user.firstName} ${user.lastName}`;
   }
   if (updates.avatar) user.avatar = updates.avatar;
-  
+
   user.updatedAt = new Date();
-  
+
   return user;
 }
 
@@ -166,16 +174,16 @@ export async function changePassword(
   newPassword: string
 ): Promise<void> {
   await delay(600);
-  
+
   // Mock password change
   if (oldPassword !== 'password123') {
     throw new Error('Mevcut şifre hatalı');
   }
-  
+
   if (newPassword.length < 6) {
     throw new Error('Yeni şifre en az 6 karakter olmalı');
   }
-  
+
   // Gerçek uygulamada şifre hash'lenip kaydedilecek
 }
 
@@ -184,13 +192,13 @@ export async function changePassword(
  */
 export async function verifyEmail(userId: string, token: string): Promise<void> {
   await delay(400);
-  
+
   const user = mockUsers.find((u) => u.id === userId);
-  
+
   if (!user) {
     throw new Error('Kullanıcı bulunamadı');
   }
-  
+
   user.isVerified = true;
   user.updatedAt = new Date();
 }

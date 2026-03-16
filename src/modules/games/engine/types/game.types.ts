@@ -5,18 +5,18 @@ export interface GameConfig {
   name: string;
   description: string;
   version: string;
-  
+
   // Metadata
   category: string;
   subcategory?: string;
   gradeMin: number;
   gradeMax: number;
   difficulty: 'very_easy' | 'easy' | 'medium' | 'hard' | 'very_hard';
-  
+
   // Technical
   component: string;
   template?: string;
-  
+
   // Features
   features: {
     multiplayer: boolean;
@@ -24,25 +24,25 @@ export interface GameConfig {
     offline: boolean;
     realtime: boolean;
   };
-  
+
   // Content
   contentSource: 'database' | 'static' | 'ai' | 'hybrid';
-  
+
   // Assets
   assets: {
     icon: string;
     thumbnail?: string;
     preview?: string;
   };
-  
+
   // Tags
   tags: string[];
   keywords?: string[];
-  
+
   // Performance
   estimatedLoadTime?: number;
   memoryUsage?: 'low' | 'medium' | 'high';
-  
+
   // Analytics
   trackEvents?: string[];
 }

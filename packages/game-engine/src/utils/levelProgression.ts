@@ -163,12 +163,12 @@ export function canProgressToNextLevel(
   totalQuestions?: number
 ): boolean {
   const scoreCheck = currentScore >= targetScore;
-  
+
   if (correctAnswers !== undefined && totalQuestions !== undefined && totalQuestions > 0) {
     const accuracy = correctAnswers / totalQuestions;
     return scoreCheck && accuracy >= minAccuracy;
   }
-  
+
   return scoreCheck;
 }
 
@@ -187,21 +187,21 @@ export function calculateLevelBonus(
   perfectScore: boolean = false
 ): number {
   let bonus = 0;
-  
+
   // Seviye bonusu
   bonus += level * 10;
-  
+
   // Süre bonusu (her saniye için)
   bonus += timeRemaining * 5;
-  
+
   // Can bonusu (her can için)
   bonus += livesRemaining * 20;
-  
+
   // Mükemmel skor bonusu
   if (perfectScore) {
     bonus += level * 50;
   }
-  
+
   return bonus;
 }
 
@@ -231,10 +231,10 @@ export function generateLevelRange(
   options: Parameters<typeof generateLevelConfig>[1] = {}
 ): LevelConfig[] {
   const levels: LevelConfig[] = [];
-  
+
   for (let level = startLevel; level <= endLevel; level++) {
     levels.push(generateLevelConfig(level, options));
   }
-  
+
   return levels;
 }

@@ -6,23 +6,23 @@ const sentences = [
   {
     correct: 'Kedi bahçede oynuyor',
     words: ['bahçede', 'Kedi', 'oynuyor'],
-    image: '🐱'
+    image: '🐱',
   },
   {
     correct: 'Çocuklar parkta koşuyor',
     words: ['parkta', 'Çocuklar', 'koşuyor'],
-    image: '👦'
+    image: '👦',
   },
   {
     correct: 'Kuş ağaçta şarkı söylüyor',
     words: ['şarkı', 'Kuş', 'ağaçta', 'söylüyor'],
-    image: '🐦'
+    image: '🐦',
   },
   {
     correct: 'Anne mutfakta yemek yapıyor',
     words: ['mutfakta', 'Anne', 'yemek', 'yapıyor'],
-    image: '👩‍🍳'
-  }
+    image: '👩‍🍳',
+  },
 ];
 
 export default function SentenceBuilderGame() {
@@ -37,7 +37,7 @@ export default function SentenceBuilderGame() {
 
   const handleWordClick = (word: string) => {
     setSelectedWords([...selectedWords, word]);
-    setAvailableWords(availableWords.filter(w => w !== word));
+    setAvailableWords(availableWords.filter((w) => w !== word));
   };
 
   const handleRemoveWord = (index: number) => {
@@ -50,7 +50,7 @@ export default function SentenceBuilderGame() {
     const userSentence = selectedWords.join(' ');
     const correct = userSentence === sentence.correct;
     setIsCorrect(correct);
-    
+
     if (correct) {
       setScore(score + 1);
       setTimeout(() => {
@@ -80,13 +80,13 @@ export default function SentenceBuilderGame() {
 
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-            Cümle Kurma Oyunu
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Cümle Kurma Oyunu</h1>
 
           <div className="text-center mb-6">
             <div className="text-6xl mb-4">{sentence.image}</div>
-            <p className="text-gray-600">Soru {currentSentence + 1}/{sentences.length}</p>
+            <p className="text-gray-600">
+              Soru {currentSentence + 1}/{sentences.length}
+            </p>
             <p className="text-lg font-semibold text-purple-600 mt-2">Skor: {score}</p>
           </div>
 
@@ -138,16 +138,20 @@ export default function SentenceBuilderGame() {
           </button>
 
           {isCorrect !== null && (
-            <div className={`mt-4 p-4 rounded-xl text-center ${
-              isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}>
+            <div
+              className={`mt-4 p-4 rounded-xl text-center ${
+                isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}
+            >
               {isCorrect ? (
                 <div className="flex items-center justify-center gap-2">
                   <CheckCircle size={24} />
                   <span className="font-semibold">Harika! Doğru cümle kurdun!</span>
                 </div>
               ) : (
-                <span className="font-semibold">Tekrar dene! Doğru cümle: "{sentence.correct}"</span>
+                <span className="font-semibold">
+                  Tekrar dene! Doğru cümle: "{sentence.correct}"
+                </span>
               )}
             </div>
           )}

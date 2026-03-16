@@ -12,9 +12,8 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
 
   const grades = ['Tümü', 'Anasınıfı', '1. Sınıf', '2. Sınıf', '3. Sınıf', '4. Sınıf'];
 
-  const filteredStories = selectedGrade === 'Tümü' 
-    ? stories 
-    : stories.filter(s => s.grade === selectedGrade);
+  const filteredStories =
+    selectedGrade === 'Tümü' ? stories : stories.filter((s) => s.grade === selectedGrade);
 
   const handleStorySelect = (story: Story) => {
     setSelectedStory(story);
@@ -52,7 +51,10 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
         </div>
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {selectedStory.characters.map((char, idx) => (
-            <div key={idx} className="px-4 py-2 bg-slate-700 rounded-full text-amber-300 font-bold shadow-md">
+            <div
+              key={idx}
+              className="px-4 py-2 bg-slate-700 rounded-full text-amber-300 font-bold shadow-md"
+            >
               {char}
             </div>
           ))}
@@ -70,8 +72,8 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
           {selectedStory.image && (
             <div className="mb-6 flex justify-center">
               <div className="relative w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border-4 border-amber-500/30">
-                <img 
-                  src={selectedStory.image} 
+                <img
+                  src={selectedStory.image}
                   alt={selectedStory.title}
                   className="w-full h-auto object-cover"
                   onError={(e) => {
@@ -79,7 +81,8 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
                     e.currentTarget.style.display = 'none';
                     const parent = e.currentTarget.parentElement;
                     if (parent) {
-                      parent.innerHTML = '<div class="w-full h-64 flex items-center justify-center bg-slate-700/50 text-8xl">📖</div>';
+                      parent.innerHTML =
+                        '<div class="w-full h-64 flex items-center justify-center bg-slate-700/50 text-8xl">📖</div>';
                     }
                   }}
                 />
@@ -104,7 +107,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
               {selectedStory.lesson}
             </p>
           </div>
-          
+
           <div className="bg-slate-700/50 rounded-3xl p-6 shadow-lg border-4 border-purple-500/30">
             <h3 className="text-2xl font-black text-purple-400 mb-4">📚 Yeni Kelimeler:</h3>
             <div className="space-y-3">
@@ -126,7 +129,10 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
         </h2>
         <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar space-y-4">
           {selectedStory.questions.map((q, idx) => (
-            <div key={idx} className="bg-slate-700/50 rounded-3xl p-6 shadow-lg border-4 border-blue-500/30">
+            <div
+              key={idx}
+              className="bg-slate-700/50 rounded-3xl p-6 shadow-lg border-4 border-blue-500/30"
+            >
               <h3 className="text-xl font-black text-blue-300 mb-3">
                 {idx + 1}. {q.question}
               </h3>
@@ -135,9 +141,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
                   Cevabı Göster 👆
                 </summary>
                 <div className="mt-3 p-4 bg-green-900/50 rounded-xl border-2 border-green-500">
-                  <p className="text-lg font-bold text-green-300">
-                    ✓ {q.answer}
-                  </p>
+                  <p className="text-lg font-bold text-green-300">✓ {q.answer}</p>
                 </div>
               </details>
             </div>
@@ -152,14 +156,15 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
         </h2>
         <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar space-y-4">
           {selectedStory.scenes.map((scene, idx) => (
-            <div key={idx} className="bg-slate-700/50 rounded-3xl p-6 shadow-lg border-4 border-pink-500/30">
+            <div
+              key={idx}
+              className="bg-slate-700/50 rounded-3xl p-6 shadow-lg border-4 border-pink-500/30"
+            >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center font-black text-xl flex-shrink-0">
                   {idx + 1}
                 </div>
-                <p className="text-lg text-white font-semibold leading-relaxed flex-1">
-                  {scene}
-                </p>
+                <p className="text-lg text-white font-semibold leading-relaxed flex-1">{scene}</p>
               </div>
             </div>
           ))}
@@ -169,9 +174,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
       // Sayfa 5: Etkinlik
       <div className="h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-800 to-slate-900">
         <div className="text-8xl mb-6">🎯</div>
-        <h2 className="text-4xl font-black text-orange-400 mb-6 text-center">
-          Etkinlik Zamanı!
-        </h2>
+        <h2 className="text-4xl font-black text-orange-400 mb-6 text-center">Etkinlik Zamanı!</h2>
         <div className="bg-slate-700/50 rounded-3xl p-8 shadow-2xl border-4 border-orange-500/30 max-w-2xl">
           <p className="text-2xl text-white font-bold leading-relaxed text-center">
             {selectedStory.activity}
@@ -183,7 +186,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
         >
           📚 Başka Hikaye Oku
         </button>
-      </div>
+      </div>,
     ];
 
     return (
@@ -192,11 +195,12 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
           {/* Kitap */}
           <div className="relative">
             {/* Kitap Sayfası */}
-            <div className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden border-8 border-amber-600" style={{ minHeight: '600px', maxHeight: '80vh' }}>
+            <div
+              className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden border-8 border-amber-600"
+              style={{ minHeight: '600px', maxHeight: '80vh' }}
+            >
               {/* Sayfa İçeriği */}
-              <div className="h-full">
-                {pages[currentPage]}
-              </div>
+              <div className="h-full">{pages[currentPage]}</div>
             </div>
 
             {/* Navigasyon */}
@@ -219,9 +223,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
                     key={idx}
                     onClick={() => setCurrentPage(idx)}
                     className={`w-3 h-3 rounded-full transition-all ${
-                      currentPage === idx
-                        ? 'bg-amber-500 w-8'
-                        : 'bg-amber-700 hover:bg-amber-600'
+                      currentPage === idx ? 'bg-amber-500 w-8' : 'bg-amber-700 hover:bg-amber-600'
                     }`}
                   />
                 ))}
@@ -256,7 +258,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
       <div className="max-w-7xl mx-auto">
-        <button 
+        <button
           onClick={onBack}
           className="mb-6 px-6 py-3 bg-amber-600 text-white rounded-full font-bold hover:bg-amber-700 transition-all shadow-lg"
         >
@@ -277,7 +279,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
 
         {/* Sınıf Filtreleri */}
         <div className="flex justify-center gap-3 mb-8 flex-wrap">
-          {grades.map(grade => (
+          {grades.map((grade) => (
             <button
               key={grade}
               onClick={() => setSelectedGrade(grade)}
@@ -294,7 +296,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
 
         {/* Hikaye Kartları - Kitap Rafı Görünümü */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {filteredStories.map(story => (
+          {filteredStories.map((story) => (
             <button
               key={story.id}
               onClick={() => handleStorySelect(story)}
@@ -303,7 +305,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
             >
               {/* Kitap Sırtı Efekti */}
               <div className="absolute inset-0 bg-gradient-to-r from-amber-900/20 to-transparent rounded-2xl pointer-events-none"></div>
-              
+
               <div className="relative h-full flex flex-col">
                 {/* Sınıf Etiketi */}
                 <div className="absolute -top-2 -right-2 px-3 py-1 bg-yellow-400 text-amber-900 rounded-full text-xs font-black shadow-md z-10">
@@ -311,9 +313,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
                 </div>
 
                 {/* Kitap İkonu */}
-                <div className="text-6xl mb-3 group-hover:scale-110 transition-transform">
-                  📖
-                </div>
+                <div className="text-6xl mb-3 group-hover:scale-110 transition-transform">📖</div>
 
                 {/* Başlık */}
                 <h3 className="text-lg font-black text-white mb-2 leading-tight line-clamp-3 flex-1">
@@ -340,9 +340,7 @@ const StoryBook: React.FC<StoryBookProps> = ({ onBack }) => {
             <h3 className="text-4xl font-black text-amber-400 mb-4">
               Bu sınıf için henüz hikaye yok
             </h3>
-            <p className="text-amber-300 text-xl">
-              Yakında yeni hikayeler eklenecek!
-            </p>
+            <p className="text-amber-300 text-xl">Yakında yeni hikayeler eklenecek!</p>
           </div>
         )}
       </div>

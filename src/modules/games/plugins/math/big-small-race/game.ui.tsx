@@ -1,58 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { GameUIProps } from '@/modules/games/engine/types/game.types';
 
-export const BigSmallRaceGame: React.FC<GameUIProps> = ({
-  config,
-  logic,
-  onComplete,
-  onExit,
-}) => {
+export const BigSmallRaceGame: React.FC<GameUIProps> = ({ config, logic, onComplete, onExit }) => {
   const [state, setState] = useState(logic.getState());
   const [feedback, setFeedback] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Initialize game
     logic.initialize(config);
     setState(logic.getState());
-    
+
     // Update state every second for timer
     const interval = setInterval(() => {
       setState(logic.getState());
     }, 100);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   const handleAnswer = (answer: 'bigger' | 'smaller' | 'equal') => {
     if (feedback) return; // Prevent multiple clicks
-    
+
     const result = logic.handleAnswer(answer);
-    
+
     // Show feedback
     setFeedback(result.feedback);
-    
+
     const delay = result.correct ? 500 : 1500;
-    
+
     setTimeout(() => {
       setFeedback(null);
-      
+
       // Update state
       const newState = logic.getState();
       setState(newState);
-      
+
       // Check if game is over
       if (newState.gameOver) {
         onComplete(newState.score);
       }
     }, delay);
   };
-  
+
   const resetGame = () => {
     logic.reset();
     setState(logic.getState());
     setFeedback(null);
   };
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-600 p-4 md:p-8">
       <div className="max-w-5xl mx-auto">
@@ -94,17 +89,15 @@ export const BigSmallRaceGame: React.FC<GameUIProps> = ({
           <>
             {/* Question */}
             <div className="bg-white/30 backdrop-blur-md rounded-3xl p-8 mb-8 text-center shadow-2xl">
-              <h3 className="text-3xl font-black text-white mb-6">
-                İlk sayı ikinci sayıdan...
-              </h3>
-              
+              <h3 className="text-3xl font-black text-white mb-6">İlk sayı ikinci sayıdan...</h3>
+
               <div className="flex items-center justify-center gap-8 mb-6">
                 <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition">
                   <div className="text-7xl font-black text-white">{state.num1}</div>
                 </div>
-                
+
                 <div className="text-6xl text-white animate-pulse">?</div>
-                
+
                 <div className="bg-gradient-to-br from-pink-400 to-purple-500 rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition">
                   <div className="text-7xl font-black text-white">{state.num2}</div>
                 </div>
@@ -121,7 +114,7 @@ export const BigSmallRaceGame: React.FC<GameUIProps> = ({
                 <div className="text-5xl mb-2">▲</div>
                 <div className="text-3xl font-black">BÜYÜK</div>
               </button>
-              
+
               <button
                 onClick={() => handleAnswer('equal')}
                 disabled={!!feedback}
@@ -130,7 +123,7 @@ export const BigSmallRaceGame: React.FC<GameUIProps> = ({
                 <div className="text-5xl mb-2">=</div>
                 <div className="text-3xl font-black">EŞİT</div>
               </button>
-              
+
               <button
                 onClick={() => handleAnswer('smaller')}
                 disabled={!!feedback}
@@ -143,9 +136,13 @@ export const BigSmallRaceGame: React.FC<GameUIProps> = ({
 
             {/* Feedback */}
             {feedback && (
-              <div className={`text-center text-3xl font-black p-6 rounded-xl animate-bounce ${
-                feedback.includes('✅') ? 'bg-green-500/30 text-green-100' : 'bg-red-500/30 text-red-100'
-              }`}>
+              <div
+                className={`text-center text-3xl font-black p-6 rounded-xl animate-bounce ${
+                  feedback.includes('✅')
+                    ? 'bg-green-500/30 text-green-100'
+                    : 'bg-red-500/30 text-red-100'
+                }`}
+              >
                 {feedback}
               </div>
             )}

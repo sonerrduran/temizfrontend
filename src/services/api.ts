@@ -45,8 +45,7 @@ axiosInstance.interceptors.response.use(
 );
 
 // Mock delay simulation
-const mockDelay = (ms: number = 500) => 
-  new Promise(resolve => setTimeout(resolve, ms));
+const mockDelay = (ms: number = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // ==================== AUTH API ====================
 export const authAPI = {

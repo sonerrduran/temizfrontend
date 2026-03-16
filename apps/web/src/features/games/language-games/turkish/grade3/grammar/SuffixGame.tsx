@@ -8,29 +8,29 @@ const questions = [
     question: 'Hangi ek "evde" kelimesini oluşturur?',
     options: ['-de', '-den', '-e', '-i'],
     correct: 0,
-    explanation: '"-de" eki bulunma hali ekidir.'
+    explanation: '"-de" eki bulunma hali ekidir.',
   },
   {
     word: 'kitap',
     question: 'Hangi ek "kitaplar" kelimesini oluşturur?',
     options: ['-lar', '-ler', '-lar/-ler', '-lık'],
     correct: 2,
-    explanation: '"-lar/-ler" eki çoğul ekidir.'
+    explanation: '"-lar/-ler" eki çoğul ekidir.',
   },
   {
     word: 'güzel',
     question: 'Hangi ek "güzellik" kelimesini oluşturur?',
     options: ['-lık', '-lik', '-luk', '-lük'],
     correct: 1,
-    explanation: '"-lik" eki isim yapım ekidir.'
+    explanation: '"-lik" eki isim yapım ekidir.',
   },
   {
     word: 'oku',
     question: 'Hangi ek "okuyorum" kelimesini oluşturur?',
     options: ['-yor', '-iyor', '-uyor', '-üyor'],
     correct: 2,
-    explanation: '"-uyor" eki şimdiki zaman ekidir.'
-  }
+    explanation: '"-uyor" eki şimdiki zaman ekidir.',
+  },
 ];
 
 export default function SuffixGame() {
@@ -94,12 +94,12 @@ export default function SuffixGame() {
                   selectedAnswer === null
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : selectedAnswer === index
-                    ? index === question.correct
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-red-100 border-2 border-red-500'
-                    : index === question.correct
-                    ? 'bg-green-100 border-2 border-green-500'
-                    : 'bg-gray-100'
+                      ? index === question.correct
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-red-100 border-2 border-red-500'
+                      : index === question.correct
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-gray-100'
                 }`}
               >
                 {option}

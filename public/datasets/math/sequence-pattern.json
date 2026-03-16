@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "sequence"
-    ],
+    "tags": ["math", "sequence"],
     "description": "Sequence Pattern oyunu",
     "icon": "🔢"
   },

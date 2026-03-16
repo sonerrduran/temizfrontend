@@ -17,7 +17,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
     if (quizData.config.randomizeQuestions) {
       qs = qs.sort(() => Math.random() - 0.5);
     }
-    
+
     // Limit question count
     if (quizData.config.questionCount) {
       qs = qs.slice(0, quizData.config.questionCount);
@@ -25,7 +25,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
 
     // Randomize options
     if (quizData.config.randomizeOptions) {
-      qs = qs.map(q => {
+      qs = qs.map((q) => {
         if (q.options && q.type === 'multiple-choice') {
           const correctOption = q.options[q.correctAnswer as number];
           const shuffled = [...q.options].sort(() => Math.random() - 0.5);
@@ -55,7 +55,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
 
     const isCorrect = answerIndex === currentQuestion.correctAnswer;
     if (isCorrect) {
-      setCorrectAnswers(prev => prev + 1);
+      setCorrectAnswers((prev) => prev + 1);
     }
 
     // Auto advance after 2 seconds
@@ -64,7 +64,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
         // Game complete
         const duration = Math.floor((Date.now() - startTime) / 1000);
         const results: GameResults = {
-          score: Math.round((correctAnswers + (isCorrect ? 1 : 0)) / questions.length * 100),
+          score: Math.round(((correctAnswers + (isCorrect ? 1 : 0)) / questions.length) * 100),
           correctAnswers: correctAnswers + (isCorrect ? 1 : 0),
           totalQuestions: questions.length,
           duration,
@@ -74,7 +74,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
         onComplete(results);
       } else {
         // Next question
-        setCurrentQuestionIndex(prev => prev + 1);
+        setCurrentQuestionIndex((prev) => prev + 1);
         setSelectedAnswer(null);
         setShowFeedback(false);
       }
@@ -114,9 +114,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
           {/* Question */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              {currentQuestion.question}
-            </h2>
+            <h2 className="text-2xl font-bold text-white mb-4">{currentQuestion.question}</h2>
             {currentQuestion.image && (
               <img
                 src={currentQuestion.image}
@@ -144,8 +142,8 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
                         ? 'bg-green-500 text-white'
                         : 'bg-red-500 text-white'
                       : isSelected
-                      ? 'bg-purple-500 text-white'
-                      : 'bg-white/5 hover:bg-white/10 text-white'
+                        ? 'bg-purple-500 text-white'
+                        : 'bg-white/5 hover:bg-white/10 text-white'
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -153,11 +151,7 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
                       {String.fromCharCode(65 + index)}
                     </div>
                     <div className="flex-1">{option}</div>
-                    {showResult && (
-                      <div className="text-2xl">
-                        {isCorrect ? '✅' : '❌'}
-                      </div>
-                    )}
+                    {showResult && <div className="text-2xl">{isCorrect ? '✅' : '❌'}</div>}
                   </div>
                 </button>
               );
@@ -175,7 +169,8 @@ export default function QuizEngine({ dataset, onComplete, onExit }: GameEnginePr
         {/* Score */}
         <div className="mt-8 text-center">
           <div className="text-white/60 text-lg">
-            Doğru Cevaplar: <span className="text-green-400 font-bold">{correctAnswers}</span> / {questions.length}
+            Doğru Cevaplar: <span className="text-green-400 font-bold">{correctAnswers}</span> /{' '}
+            {questions.length}
           </div>
         </div>
       </div>

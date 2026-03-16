@@ -33,9 +33,9 @@ export async function getGames(filters?: {
   isNew?: boolean;
 }): Promise<Game[]> {
   await delay();
-  
+
   let games = [...mockGames];
-  
+
   if (filters) {
     if (filters.category) {
       games = games.filter((game) => game.category === filters.category);
@@ -56,7 +56,7 @@ export async function getGames(filters?: {
       games = games.filter((game) => game.isNew === filters.isNew);
     }
   }
-  
+
   return games;
 }
 

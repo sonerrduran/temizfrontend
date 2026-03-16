@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "decimal"
-    ],
+    "tags": ["math", "decimal"],
     "description": "Decimal Sort oyunu",
     "icon": "🔢"
   },

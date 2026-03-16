@@ -7,7 +7,7 @@ interface SessionStore {
   currentSession: GameSession | null;
   isPlaying: boolean;
   startTime: number | null;
-  
+
   // Actions
   startSession: (gameId: string) => Promise<void>;
   endSession: (score: number, correctAnswers: number, totalQuestions: number) => Promise<void>;
@@ -25,7 +25,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   startSession: async (gameId: string) => {
     try {
       const session = await gameService.createSession({ gameId });
-      
+
       set({
         currentSession: session,
         isPlaying: true,
@@ -42,7 +42,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   // End the current session
   endSession: async (score: number, correctAnswers: number, totalQuestions: number) => {
     const { currentSession, startTime } = get();
-    
+
     if (!currentSession || !startTime) return;
 
     const duration = Math.floor((Date.now() - startTime) / 1000); // seconds
@@ -76,7 +76,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   // Pause the session
   pauseSession: () => {
     set({ isPlaying: false });
-    
+
     const { currentSession } = get();
     if (currentSession) {
       analytics.track('GAME_PAUSE', { gameId: currentSession.gameId });
@@ -86,7 +86,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   // Resume the session
   resumeSession: () => {
     set({ isPlaying: true });
-    
+
     const { currentSession } = get();
     if (currentSession) {
       analytics.track('GAME_RESUME', { gameId: currentSession.gameId });

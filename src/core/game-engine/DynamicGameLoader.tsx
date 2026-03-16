@@ -22,9 +22,7 @@ const ErrorFallback = ({ gameId }: { gameId: string }) => (
     <div className="text-center bg-white/10 backdrop-blur-xl rounded-3xl p-8 max-w-md">
       <div className="text-6xl mb-4">❌</div>
       <h2 className="text-2xl font-bold text-white mb-2">Oyun Bulunamadı</h2>
-      <p className="text-white/70 mb-4">
-        "{gameId}" oyunu yüklenemedi.
-      </p>
+      <p className="text-white/70 mb-4">"{gameId}" oyunu yüklenemedi.</p>
       <button
         onClick={() => window.history.back()}
         className="bg-white text-red-900 px-6 py-3 rounded-xl font-bold hover:bg-white/90 transition-all"

@@ -11,31 +11,31 @@ const SENTENCES = [
     text: 'Bugün hava çok güzel',
     correct: 'Bugün hava çok güzel.',
     punctuation: '.',
-    explanation: 'Cümle nokta ile biter.'
+    explanation: 'Cümle nokta ile biter.',
   },
   {
     text: 'Sen okula gidiyor musun',
     correct: 'Sen okula gidiyor musun?',
     punctuation: '?',
-    explanation: 'Soru cümleleri soru işareti ile biter.'
+    explanation: 'Soru cümleleri soru işareti ile biter.',
   },
   {
     text: 'Ne kadar güzel bir gün',
     correct: 'Ne kadar güzel bir gün!',
     punctuation: '!',
-    explanation: 'Ünlem cümleleri ünlem işareti ile biter.'
+    explanation: 'Ünlem cümleleri ünlem işareti ile biter.',
   },
   {
     text: 'Ali Ayşe ve Mehmet okula gitti',
     correct: 'Ali, Ayşe ve Mehmet okula gitti.',
     punctuation: ',',
-    explanation: 'Sıralı kelimeler virgül ile ayrılır.'
+    explanation: 'Sıralı kelimeler virgül ile ayrılır.',
   },
   {
     text: 'Annem dedi ki Ödevini yap',
     correct: 'Annem dedi ki: "Ödevini yap."',
     punctuation: ': "',
-    explanation: 'Konuşmalar iki nokta ve tırnak işareti ile gösterilir.'
+    explanation: 'Konuşmalar iki nokta ve tırnak işareti ile gösterilir.',
   },
 ];
 
@@ -87,7 +87,9 @@ const PunctuationGame: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">Noktalama İşaretleri</h1>
-              <p className="text-gray-600">Soru {currentIndex + 1}/{SENTENCES.length}</p>
+              <p className="text-gray-600">
+                Soru {currentIndex + 1}/{SENTENCES.length}
+              </p>
             </div>
             <div className="flex items-center gap-2 text-yellow-500">
               <Star className="w-6 h-6 fill-current" />
@@ -102,9 +104,7 @@ const PunctuationGame: React.FC = () => {
           </p>
 
           <div className="mb-6 p-6 bg-indigo-50 rounded-xl">
-            <p className="text-2xl text-gray-800 font-medium">
-              {currentSentence.text}
-            </p>
+            <p className="text-2xl text-gray-800 font-medium">{currentSentence.text}</p>
           </div>
 
           <textarea
@@ -125,9 +125,11 @@ const PunctuationGame: React.FC = () => {
             </button>
           ) : (
             <div>
-              <div className={`mb-4 p-4 rounded-lg ${
-                feedback === 'correct' ? 'bg-green-50' : 'bg-red-50'
-              }`}>
+              <div
+                className={`mb-4 p-4 rounded-lg ${
+                  feedback === 'correct' ? 'bg-green-50' : 'bg-red-50'
+                }`}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   {feedback === 'correct' ? (
                     <>
@@ -144,9 +146,7 @@ const PunctuationGame: React.FC = () => {
                 <p className="text-gray-700 mb-2">
                   <strong>Doğru cevap:</strong> {currentSentence.correct}
                 </p>
-                <p className="text-gray-600 text-sm">
-                  {currentSentence.explanation}
-                </p>
+                <p className="text-gray-600 text-sm">{currentSentence.explanation}</p>
               </div>
 
               <button
@@ -162,12 +162,24 @@ const PunctuationGame: React.FC = () => {
         <div className="mt-6 bg-indigo-50 rounded-xl p-6">
           <h3 className="font-bold text-gray-800 mb-2">Noktalama İşaretleri</h3>
           <ul className="text-gray-700 space-y-1">
-            <li>• <strong>Nokta (.)</strong> - Cümle sonu</li>
-            <li>• <strong>Soru işareti (?)</strong> - Soru cümleleri</li>
-            <li>• <strong>Ünlem (!)</strong> - Ünlem cümleleri</li>
-            <li>• <strong>Virgül (,)</strong> - Sıralama, ayırma</li>
-            <li>• <strong>İki nokta (:)</strong> - Açıklama, konuşma</li>
-            <li>• <strong>Tırnak ("")</strong> - Konuşmalar</li>
+            <li>
+              • <strong>Nokta (.)</strong> - Cümle sonu
+            </li>
+            <li>
+              • <strong>Soru işareti (?)</strong> - Soru cümleleri
+            </li>
+            <li>
+              • <strong>Ünlem (!)</strong> - Ünlem cümleleri
+            </li>
+            <li>
+              • <strong>Virgül (,)</strong> - Sıralama, ayırma
+            </li>
+            <li>
+              • <strong>İki nokta (:)</strong> - Açıklama, konuşma
+            </li>
+            <li>
+              • <strong>Tırnak ("")</strong> - Konuşmalar
+            </li>
           </ul>
         </div>
       </div>

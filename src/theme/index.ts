@@ -19,7 +19,7 @@ export const theme = {
       800: '#075985',
       900: '#0c4a6e',
     },
-    
+
     // İkincil Renkler
     secondary: {
       50: '#faf5ff',
@@ -33,7 +33,7 @@ export const theme = {
       800: '#6b21a8',
       900: '#581c87',
     },
-    
+
     // Başarı
     success: {
       50: '#f0fdf4',
@@ -47,7 +47,7 @@ export const theme = {
       800: '#166534',
       900: '#14532d',
     },
-    
+
     // Uyarı
     warning: {
       50: '#fffbeb',
@@ -61,7 +61,7 @@ export const theme = {
       800: '#92400e',
       900: '#78350f',
     },
-    
+
     // Hata
     error: {
       50: '#fef2f2',
@@ -75,7 +75,7 @@ export const theme = {
       800: '#991b1b',
       900: '#7f1d1d',
     },
-    
+
     // Nötr
     gray: {
       50: '#f9fafb',
@@ -89,19 +89,19 @@ export const theme = {
       800: '#1f2937',
       900: '#111827',
     },
-    
+
     // Kategori Renkleri
     categories: {
-      math: '#3b82f6',      // Mavi
-      turkish: '#ef4444',   // Kırmızı
-      logic: '#8b5cf6',     // Mor
-      science: '#10b981',   // Yeşil
-      reading: '#f59e0b',   // Turuncu
-      focus: '#06b6d4',     // Cyan
-      life: '#ec4899',      // Pembe
+      math: '#3b82f6', // Mavi
+      turkish: '#ef4444', // Kırmızı
+      logic: '#8b5cf6', // Mor
+      science: '#10b981', // Yeşil
+      reading: '#f59e0b', // Turuncu
+      focus: '#06b6d4', // Cyan
+      life: '#ec4899', // Pembe
     },
   },
-  
+
   // ==================== GRADIENTLER ====================
   gradients: {
     // Ana Gradientler
@@ -110,14 +110,14 @@ export const theme = {
     success: 'from-green-500 to-emerald-600',
     warning: 'from-yellow-500 to-orange-600',
     error: 'from-red-500 to-rose-600',
-    
+
     // Arka Plan Gradientleri
     background: {
       light: 'from-indigo-50 via-purple-50 to-pink-50',
       dark: 'from-slate-900 via-purple-900 to-slate-900',
       cosmic: 'from-[#0f0c29] via-[#302b63] to-[#24243e]',
     },
-    
+
     // Kategori Gradientleri
     categories: {
       math: 'from-blue-400 to-blue-600',
@@ -128,7 +128,7 @@ export const theme = {
       focus: 'from-cyan-400 to-cyan-600',
       life: 'from-pink-400 to-pink-600',
     },
-    
+
     // Sınıf Gradientleri
     grades: {
       1: 'from-green-400 to-emerald-500',
@@ -141,7 +141,7 @@ export const theme = {
       8: 'from-emerald-400 to-teal-500',
     },
   },
-  
+
   // ==================== TİPOGRAFİ ====================
   typography: {
     fontFamily: {
@@ -149,20 +149,20 @@ export const theme = {
       display: 'Poppins, Inter, sans-serif',
       mono: 'JetBrains Mono, monospace',
     },
-    
+
     fontSize: {
-      xs: '0.75rem',      // 12px
-      sm: '0.875rem',     // 14px
-      base: '1rem',       // 16px
-      lg: '1.125rem',     // 18px
-      xl: '1.25rem',      // 20px
-      '2xl': '1.5rem',    // 24px
-      '3xl': '1.875rem',  // 30px
-      '4xl': '2.25rem',   // 36px
-      '5xl': '3rem',      // 48px
-      '6xl': '3.75rem',   // 60px
+      xs: '0.75rem', // 12px
+      sm: '0.875rem', // 14px
+      base: '1rem', // 16px
+      lg: '1.125rem', // 18px
+      xl: '1.25rem', // 20px
+      '2xl': '1.5rem', // 24px
+      '3xl': '1.875rem', // 30px
+      '4xl': '2.25rem', // 36px
+      '5xl': '3rem', // 48px
+      '6xl': '3.75rem', // 60px
     },
-    
+
     fontWeight: {
       light: '300',
       normal: '400',
@@ -172,30 +172,30 @@ export const theme = {
       black: '900',
     },
   },
-  
+
   // ==================== SPACING ====================
   spacing: {
-    xs: '0.25rem',   // 4px
-    sm: '0.5rem',    // 8px
-    md: '1rem',      // 16px
-    lg: '1.5rem',    // 24px
-    xl: '2rem',      // 32px
-    '2xl': '3rem',   // 48px
-    '3xl': '4rem',   // 64px
+    xs: '0.25rem', // 4px
+    sm: '0.5rem', // 8px
+    md: '1rem', // 16px
+    lg: '1.5rem', // 24px
+    xl: '2rem', // 32px
+    '2xl': '3rem', // 48px
+    '3xl': '4rem', // 64px
   },
-  
+
   // ==================== BORDER RADIUS ====================
   borderRadius: {
     none: '0',
-    sm: '0.25rem',    // 4px
-    md: '0.5rem',     // 8px
-    lg: '0.75rem',    // 12px
-    xl: '1rem',       // 16px
-    '2xl': '1.5rem',  // 24px
-    '3xl': '2rem',    // 32px
+    sm: '0.25rem', // 4px
+    md: '0.5rem', // 8px
+    lg: '0.75rem', // 12px
+    xl: '1rem', // 16px
+    '2xl': '1.5rem', // 24px
+    '3xl': '2rem', // 32px
     full: '9999px',
   },
-  
+
   // ==================== GÖLGELER ====================
   shadows: {
     sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -211,7 +211,7 @@ export const theme = {
       error: '0 0 30px rgba(239, 68, 68, 0.4)',
     },
   },
-  
+
   // ==================== ANİMASYONLAR ====================
   animations: {
     duration: {
@@ -219,7 +219,7 @@ export const theme = {
       normal: '300ms',
       slow: '500ms',
     },
-    
+
     easing: {
       linear: 'linear',
       ease: 'ease',
@@ -228,7 +228,7 @@ export const theme = {
       easeInOut: 'ease-in-out',
     },
   },
-  
+
   // ==================== BREAKPOINTS ====================
   breakpoints: {
     sm: '640px',
@@ -237,18 +237,23 @@ export const theme = {
     xl: '1280px',
     '2xl': '1536px',
   },
-  
+
   // ==================== COMPONENT STYLES ====================
   components: {
     // Button Stilleri
     button: {
       base: 'px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2',
       variants: {
-        primary: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl',
-        secondary: 'bg-gradient-to-r from-purple-500 to-pink-600 text-white hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl',
-        success: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 shadow-lg hover:shadow-xl',
-        warning: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:from-yellow-600 hover:to-orange-700 shadow-lg hover:shadow-xl',
-        error: 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-lg hover:shadow-xl',
+        primary:
+          'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-lg hover:shadow-xl',
+        secondary:
+          'bg-gradient-to-r from-purple-500 to-pink-600 text-white hover:from-purple-600 hover:to-pink-700 shadow-lg hover:shadow-xl',
+        success:
+          'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 shadow-lg hover:shadow-xl',
+        warning:
+          'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:from-yellow-600 hover:to-orange-700 shadow-lg hover:shadow-xl',
+        error:
+          'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-lg hover:shadow-xl',
         outline: 'border-2 border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50',
         ghost: 'text-gray-700 hover:bg-gray-100',
       },
@@ -258,7 +263,7 @@ export const theme = {
         lg: 'px-8 py-4 text-lg',
       },
     },
-    
+
     // Card Stilleri
     card: {
       base: 'bg-white rounded-2xl shadow-xl p-6 transition-all duration-300',
@@ -271,14 +276,14 @@ export const theme = {
         error: 'border-2 border-red-500',
       },
     },
-    
+
     // Input Stilleri
     input: {
       base: 'w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:outline-none focus:border-blue-500 transition-colors',
       error: 'border-red-500 focus:border-red-600',
       success: 'border-green-500 focus:border-green-600',
     },
-    
+
     // Badge Stilleri
     badge: {
       base: 'px-3 py-1 rounded-full text-sm font-medium',
@@ -300,21 +305,29 @@ export const theme = {
  * Kategori rengini al
  */
 export const getCategoryColor = (category: string): string => {
-  return theme.colors.categories[category as keyof typeof theme.colors.categories] || theme.colors.primary[500];
+  return (
+    theme.colors.categories[category as keyof typeof theme.colors.categories] ||
+    theme.colors.primary[500]
+  );
 };
 
 /**
  * Kategori gradientini al
  */
 export const getCategoryGradient = (category: string): string => {
-  return theme.gradients.categories[category as keyof typeof theme.gradients.categories] || theme.gradients.primary;
+  return (
+    theme.gradients.categories[category as keyof typeof theme.gradients.categories] ||
+    theme.gradients.primary
+  );
 };
 
 /**
  * Sınıf gradientini al
  */
 export const getGradeGradient = (grade: number): string => {
-  return theme.gradients.grades[grade as keyof typeof theme.gradients.grades] || theme.gradients.primary;
+  return (
+    theme.gradients.grades[grade as keyof typeof theme.gradients.grades] || theme.gradients.primary
+  );
 };
 
 /**

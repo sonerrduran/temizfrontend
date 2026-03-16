@@ -1,7 +1,10 @@
 /**
  * Dashboard Feature
- * Barrel export for dashboard feature
+ * Barrel export for dashboard components
  */
 
-export { StudentDashboard } from './StudentDashboard';
-export { TeacherDashboard } from './TeacherDashboard';
+export { default as StudentDashboard } from './StudentDashboard';
+export { default as TeacherDashboard } from './TeacherDashboard';
+export { default as AdminDashboard } from './AdminDashboard';
+export { default as ParentDashboard } from './ParentDashboard';
+export { DashboardRoutes } from './routes';

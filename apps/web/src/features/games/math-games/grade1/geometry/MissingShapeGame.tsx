@@ -23,7 +23,7 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
     triangle: '🔺',
     star: '⭐',
     heart: '❤️',
-    diamond: '🔷'
+    diamond: '🔷',
   };
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
   const generatePattern = () => {
     const patternLength = Math.min(4 + level, 8);
     const selectedShapes = [...shapes].sort(() => Math.random() - 0.5).slice(0, 3);
-    
+
     const newPattern: ShapeType[] = [];
     for (let i = 0; i < patternLength; i++) {
       newPattern.push(selectedShapes[i % selectedShapes.length]);
@@ -41,11 +41,14 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
 
     const missing = Math.floor(Math.random() * patternLength);
     const correctAnswer = newPattern[missing];
-    
-    const wrongOptions = shapes.filter(s => s !== correctAnswer).sort(() => Math.random() - 0.5).slice(0, 2);
+
+    const wrongOptions = shapes
+      .filter((s) => s !== correctAnswer)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
     const allOptions = [correctAnswer, ...wrongOptions].sort(() => Math.random() - 0.5);
 
-    const patternWithMissing = newPattern.map((s, i) => i === missing ? null : s);
+    const patternWithMissing = newPattern.map((s, i) => (i === missing ? null : s));
 
     setPattern(patternWithMissing);
     setMissingIndex(missing);
@@ -54,16 +57,16 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
   };
 
   const handleOptionClick = (shape: ShapeType) => {
-    const correctShape = pattern.filter(s => s !== null)[0];
+    const correctShape = pattern.filter((s) => s !== null)[0];
     const fullPattern = [...pattern];
-    
+
     let correct = false;
     if (missingIndex > 0 && pattern[missingIndex - 1]) {
       const prevShape = pattern[missingIndex - 1];
-      const prevIndex = pattern.slice(0, missingIndex - 1).filter(s => s === prevShape).length;
+      const prevIndex = pattern.slice(0, missingIndex - 1).filter((s) => s === prevShape).length;
       const nextIndex = prevIndex + 1;
-      
-      const allOfType = pattern.filter(s => s === prevShape);
+
+      const allOfType = pattern.filter((s) => s === prevShape);
       if (nextIndex < allOfType.length + 1) {
         correct = shape === prevShape;
       }
@@ -105,10 +108,16 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
           <p className="text-3xl text-white mb-2">Toplam Puan: {score}</p>
           <p className="text-xl text-white/80 mb-8">Tüm desenleri tamamladın!</p>
           <div className="flex gap-4 justify-center">
-            <button onClick={resetGame} className="px-8 py-4 bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 rounded-xl text-white font-bold text-xl transition-all transform hover:scale-105">
+            <button
+              onClick={resetGame}
+              className="px-8 py-4 bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 rounded-xl text-white font-bold text-xl transition-all transform hover:scale-105"
+            >
               Tekrar Oyna
             </button>
-            <button onClick={onBack} className="px-8 py-4 bg-slate-700/50 hover:bg-slate-600/50 rounded-xl text-white font-bold text-xl transition-all transform hover:scale-105">
+            <button
+              onClick={onBack}
+              className="px-8 py-4 bg-slate-700/50 hover:bg-slate-600/50 rounded-xl text-white font-bold text-xl transition-all transform hover:scale-105"
+            >
               Menüye Dön
             </button>
           </div>
@@ -121,10 +130,19 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <button onClick={onBack} className="px-6 py-3 bg-red-600/90 hover:bg-red-500/90 text-white rounded-xl font-bold transition-all transform hover:scale-105">← Çıkış</button>
+          <button
+            onClick={onBack}
+            className="px-6 py-3 bg-red-600/90 hover:bg-red-500/90 text-white rounded-xl font-bold transition-all transform hover:scale-105"
+          >
+            ← Çıkış
+          </button>
           <div className="flex gap-4">
-            <div className="px-6 py-3 bg-slate-800/80 rounded-xl"><span className="text-white font-black">Seviye: {level}/5</span></div>
-            <div className="px-6 py-3 bg-slate-800/80 rounded-xl"><span className="text-white font-black">⭐ {score}</span></div>
+            <div className="px-6 py-3 bg-slate-800/80 rounded-xl">
+              <span className="text-white font-black">Seviye: {level}/5</span>
+            </div>
+            <div className="px-6 py-3 bg-slate-800/80 rounded-xl">
+              <span className="text-white font-black">⭐ {score}</span>
+            </div>
           </div>
         </div>
 
@@ -136,16 +154,26 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
         <div className="bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-700 p-8">
           <div className="bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 rounded-2xl p-8 md:p-12 mb-8">
             <div className="flex justify-between items-center mb-6">
-              <button onClick={() => setShowRules(true)} className="px-4 py-2 bg-orange-700/40 hover:bg-orange-600/40 border-2 border-orange-300 text-white rounded-xl font-bold transition-all transform hover:scale-105">📖 NASIL OYNANIR?</button>
+              <button
+                onClick={() => setShowRules(true)}
+                className="px-4 py-2 bg-orange-700/40 hover:bg-orange-600/40 border-2 border-orange-300 text-white rounded-xl font-bold transition-all transform hover:scale-105"
+              >
+                📖 NASIL OYNANIR?
+              </button>
             </div>
 
             <div className="bg-orange-700/40 rounded-2xl p-8 mb-6 border-2 border-orange-300">
               <h3 className="text-2xl font-black text-white text-center mb-6">Deseni Tamamla</h3>
               <div className="flex flex-wrap justify-center gap-4 mb-6">
                 {pattern.map((shape, idx) => (
-                  <div key={idx} className={`w-20 h-20 rounded-2xl flex items-center justify-center text-5xl ${
-                    shape === null ? 'bg-orange-800/40 border-4 border-dashed border-yellow-300' : 'bg-orange-800/40 border-2 border-orange-300'
-                  }`}>
+                  <div
+                    key={idx}
+                    className={`w-20 h-20 rounded-2xl flex items-center justify-center text-5xl ${
+                      shape === null
+                        ? 'bg-orange-800/40 border-4 border-dashed border-yellow-300'
+                        : 'bg-orange-800/40 border-2 border-orange-300'
+                    }`}
+                  >
                     {shape ? shapeEmojis[shape] : '❓'}
                   </div>
                 ))}
@@ -156,7 +184,11 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
               <h3 className="text-xl font-black text-white text-center mb-4">Seçenekler</h3>
               <div className="flex justify-center gap-4">
                 {options.map((shape, idx) => (
-                  <button key={idx} onClick={() => handleOptionClick(shape)} className="w-24 h-24 bg-orange-800/40 hover:bg-orange-700/40 border-2 border-orange-300 rounded-2xl text-6xl transition-all transform hover:scale-105">
+                  <button
+                    key={idx}
+                    onClick={() => handleOptionClick(shape)}
+                    className="w-24 h-24 bg-orange-800/40 hover:bg-orange-700/40 border-2 border-orange-300 rounded-2xl text-6xl transition-all transform hover:scale-105"
+                  >
                     {shapeEmojis[shape]}
                   </button>
                 ))}
@@ -164,7 +196,9 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
             </div>
 
             {feedback && (
-              <div className={`mt-6 text-center text-2xl font-black p-6 rounded-xl ${feedback.includes('🎉') ? 'bg-green-500/90 border-2 border-green-300 text-white' : 'bg-red-500/90 border-2 border-red-300 text-white'}`}>
+              <div
+                className={`mt-6 text-center text-2xl font-black p-6 rounded-xl ${feedback.includes('🎉') ? 'bg-green-500/90 border-2 border-green-300 text-white' : 'bg-red-500/90 border-2 border-red-300 text-white'}`}
+              >
                 {feedback}
               </div>
             )}
@@ -178,12 +212,25 @@ const MissingShapeGame: React.FC<MissingShapeGameProps> = ({ onBack }) => {
             <div className="text-5xl mb-4">🧩</div>
             <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Nasıl Oynanır?</h3>
             <ul className="text-white/90 text-left space-y-3 mb-8 text-sm md:text-base">
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">1.</span> Şekil desenine bak ve eksik parçayı bul</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">2.</span> Alttaki seçeneklerden doğru şekli seç</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">3.</span> Deseni tamamla ve puan kazan</li>
-              <li className="flex gap-2"><span className="text-orange-400 font-bold">4.</span> 5 seviyeyi tamamla!</li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">1.</span> Şekil desenine bak ve eksik
+                parçayı bul
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">2.</span> Alttaki seçeneklerden doğru
+                şekli seç
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">3.</span> Deseni tamamla ve puan kazan
+              </li>
+              <li className="flex gap-2">
+                <span className="text-orange-400 font-bold">4.</span> 5 seviyeyi tamamla!
+              </li>
             </ul>
-            <button onClick={() => setShowRules(false)} className="w-full bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-black py-4 rounded-xl transition-all transform hover:scale-105">
+            <button
+              onClick={() => setShowRules(false)}
+              className="w-full bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-black py-4 rounded-xl transition-all transform hover:scale-105"
+            >
               ANLADIM, BAŞLA! 🚀
             </button>
           </div>

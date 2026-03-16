@@ -41,7 +41,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
   const [remainingSeconds, setRemainingSeconds] = useState(duration);
   const [isRunning, setIsRunning] = useState(autoStart);
   const [isCompleted, setIsCompleted] = useState(false);
-  
+
   const startTimeRef = useRef<number | null>(null);
   const pausedTimeRef = useRef<number>(duration);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -58,7 +58,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
   // Timer'ı başlat
   const start = useCallback(() => {
     if (isCompleted) return;
-    
+
     startTimeRef.current = Date.now();
     pausedTimeRef.current = remainingSeconds;
     setIsRunning(true);
@@ -108,10 +108,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
     intervalRef.current = setInterval(() => {
       if (startTimeRef.current === null) return;
 
-      const remaining = calculateRemainingTime(
-        startTimeRef.current,
-        pausedTimeRef.current
-      );
+      const remaining = calculateRemainingTime(startTimeRef.current, pausedTimeRef.current);
 
       setRemainingSeconds(remaining);
 
@@ -121,12 +118,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
       }
 
       // Warning callback
-      if (
-        !warningShownRef.current &&
-        remaining <= warningThreshold &&
-        remaining > 0 &&
-        onWarning
-      ) {
+      if (!warningShownRef.current && remaining <= warningThreshold && remaining > 0 && onWarning) {
         warningShownRef.current = true;
         onWarning(remaining);
       }
@@ -136,7 +128,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
         setIsRunning(false);
         setIsCompleted(true);
         clearTimer();
-        
+
         if (onComplete) {
           onComplete();
         }
@@ -144,15 +136,7 @@ export function useTimer(options: UseTimerOptions): UseTimerReturn {
     }, 1000);
 
     return () => clearTimer();
-  }, [
-    isRunning,
-    isCompleted,
-    onTick,
-    onComplete,
-    onWarning,
-    warningThreshold,
-    clearTimer,
-  ]);
+  }, [isRunning, isCompleted, onTick, onComplete, onWarning, warningThreshold, clearTimer]);
 
   // Auto-start effect
   useEffect(() => {

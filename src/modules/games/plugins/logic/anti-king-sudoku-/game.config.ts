@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'AntiKingSudoku',
   description: 'AntiKingSudoku oyunu',
   version: '1.0.0',
-  
+
   category: 'logic',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'AntiKingSudokuGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/anti-king-sudoku-/icon.svg',
   },
-  
+
   tags: ['logic'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

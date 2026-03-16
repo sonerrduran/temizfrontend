@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'IrregularSudoku',
   description: 'IrregularSudoku oyunu',
   version: '1.0.0',
-  
+
   category: 'logic',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'IrregularSudokuGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/irregular-sudoku-/icon.svg',
   },
-  
+
   tags: ['logic'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

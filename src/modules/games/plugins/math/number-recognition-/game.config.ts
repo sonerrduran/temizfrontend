@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'NumberRecognition',
   description: 'NumberRecognition oyunu',
   version: '1.0.0',
-  
+
   category: 'math',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'NumberRecognitionGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/number-recognition-/icon.svg',
   },
-  
+
   tags: ['math'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

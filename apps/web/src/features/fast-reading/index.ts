@@ -1,13 +1,14 @@
 /**
- * Fast Reading Feature
- * Hızlı okuma modülü
+ * Fast Reading Feature Exports
  */
 
 export { default as FastReadingDashboard } from './FastReadingDashboard';
 export { default as FastReadingMenu } from './FastReadingMenu';
-export { default as FastReadingTeacher } from './FastReadingTeacher';
-export { default as SpeedReadingTest } from './SpeedReadingTest';
-export { default as EyeExercise } from './EyeExercise';
-export { default as Tachistoscope } from './Tachistoscope';
-export { default as BionicReadingModule } from './BionicReadingModule';
+export { default as EyeFlowMenu } from './EyeFlowMenu';
+export { default as MeasurementMenu } from './MeasurementMenu';
+export { default as BrainGamesMenu } from './BrainGamesMenu';
+export { default as FocusTrainingMenu } from './FocusTrainingMenu';
 export { default as TechniquesModule } from './TechniquesModule';
+export { default as BionicReadingModule } from './BionicReadingModule';
+export { default as FastReadingTeacher } from './FastReadingTeacher';
+export { FastReadingRoutes } from './routes';

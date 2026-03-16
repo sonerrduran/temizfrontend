@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:unit": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo node_modules/.vite"
   },
   "dependencies": {
     "@egitim-galaksisi/ui": "*",
@@ -24,6 +30,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.5",
     "@types/node": "^22.14.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

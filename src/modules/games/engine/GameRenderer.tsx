@@ -31,52 +31,48 @@ const ErrorScreen: React.FC<{ error: string; onExit: () => void }> = ({ error, o
   </div>
 );
 
-export const GameRenderer: React.FC<GameRendererProps> = ({
-  gameId,
-  onComplete,
-  onExit,
-}) => {
+export const GameRenderer: React.FC<GameRendererProps> = ({ gameId, onComplete, onExit }) => {
   const [plugin, setPlugin] = useState<GamePlugin | null>(null);
   const [engine] = useState(() => new GameEngine());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     loadGame();
-    
+
     return () => {
       engine.cleanup();
     };
   }, [gameId]);
-  
+
   const loadGame = async () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       console.log(`🎮 GameRenderer: Loading game ${gameId}`);
-      
+
       // Try to get from registry first
       let loadedPlugin = GameRegistry.get(gameId);
-      
+
       // If not in registry, try dynamic loading
       if (!loadedPlugin) {
         console.log(`📦 Game not in registry, loading dynamically...`);
         loadedPlugin = await gameLoader.loadPlugin(gameId);
       }
-      
+
       if (!loadedPlugin) {
         throw new Error(`Oyun bulunamadı: ${gameId}`);
       }
-      
+
       setPlugin(loadedPlugin);
-      
+
       // Initialize engine
       await engine.loadGame(gameId);
       await engine.startGame();
-      
+
       setLoading(false);
-      
+
       console.log(`✅ Game loaded successfully: ${gameId}`);
     } catch (err: any) {
       console.error(`❌ Failed to load game: ${gameId}`, err);
@@ -84,22 +80,22 @@ export const GameRenderer: React.FC<GameRendererProps> = ({
       setLoading(false);
     }
   };
-  
+
   if (loading) {
     return <LoadingSpinner message="Oyun yükleniyor..." />;
   }
-  
+
   if (error) {
     return <ErrorScreen error={error} onExit={onExit} />;
   }
-  
+
   if (!plugin) {
     return <ErrorScreen error="Oyun bulunamadı" onExit={onExit} />;
   }
-  
+
   const GameComponent = plugin.component;
   const logic = new plugin.logic();
-  
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <GameComponent

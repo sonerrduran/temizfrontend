@@ -34,7 +34,7 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
   useEffect(() => {
     if (compData.config.showTimer && timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => {
+        setTimeLeft((prev) => {
           if (prev <= 1) {
             handleGameEnd();
             return 0;
@@ -50,12 +50,12 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
     if (feedback) return;
 
     const isCorrect = answer === currentQuestion.correctAnswer;
-    
+
     if (isCorrect) {
       const newStreak = streak + 1;
-      const points = 10 + (newStreak * 2);
-      setScore(prev => prev + points);
-      setCorrectAnswers(prev => prev + 1);
+      const points = 10 + newStreak * 2;
+      setScore((prev) => prev + points);
+      setCorrectAnswers((prev) => prev + 1);
       setStreak(newStreak);
       setMaxStreak(Math.max(maxStreak, newStreak));
       setFeedback(`✅ Doğru! +${points} puan`);
@@ -69,7 +69,7 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
       if (isLastQuestion) {
         handleGameEnd();
       } else {
-        setCurrentIndex(prev => prev + 1);
+        setCurrentIndex((prev) => prev + 1);
       }
     }, 1500);
   };
@@ -89,10 +89,14 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
 
   const getAnswerText = (answer: string) => {
     switch (answer) {
-      case 'bigger': return 'BÜYÜK';
-      case 'smaller': return 'KÜÇÜK';
-      case 'equal': return 'EŞİT';
-      default: return answer;
+      case 'bigger':
+        return 'BÜYÜK';
+      case 'smaller':
+        return 'KÜÇÜK';
+      case 'equal':
+        return 'EŞİT';
+      default:
+        return answer;
     }
   };
 
@@ -120,7 +124,9 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
           {compData.config.showTimer && (
             <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
               <div className="text-white/80 text-sm">Süre</div>
-              <div className={`text-3xl font-black ${timeLeft <= 10 ? 'text-red-300 animate-pulse' : 'text-white'}`}>
+              <div
+                className={`text-3xl font-black ${timeLeft <= 10 ? 'text-red-300 animate-pulse' : 'text-white'}`}
+              >
                 {timeLeft}s
               </div>
             </div>
@@ -142,14 +148,14 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
           <h3 className="text-2xl font-bold text-white mb-6">
             İlk {currentQuestion.type || 'sayı'} ikinci {currentQuestion.type || 'sayı'}dan...
           </h3>
-          
+
           <div className="flex items-center justify-center gap-8 mb-6">
             <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl p-8 shadow-2xl">
               <div className="text-7xl font-black text-white">{currentQuestion.item1}</div>
             </div>
-            
+
             <div className="text-6xl text-white animate-pulse">?</div>
-            
+
             <div className="bg-gradient-to-br from-pink-400 to-purple-500 rounded-3xl p-8 shadow-2xl">
               <div className="text-7xl font-black text-white">{currentQuestion.item2}</div>
             </div>
@@ -166,7 +172,7 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
             <div className="text-5xl mb-2">▲</div>
             <div className="text-3xl font-black">BÜYÜK</div>
           </button>
-          
+
           <button
             onClick={() => handleAnswer('equal')}
             disabled={!!feedback}
@@ -175,7 +181,7 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
             <div className="text-5xl mb-2">=</div>
             <div className="text-3xl font-black">EŞİT</div>
           </button>
-          
+
           <button
             onClick={() => handleAnswer('smaller')}
             disabled={!!feedback}
@@ -188,9 +194,13 @@ export default function ComparisonEngine({ dataset, onComplete, onExit }: GameEn
 
         {/* Feedback */}
         {feedback && (
-          <div className={`text-center text-2xl font-black p-6 rounded-xl ${
-            feedback.includes('✅') ? 'bg-green-500/30 text-green-100' : 'bg-red-500/30 text-red-100'
-          }`}>
+          <div
+            className={`text-center text-2xl font-black p-6 rounded-xl ${
+              feedback.includes('✅')
+                ? 'bg-green-500/30 text-green-100'
+                : 'bg-red-500/30 text-red-100'
+            }`}
+          >
             {feedback}
           </div>
         )}

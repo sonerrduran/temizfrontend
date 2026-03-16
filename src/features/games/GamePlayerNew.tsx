@@ -10,7 +10,7 @@ export default function GamePlayerNew() {
   const navigate = useNavigate();
   const [showResults, setShowResults] = useState(false);
   const [finalResults, setFinalResults] = useState<GameResults | null>(null);
-  
+
   const { startSession, endSession } = useSessionStore();
 
   React.useEffect(() => {
@@ -48,13 +48,9 @@ export default function GamePlayerNew() {
   const handleComplete = async (results: GameResults) => {
     setFinalResults(results);
     setShowResults(true);
-    
+
     // Save to backend
-    await endSession(
-      results.score,
-      results.correctAnswers,
-      results.totalQuestions
-    );
+    await endSession(results.score, results.correctAnswers, results.totalQuestions);
   };
 
   const handleExit = () => {
@@ -74,7 +70,7 @@ export default function GamePlayerNew() {
           <div className="text-8xl mb-6">🎉</div>
           <h1 className="text-5xl font-black text-white mb-4">Tebrikler!</h1>
           <p className="text-3xl text-white/80 mb-2">Oyunu Tamamladın</p>
-          
+
           {/* Score */}
           <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-8">
             {finalResults.score} Puan
@@ -84,24 +80,18 @@ export default function GamePlayerNew() {
           <div className="grid grid-cols-3 gap-4 mb-8">
             <div className="bg-white/5 rounded-xl p-4">
               <div className="text-white/60 text-sm mb-1">Doğru</div>
-              <div className="text-2xl font-bold text-green-400">
-                {finalResults.correctAnswers}
-              </div>
+              <div className="text-2xl font-bold text-green-400">{finalResults.correctAnswers}</div>
             </div>
             <div className="bg-white/5 rounded-xl p-4">
               <div className="text-white/60 text-sm mb-1">Toplam</div>
-              <div className="text-2xl font-bold text-white">
-                {finalResults.totalQuestions}
-              </div>
+              <div className="text-2xl font-bold text-white">{finalResults.totalQuestions}</div>
             </div>
             <div className="bg-white/5 rounded-xl p-4">
               <div className="text-white/60 text-sm mb-1">Süre</div>
-              <div className="text-2xl font-bold text-blue-400">
-                {finalResults.duration}s
-              </div>
+              <div className="text-2xl font-bold text-blue-400">{finalResults.duration}s</div>
             </div>
           </div>
-          
+
           {/* Actions */}
           <div className="flex gap-4 justify-center">
             <button

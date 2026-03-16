@@ -8,7 +8,9 @@ interface Props {
 const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-  const [candidates, setCandidates] = useState<{ name: string; emoji: string; votes: number }[]>([]);
+  const [candidates, setCandidates] = useState<{ name: string; emoji: string; votes: number }[]>(
+    []
+  );
   const [question, setQuestion] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [options, setOptions] = useState<string[]>([]);
@@ -19,7 +21,7 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
     { name: 'Ayşe', emoji: '👧' },
     { name: 'Mehmet', emoji: '🧒' },
     { name: 'Zeynep', emoji: '👧' },
-    { name: 'Can', emoji: '👦' }
+    { name: 'Can', emoji: '👦' },
   ];
 
   useEffect(() => {
@@ -28,8 +30,10 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
   const generateLevel = () => {
     const numCandidates = Math.min(3 + Math.floor(level / 2), 4);
-    const selected = [...candidateData].sort(() => Math.random() - 0.5).slice(0, numCandidates)
-      .map(c => ({ ...c, votes: Math.floor(Math.random() * (8 + level * 3)) + 1 }));
+    const selected = [...candidateData]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, numCandidates)
+      .map((c) => ({ ...c, votes: Math.floor(Math.random() * (8 + level * 3)) + 1 }));
 
     setCandidates(selected);
 
@@ -38,7 +42,7 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
     let questionText = '';
 
     if (questionType < 0.4) {
-      const winner = selected.reduce((max, c) => c.votes > max.votes ? c : max);
+      const winner = selected.reduce((max, c) => (c.votes > max.votes ? c : max));
       answer = winner.name;
       questionText = 'Kim başkan seçildi?';
     } else if (questionType < 0.7) {
@@ -65,7 +69,10 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
       }
       setOptions([answer, ...wrongOptions].sort(() => Math.random() - 0.5));
     } else {
-      const wrongOptions = selected.filter(c => c.name !== answer).map(c => c.name).slice(0, 2);
+      const wrongOptions = selected
+        .filter((c) => c.name !== answer)
+        .map((c) => c.name)
+        .slice(0, 2);
       setOptions([answer, ...wrongOptions].sort(() => Math.random() - 0.5));
     }
 
@@ -95,10 +102,19 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-blue-900 to-cyan-900 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <button onClick={onExit} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold">← Çıkış</button>
+          <button
+            onClick={onExit}
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold"
+          >
+            ← Çıkış
+          </button>
           <div className="flex gap-4">
-            <div className="px-6 py-3 bg-white/10 rounded-xl"><span className="text-white font-black">Seviye: {level}/5</span></div>
-            <div className="px-6 py-3 bg-yellow-500/90 rounded-xl"><span className="text-white font-black">⭐ {score}</span></div>
+            <div className="px-6 py-3 bg-white/10 rounded-xl">
+              <span className="text-white font-black">Seviye: {level}/5</span>
+            </div>
+            <div className="px-6 py-3 bg-yellow-500/90 rounded-xl">
+              <span className="text-white font-black">⭐ {score}</span>
+            </div>
           </div>
         </div>
 
@@ -109,7 +125,10 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
         <div className="bg-white/10 rounded-3xl p-8 mb-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             {candidates.map((candidate, idx) => (
-              <div key={idx} className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-center">
+              <div
+                key={idx}
+                className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-center"
+              >
                 <span className="text-6xl mb-2 block">{candidate.emoji}</span>
                 <h3 className="text-white text-2xl font-bold mb-4">{candidate.name}</h3>
                 <div className="bg-white/20 rounded-xl p-4 mb-2">
@@ -132,14 +151,23 @@ const ElectionTallyGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
           <div className="grid grid-cols-3 gap-6">
             {options.map((option, idx) => (
-              <button key={idx} onClick={() => handleAnswer(option)}
-                className="h-24 bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-2xl font-black text-4xl">
+              <button
+                key={idx}
+                onClick={() => handleAnswer(option)}
+                className="h-24 bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-2xl font-black text-4xl"
+              >
                 {option}
               </button>
             ))}
           </div>
 
-          {feedback && <div className={`mt-8 text-center text-3xl font-black ${feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'}`}>{feedback}</div>}
+          {feedback && (
+            <div
+              className={`mt-8 text-center text-3xl font-black ${feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'}`}
+            >
+              {feedback}
+            </div>
+          )}
         </div>
       </div>
     </div>

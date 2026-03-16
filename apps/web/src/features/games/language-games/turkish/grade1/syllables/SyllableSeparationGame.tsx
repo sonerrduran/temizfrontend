@@ -58,7 +58,7 @@ const SyllableSeparationGame: React.FC = () => {
   };
 
   const checkAnswer = () => {
-    const isCorrect = 
+    const isCorrect =
       userSyllables.length === currentWord.syllables.length &&
       userSyllables.every((syl, i) => syl.toLowerCase() === currentWord.syllables[i].toLowerCase());
 
@@ -106,16 +106,12 @@ const SyllableSeparationGame: React.FC = () => {
 
         {/* Game Area */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <p className="text-center text-gray-700 text-xl mb-6">
-            Bu kelimeyi hecelere ayır:
-          </p>
+          <p className="text-center text-gray-700 text-xl mb-6">Bu kelimeyi hecelere ayır:</p>
 
           {/* Word to separate */}
           <div className="text-center mb-8">
             <div className="inline-block px-12 py-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg">
-              <div className="text-6xl font-bold text-white">
-                {currentWord.word}
-              </div>
+              <div className="text-6xl font-bold text-white">{currentWord.word}</div>
             </div>
           </div>
 
@@ -185,9 +181,7 @@ const SyllableSeparationGame: React.FC = () => {
                     <X className="w-8 h-8" />
                     Tekrar dene!
                   </div>
-                  <div className="text-gray-600">
-                    İpucu: {currentWord.count} hece var
-                  </div>
+                  <div className="text-gray-600">İpucu: {currentWord.count} hece var</div>
                 </div>
               )}
             </div>

@@ -24,7 +24,7 @@ export default function GameLayout({
   useEffect(() => {
     if (timer && timeLeft > 0) {
       const interval = setInterval(() => {
-        setTimeLeft(prev => Math.max(0, prev - 1));
+        setTimeLeft((prev) => Math.max(0, prev - 1));
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -57,16 +57,18 @@ export default function GameLayout({
                     <span className="text-white font-bold ml-2">{level}</span>
                   </div>
                 )}
-                
+
                 {timer !== undefined && (
-                  <div className={`px-4 py-2 rounded-xl ${
-                    timeLeft <= 10 ? 'bg-red-500/20 animate-pulse' : 'bg-white/10'
-                  }`}>
+                  <div
+                    className={`px-4 py-2 rounded-xl ${
+                      timeLeft <= 10 ? 'bg-red-500/20 animate-pulse' : 'bg-white/10'
+                    }`}
+                  >
                     <span className="text-white/60 text-sm">⏱️</span>
                     <span className="text-white font-bold ml-2">{timeLeft}s</span>
                   </div>
                 )}
-                
+
                 <div className="px-4 py-2 bg-white/10 rounded-xl">
                   <span className="text-white/60 text-sm">⭐</span>
                   <span className="text-white font-bold ml-2">{score}</span>
@@ -78,9 +80,7 @@ export default function GameLayout({
       )}
 
       {/* Game Area */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {children}
-      </div>
+      <div className="max-w-7xl mx-auto px-4 py-8">{children}</div>
     </div>
   );
 }

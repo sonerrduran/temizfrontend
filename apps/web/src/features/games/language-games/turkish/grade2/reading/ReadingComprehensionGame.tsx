@@ -11,14 +11,14 @@ const stories = [
       {
         question: 'Kedi nerede yaşıyordu?',
         options: ['Şehirde', 'Köyde', 'Ormanda', 'Dağda'],
-        correct: 1
+        correct: 1,
       },
       {
         question: 'Kedi kimlere yardım ediyordu?',
         options: ['Köpeklere', 'Kuşlara', 'Yavru kedilere', 'İnsanlara'],
-        correct: 2
-      }
-    ]
+        correct: 2,
+      },
+    ],
   },
   {
     id: 2,
@@ -28,15 +28,15 @@ const stories = [
       {
         question: 'Fidan neyi bekliyordu?',
         options: ['Yağmuru', 'Güneş ve suyu', 'Rüzgarı', 'Karı'],
-        correct: 1
+        correct: 1,
       },
       {
         question: 'Fidan zamanla ne oldu?',
         options: ['Kurudu', 'Güzel bir ağaç oldu', 'Taşındı', 'Kayboldu'],
-        correct: 1
-      }
-    ]
-  }
+        correct: 1,
+      },
+    ],
+  },
 ];
 
 export default function ReadingComprehensionGame() {
@@ -141,12 +141,12 @@ export default function ReadingComprehensionGame() {
                     selectedAnswer === null
                       ? 'bg-gray-100 hover:bg-gray-200'
                       : selectedAnswer === index
-                      ? index === question.correct
-                        ? 'bg-green-100 border-2 border-green-500'
-                        : 'bg-red-100 border-2 border-red-500'
-                      : index === question.correct
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-gray-100'
+                        ? index === question.correct
+                          ? 'bg-green-100 border-2 border-green-500'
+                          : 'bg-red-100 border-2 border-red-500'
+                        : index === question.correct
+                          ? 'bg-green-100 border-2 border-green-500'
+                          : 'bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -164,7 +164,8 @@ export default function ReadingComprehensionGame() {
           </div>
 
           <div className="mt-6 text-center text-gray-600">
-            Hikaye {currentStory + 1}/{stories.length} - Soru {currentQuestion + 1}/{story.questions.length}
+            Hikaye {currentStory + 1}/{stories.length} - Soru {currentQuestion + 1}/
+            {story.questions.length}
           </div>
         </div>
       </div>

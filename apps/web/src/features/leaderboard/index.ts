@@ -1,6 +1,7 @@
 /**
  * Leaderboard Feature
- * Liderlik tablosu modülü
+ * Barrel export for leaderboard components
  */
 
-export { LeaderboardPage } from './LeaderboardPage';
+export { default as LeaderboardPage } from './LeaderboardPage';
+export { LeaderboardRoutes } from './routes';

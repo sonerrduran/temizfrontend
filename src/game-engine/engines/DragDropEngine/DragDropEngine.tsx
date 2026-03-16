@@ -19,12 +19,12 @@ export default function DragDropEngine({ dataset, onComplete, onExit }: GameEngi
   const handleDrop = (targetId: string) => {
     if (!draggedItem) return;
 
-    const item = dragDropData.items.find(i => i.id === draggedItem);
+    const item = dragDropData.items.find((i) => i.id === draggedItem);
     if (!item) return;
 
     // Check if correct target
     if (item.targetId === targetId) {
-      setDroppedItems(prev => ({
+      setDroppedItems((prev) => ({
         ...prev,
         [targetId]: [...(prev[targetId] || []), draggedItem],
       }));
@@ -36,9 +36,9 @@ export default function DragDropEngine({ dataset, onComplete, onExit }: GameEngi
     const totalDropped = Object.values(droppedItems).flat().length + 1;
     if (totalDropped === dragDropData.items.length) {
       const duration = Math.floor((Date.now() - startTime) / 1000);
-      const correctCount = dragDropData.items.filter(item => 
-        droppedItems[item.targetId]?.includes(item.id)
-      ).length + 1;
+      const correctCount =
+        dragDropData.items.filter((item) => droppedItems[item.targetId]?.includes(item.id)).length +
+        1;
 
       const results: GameResults = {
         score: Math.round((correctCount / dragDropData.items.length) * 100),
@@ -53,7 +53,7 @@ export default function DragDropEngine({ dataset, onComplete, onExit }: GameEngi
   };
 
   const availableItems = dragDropData.items.filter(
-    item => !Object.values(droppedItems).flat().includes(item.id)
+    (item) => !Object.values(droppedItems).flat().includes(item.id)
   );
 
   return (
@@ -103,7 +103,7 @@ export default function DragDropEngine({ dataset, onComplete, onExit }: GameEngi
                 <h3 className="text-lg font-bold text-white mb-3">{target.label}</h3>
                 <div className="space-y-2">
                   {droppedItems[target.id]?.map((itemId) => {
-                    const item = dragDropData.items.find(i => i.id === itemId);
+                    const item = dragDropData.items.find((i) => i.id === itemId);
                     return (
                       <div
                         key={itemId}

@@ -45,7 +45,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   // Select a game
   selectGame: (gameId: string) => {
-    const game = get().games.find(g => g.id === gameId);
+    const game = get().games.find((g) => g.id === gameId);
     set({ currentGame: game || null });
   },
 

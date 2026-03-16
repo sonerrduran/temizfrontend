@@ -1,6 +1,6 @@
 // Base types for all game engines
 
-export type EngineType = 
+export type EngineType =
   | 'QuizEngine'
   | 'MemoryEngine'
   | 'DragDropEngine'

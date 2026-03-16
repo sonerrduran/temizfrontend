@@ -20,11 +20,11 @@ export default function MatchingEngine({ dataset, onComplete, onExit }: GameEngi
   const handleLeftClick = (pairId: string) => {
     if (matches[pairId]) return;
     setSelectedLeft(pairId);
-    
+
     if (selectedRight) {
       if (pairId === selectedRight) {
         // Correct match
-        setMatches(prev => ({ ...prev, [pairId]: selectedRight }));
+        setMatches((prev) => ({ ...prev, [pairId]: selectedRight }));
         setSelectedLeft(null);
         setSelectedRight(null);
 
@@ -54,11 +54,11 @@ export default function MatchingEngine({ dataset, onComplete, onExit }: GameEngi
   const handleRightClick = (pairId: string) => {
     if (Object.values(matches).includes(pairId)) return;
     setSelectedRight(pairId);
-    
+
     if (selectedLeft) {
       if (pairId === selectedLeft) {
         // Correct match
-        setMatches(prev => ({ ...prev, [selectedLeft]: pairId }));
+        setMatches((prev) => ({ ...prev, [selectedLeft]: pairId }));
         setSelectedLeft(null);
         setSelectedRight(null);
 
@@ -115,8 +115,8 @@ export default function MatchingEngine({ dataset, onComplete, onExit }: GameEngi
                   matches[pair.id]
                     ? 'bg-green-500 text-white'
                     : selectedLeft === pair.id
-                    ? 'bg-purple-500 text-white scale-105'
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                      ? 'bg-purple-500 text-white scale-105'
+                      : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
                 {pair.leftImage && <div className="text-4xl mb-2">{pair.leftImage}</div>}
@@ -136,8 +136,8 @@ export default function MatchingEngine({ dataset, onComplete, onExit }: GameEngi
                   Object.values(matches).includes(pair.id)
                     ? 'bg-green-500 text-white'
                     : selectedRight === pair.id
-                    ? 'bg-pink-500 text-white scale-105'
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                      ? 'bg-pink-500 text-white scale-105'
+                      : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
                 {pair.rightImage && <div className="text-4xl mb-2">{pair.rightImage}</div>}
@@ -150,7 +150,8 @@ export default function MatchingEngine({ dataset, onComplete, onExit }: GameEngi
         {/* Progress */}
         <div className="mt-8 text-center">
           <div className="text-white/60 text-lg">
-            Eşleşme: <span className="text-green-400 font-bold">{Object.keys(matches).length}</span> / {matchingData.pairs.length}
+            Eşleşme: <span className="text-green-400 font-bold">{Object.keys(matches).length}</span>{' '}
+            / {matchingData.pairs.length}
           </div>
         </div>
       </div>

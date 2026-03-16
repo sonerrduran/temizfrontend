@@ -24,7 +24,7 @@ export const EngineRegistry: Record<string, React.ComponentType<any>> = {
   SpeedQuizEngine: SpeedQuizEngine,
   DiagramEngine: DiagramEngine,
   LogicPuzzleEngine: LogicPuzzleEngine,
-  
+
   // Based on existing games
   ComparisonEngine: ComparisonEngine,
   TimedQuizEngine: SpeedQuizEngine, // Reuse SpeedQuizEngine

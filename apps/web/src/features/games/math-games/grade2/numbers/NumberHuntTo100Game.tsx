@@ -8,7 +8,9 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(90);
   const [targetNumber, setTargetNumber] = useState(0);
-  const [numbers, setNumbers] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
+  const [numbers, setNumbers] = useState<
+    Array<{ id: number; value: number; x: number; y: number }>
+  >([]);
   const [gameOver, setGameOver] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [level, setLevel] = useState(1);
@@ -39,7 +41,7 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
       id: 0,
       value: target,
       x: Math.random() * 80 + 10,
-      y: Math.random() * 70 + 10
+      y: Math.random() * 70 + 10,
     });
 
     // Add other numbers
@@ -47,13 +49,13 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
       let num;
       do {
         num = Math.floor(Math.random() * max) + 1;
-      } while (newNumbers.some(n => n.value === num));
+      } while (newNumbers.some((n) => n.value === num));
 
       newNumbers.push({
         id: i,
         value: num,
         x: Math.random() * 80 + 10,
-        y: Math.random() * 70 + 10
+        y: Math.random() * 70 + 10,
       });
     }
 
@@ -65,11 +67,11 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
     if (value === targetNumber) {
       setScore(score + 15);
       setFeedback('🎯 Buldun!');
-      
+
       if ((score + 15) % 100 === 0) {
         setLevel(level + 1);
       }
-      
+
       setTimeout(() => generateRound(), 800);
     } else {
       setScore(Math.max(0, score - 5));
@@ -97,7 +99,9 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
           >
             ← Geri
           </button>
-          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">🔢 Sayı Avı (100'e Kadar)</h1>
+          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">
+            🔢 Sayı Avı (100'e Kadar)
+          </h1>
           <div className="w-24"></div>
         </div>
 
@@ -121,12 +125,12 @@ const NumberHuntTo100Game: React.FC<NumberHuntTo100GameProps> = ({ onBack }) => 
           <>
             {/* Target */}
             <div className="bg-white/30 backdrop-blur-md rounded-3xl p-6 mb-6 text-center shadow-2xl">
-              <div className="text-6xl font-black text-white mb-2">
-                {targetNumber}
-              </div>
+              <div className="text-6xl font-black text-white mb-2">{targetNumber}</div>
               <p className="text-2xl text-white/80">sayısını bul!</p>
               {feedback && (
-                <div className={`mt-4 text-3xl font-bold ${feedback.includes('🎯') ? 'text-green-300' : 'text-red-300'}`}>
+                <div
+                  className={`mt-4 text-3xl font-bold ${feedback.includes('🎯') ? 'text-green-300' : 'text-red-300'}`}
+                >
                   {feedback}
                 </div>
               )}

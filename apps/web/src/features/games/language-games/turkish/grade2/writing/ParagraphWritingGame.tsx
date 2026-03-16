@@ -13,9 +13,9 @@ const TOPICS = [
       'Hangi hayvanı seviyorsun?',
       'Neden onu seviyorsun?',
       'Nasıl görünüyor?',
-      'Ne yapmayı sever?'
+      'Ne yapmayı sever?',
     ],
-    minWords: 30
+    minWords: 30,
   },
   {
     title: 'Okulum',
@@ -23,9 +23,9 @@ const TOPICS = [
       'Okulunun adı nedir?',
       'Okulunda neler var?',
       'En sevdiğin ders hangisi?',
-      'Okulda neler yapıyorsun?'
+      'Okulda neler yapıyorsun?',
     ],
-    minWords: 30
+    minWords: 30,
   },
   {
     title: 'Ailem',
@@ -33,9 +33,9 @@ const TOPICS = [
       'Ailende kimler var?',
       'Birlikte neler yaparsınız?',
       'En çok neyi seversiniz?',
-      'Hafta sonları ne yaparsınız?'
+      'Hafta sonları ne yaparsınız?',
     ],
-    minWords: 30
+    minWords: 30,
   },
 ];
 
@@ -47,7 +47,10 @@ const ParagraphWritingGame: React.FC = () => {
   const [showFeedback, setShowFeedback] = useState(false);
 
   const currentTopic = TOPICS[currentTopicIndex];
-  const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  const wordCount = text
+    .trim()
+    .split(/\s+/)
+    .filter((w) => w.length > 0).length;
 
   const handleSubmit = () => {
     if (wordCount >= currentTopic.minWords) {
@@ -85,7 +88,9 @@ const ParagraphWritingGame: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">Paragraf Yazma</h1>
-              <p className="text-gray-600">Konu {currentTopicIndex + 1}/{TOPICS.length}</p>
+              <p className="text-gray-600">
+                Konu {currentTopicIndex + 1}/{TOPICS.length}
+              </p>
             </div>
             <div className="flex items-center gap-2 text-yellow-500">
               <Star className="w-6 h-6 fill-current" />
@@ -96,10 +101,8 @@ const ParagraphWritingGame: React.FC = () => {
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-pink-600 mb-4">
-              {currentTopic.title}
-            </h2>
-            
+            <h2 className="text-2xl font-bold text-pink-600 mb-4">{currentTopic.title}</h2>
+
             <div className="bg-pink-50 rounded-xl p-4 mb-4">
               <div className="flex items-start gap-2 mb-2">
                 <Lightbulb className="w-5 h-5 text-pink-600 mt-1" />
@@ -107,7 +110,9 @@ const ParagraphWritingGame: React.FC = () => {
               </div>
               <ul className="space-y-1 ml-7">
                 {currentTopic.prompts.map((prompt, index) => (
-                  <li key={index} className="text-gray-700">• {prompt}</li>
+                  <li key={index} className="text-gray-700">
+                    • {prompt}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -124,9 +129,11 @@ const ParagraphWritingGame: React.FC = () => {
               />
 
               <div className="flex justify-between items-center mb-4">
-                <span className={`text-lg font-medium ${
-                  wordCount >= currentTopic.minWords ? 'text-green-600' : 'text-gray-600'
-                }`}>
+                <span
+                  className={`text-lg font-medium ${
+                    wordCount >= currentTopic.minWords ? 'text-green-600' : 'text-gray-600'
+                  }`}
+                >
                   Kelime sayısı: {wordCount} / {currentTopic.minWords}
                 </span>
               </div>
@@ -149,8 +156,12 @@ const ParagraphWritingGame: React.FC = () => {
                   <p className="text-gray-800 whitespace-pre-wrap">{text}</p>
                 </div>
                 <div className="text-gray-700">
-                  <p>• Kelime sayısı: <strong>{wordCount}</strong></p>
-                  <p>• Kazandığın puan: <strong>{Math.min(50, wordCount * 2)}</strong></p>
+                  <p>
+                    • Kelime sayısı: <strong>{wordCount}</strong>
+                  </p>
+                  <p>
+                    • Kazandığın puan: <strong>{Math.min(50, wordCount * 2)}</strong>
+                  </p>
                 </div>
               </div>
 

@@ -10,12 +10,8 @@ const AcademicDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">
-            📚 Akademik Dersler
-          </h1>
-          <p className="text-white/70 text-lg">
-            Dersini seç, öğrenmeye başla!
-          </p>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">📚 Akademik Dersler</h1>
+          <p className="text-white/70 text-lg">Dersini seç, öğrenmeye başla!</p>
         </div>
 
         {/* Subjects Grid */}
@@ -32,14 +28,10 @@ const AcademicDashboard: React.FC = () => {
               </div>
 
               {/* Name */}
-              <h3 className="text-xl font-bold text-white mb-2">
-                {subject.name}
-              </h3>
+              <h3 className="text-xl font-bold text-white mb-2">{subject.name}</h3>
 
               {/* Description */}
-              <p className="text-white/80 text-sm mb-3">
-                {subject.description}
-              </p>
+              <p className="text-white/80 text-sm mb-3">{subject.description}</p>
 
               {/* Grades */}
               <div className="flex flex-wrap gap-1 justify-center">

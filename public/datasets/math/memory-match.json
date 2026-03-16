@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "memory"
-    ],
+    "tags": ["math", "memory"],
     "description": "Memory Match oyunu",
     "icon": "🔢"
   },

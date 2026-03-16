@@ -13,7 +13,7 @@ interface PuzzleDataset {
 export default function PuzzleEngine({ dataset, onComplete, onExit }: GameEngineProps) {
   const puzzleData = dataset.data as PuzzleDataset;
   const [grid, setGrid] = useState<(number | null)[][]>(
-    puzzleData.grid.map(row => row.map(cell => cell === 0 ? null : cell))
+    puzzleData.grid.map((row) => row.map((cell) => (cell === 0 ? null : cell)))
   );
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
   const [startTime] = useState(Date.now());
@@ -26,8 +26,8 @@ export default function PuzzleEngine({ dataset, onComplete, onExit }: GameEngine
   const handleNumberClick = (num: number) => {
     if (!selectedCell) return;
     const [row, col] = selectedCell;
-    
-    const newGrid = grid.map(r => [...r]);
+
+    const newGrid = grid.map((r) => [...r]);
     newGrid[row][col] = num;
     setGrid(newGrid);
   };
@@ -35,8 +35,8 @@ export default function PuzzleEngine({ dataset, onComplete, onExit }: GameEngine
   const handleClear = () => {
     if (!selectedCell) return;
     const [row, col] = selectedCell;
-    
-    const newGrid = grid.map(r => [...r]);
+
+    const newGrid = grid.map((r) => [...r]);
     newGrid[row][col] = null;
     setGrid(newGrid);
   };
@@ -92,8 +92,8 @@ export default function PuzzleEngine({ dataset, onComplete, onExit }: GameEngine
                           puzzleData.grid[i][j] !== 0
                             ? 'bg-white/30 text-white cursor-not-allowed'
                             : selectedCell?.[0] === i && selectedCell?.[1] === j
-                            ? 'bg-purple-500 text-white'
-                            : 'bg-white/10 text-white hover:bg-white/20'
+                              ? 'bg-purple-500 text-white'
+                              : 'bg-white/10 text-white hover:bg-white/20'
                         }`}
                       >
                         {cell || ''}
@@ -110,7 +110,7 @@ export default function PuzzleEngine({ dataset, onComplete, onExit }: GameEngine
             <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
               <h3 className="text-white font-bold mb-4">Sayılar</h3>
               <div className="grid grid-cols-3 gap-3">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                   <button
                     key={num}
                     onClick={() => handleNumberClick(num)}

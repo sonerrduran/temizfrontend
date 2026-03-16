@@ -6,11 +6,44 @@
 import type { User, Student, UserRole, Gender } from '../contracts/user';
 
 const firstNames = {
-  male: ['Ahmet', 'Mehmet', 'Mustafa', 'Ali', 'Hasan', 'Hüseyin', 'İbrahim', 'Yusuf', 'Emre', 'Can'],
-  female: ['Ayşe', 'Fatma', 'Zeynep', 'Elif', 'Emine', 'Hatice', 'Merve', 'Selin', 'Deniz', 'Büşra'],
+  male: [
+    'Ahmet',
+    'Mehmet',
+    'Mustafa',
+    'Ali',
+    'Hasan',
+    'Hüseyin',
+    'İbrahim',
+    'Yusuf',
+    'Emre',
+    'Can',
+  ],
+  female: [
+    'Ayşe',
+    'Fatma',
+    'Zeynep',
+    'Elif',
+    'Emine',
+    'Hatice',
+    'Merve',
+    'Selin',
+    'Deniz',
+    'Büşra',
+  ],
 };
 
-const lastNames = ['Yılmaz', 'Kaya', 'Demir', 'Çelik', 'Şahin', 'Yıldız', 'Öztürk', 'Aydın', 'Arslan', 'Koç'];
+const lastNames = [
+  'Yılmaz',
+  'Kaya',
+  'Demir',
+  'Çelik',
+  'Şahin',
+  'Yıldız',
+  'Öztürk',
+  'Aydın',
+  'Arslan',
+  'Koç',
+];
 
 /**
  * Rastgele isim üretir

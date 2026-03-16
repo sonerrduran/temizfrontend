@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "symmetry"
-    ],
+    "tags": ["math", "symmetry"],
     "description": "Symmetry oyunu",
     "icon": "🔢"
   },
@@ -26,12 +23,7 @@
         "id": "q1",
         "type": "multiple-choice",
         "question": "Soru 1",
-        "options": [
-          "A",
-          "B",
-          "C",
-          "D"
-        ],
+        "options": ["A", "B", "C", "D"],
         "correctAnswer": 0,
         "points": 10
       }

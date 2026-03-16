@@ -41,7 +41,7 @@ const MultiplicationNinjaGame: React.FC<MultiplicationNinjaGameProps> = ({ onBac
     }
 
     const allOptions = [answer, ...wrongAnswers].sort(() => Math.random() - 0.5);
-    
+
     setCurrentProblem({ num1, num2, answer });
     setOptions(allOptions);
   };
@@ -50,11 +50,11 @@ const MultiplicationNinjaGame: React.FC<MultiplicationNinjaGameProps> = ({ onBac
     if (selected === currentProblem.answer) {
       setScore(score + 10 + streak * 2);
       setStreak(streak + 1);
-      
+
       if (streak > 0 && streak % 5 === 0) {
         setLevel(level + 1);
       }
-      
+
       generateProblem();
     } else {
       setStreak(0);

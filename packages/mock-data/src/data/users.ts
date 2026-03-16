@@ -5,6 +5,23 @@
 
 import type { User, Student, Teacher, Parent, Admin, UserRole } from '../contracts/user';
 
+/**
+ * Mock passwords (sadece development için!)
+ * Production'da asla böyle yapılmamalı!
+ */
+export const mockPasswords: Record<string, string> = {
+  'ahmet@example.com': '123456',
+  'ayse@example.com': '123456',
+  'mehmet@example.com': '123456',
+  'zeynep.ozturk@school.com': 'teacher123',
+  'ali.celik@school.com': 'teacher123',
+  'fatma.yildirim@school.com': 'teacher123',
+  'mustafa.yilmaz@example.com': 'parent123',
+  'emine.demir@example.com': 'parent123',
+  'hasan.kaya@example.com': 'parent123',
+  'admin@egitimgalaksisi.com': 'admin123',
+};
+
 export const mockStudents: Student[] = [
   {
     id: 'student-1',
@@ -235,12 +252,7 @@ export const mockAdmins: Admin[] = [
   },
 ];
 
-export const mockUsers: User[] = [
-  ...mockStudents,
-  ...mockTeachers,
-  ...mockParents,
-  ...mockAdmins,
-];
+export const mockUsers: User[] = [...mockStudents, ...mockTeachers, ...mockParents, ...mockAdmins];
 
 /**
  * Role'e göre kullanıcıları filtreler
@@ -296,4 +308,21 @@ export function getStudentsByTeacher(teacherId: string): Student[] {
  */
 export function getStudentsByParent(parentId: string): Student[] {
   return mockStudents.filter((student) => student.parentId === parentId);
+}
+
+/**
+ * Login fonksiyonu - email ve password ile giriş
+ */
+export function loginUser(email: string, password: string): User | null {
+  const user = getUserByEmail(email);
+  if (!user) {
+    return null;
+  }
+
+  // Password kontrolü
+  if (mockPasswords[email] === password) {
+    return user;
+  }
+
+  return null;
 }

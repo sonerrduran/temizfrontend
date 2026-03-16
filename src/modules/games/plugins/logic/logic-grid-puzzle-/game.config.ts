@@ -5,27 +5,27 @@ export const config: GameConfig = {
   name: 'LogicGridPuzzle',
   description: 'LogicGridPuzzle oyunu',
   version: '1.0.0',
-  
+
   category: 'logic',
   gradeMin: 1,
   gradeMax: 2,
   difficulty: 'easy',
-  
+
   component: 'LogicGridPuzzleGame',
-  
+
   features: {
     multiplayer: false,
     ai: false,
     offline: true,
     realtime: false,
   },
-  
+
   contentSource: 'static',
-  
+
   assets: {
     icon: '/assets/games/logic-grid-puzzle-/icon.svg',
   },
-  
+
   tags: ['logic'],
   estimatedLoadTime: 300,
   memoryUsage: 'low',

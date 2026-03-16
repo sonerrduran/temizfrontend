@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "race"
-    ],
+    "tags": ["math", "race"],
     "description": "Race Order oyunu",
     "icon": "🔢"
   },

@@ -4,10 +4,7 @@ import { gameService } from '@/services/api/game.service';
 /**
  * Fetch leaderboard with auto-refresh
  */
-export function useLeaderboard(
-  gameId?: string,
-  period: 'daily' | 'weekly' | 'all' = 'all'
-) {
+export function useLeaderboard(gameId?: string, period: 'daily' | 'weekly' | 'all' = 'all') {
   return useQuery({
     queryKey: ['leaderboard', gameId, period],
     queryFn: () => gameService.getLeaderboard(gameId, period),

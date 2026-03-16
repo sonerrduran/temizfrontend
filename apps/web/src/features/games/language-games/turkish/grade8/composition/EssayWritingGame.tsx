@@ -6,24 +6,24 @@ const topics = [
   {
     title: 'Teknolojinin Eğitime Etkisi',
     description: 'Teknolojinin eğitim sistemindeki olumlu ve olumsuz etkilerini tartışın.',
-    keywords: ['teknoloji', 'eğitim', 'dijital', 'öğrenme']
+    keywords: ['teknoloji', 'eğitim', 'dijital', 'öğrenme'],
   },
   {
     title: 'Çevre Kirliliği ve Çözümleri',
     description: 'Çevre kirliliğinin nedenleri ve alınabilecek önlemleri açıklayın.',
-    keywords: ['çevre', 'kirlilik', 'doğa', 'çözüm']
+    keywords: ['çevre', 'kirlilik', 'doğa', 'çözüm'],
   },
   {
     title: 'Kitap Okuma Alışkanlığı',
     description: 'Kitap okumanın önemi ve gençlerde okuma alışkanlığının geliştirilmesi.',
-    keywords: ['kitap', 'okuma', 'kültür', 'gelişim']
-  }
+    keywords: ['kitap', 'okuma', 'kültür', 'gelişim'],
+  },
 ];
 
 const structure = [
   { name: 'Giriş', minWords: 30, description: 'Konuyu tanıtın ve tezinizi belirtin' },
   { name: 'Gelişme', minWords: 100, description: 'Argümanlarınızı örneklerle destekleyin' },
-  { name: 'Sonuç', minWords: 30, description: 'Fikirlerinizi özetleyin ve sonuca bağlayın' }
+  { name: 'Sonuç', minWords: 30, description: 'Fikirlerinizi özetleyin ve sonuca bağlayın' },
 ];
 
 export default function EssayWritingGame() {
@@ -39,7 +39,10 @@ export default function EssayWritingGame() {
     newSections[currentSection] = text;
     setSections(newSections);
 
-    const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+    const words = text
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 0);
     const newWordCounts = [...wordCounts];
     newWordCounts[currentSection] = words.length;
     setWordCounts(newWordCounts);
@@ -88,7 +91,10 @@ export default function EssayWritingGame() {
                   <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {topic.keywords.map((keyword, i) => (
-                      <span key={i} className="px-2 py-1 bg-white rounded-full text-xs text-gray-600">
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-white rounded-full text-xs text-gray-600"
+                      >
                         {keyword}
                       </span>
                     ))}
@@ -120,9 +126,7 @@ export default function EssayWritingGame() {
             {structure.map((sec, index) => (
               <div key={index} className="border-2 border-gray-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{sec.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  {wordCounts[index]} kelime
-                </p>
+                <p className="text-sm text-gray-600 mb-3">{wordCounts[index]} kelime</p>
                 <p className="text-gray-700 whitespace-pre-wrap">{sections[index]}</p>
               </div>
             ))}
@@ -176,12 +180,14 @@ export default function EssayWritingGame() {
                   index === currentSection
                     ? 'bg-emerald-500 text-white'
                     : index < currentSection
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-500'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-gray-100 text-gray-500'
                 }`}
               >
                 <div className="font-semibold">{sec.name}</div>
-                <div className="text-sm">{wordCounts[index]} / {sec.minWords} kelime</div>
+                <div className="text-sm">
+                  {wordCounts[index]} / {sec.minWords} kelime
+                </div>
               </div>
             ))}
           </div>

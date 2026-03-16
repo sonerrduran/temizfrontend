@@ -8,7 +8,9 @@ const DivisionHuntGame: React.FC<DivisionHuntGameProps> = ({ onBack }) => {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(90);
   const [currentProblem, setCurrentProblem] = useState({ dividend: 0, divisor: 0, answer: 0 });
-  const [targets, setTargets] = useState<Array<{ id: number; value: number; x: number; y: number }>>([]);
+  const [targets, setTargets] = useState<
+    Array<{ id: number; value: number; x: number; y: number }>
+  >([]);
   const [gameOver, setGameOver] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [level, setLevel] = useState(1);
@@ -37,20 +39,20 @@ const DivisionHuntGame: React.FC<DivisionHuntGameProps> = ({ onBack }) => {
       id: 0,
       value: quotient,
       x: Math.random() * 70 + 10,
-      y: Math.random() * 60 + 10
+      y: Math.random() * 60 + 10,
     });
 
     for (let i = 1; i < 5; i++) {
       let wrongAnswer;
       do {
         wrongAnswer = Math.floor(Math.random() * 20) + 1;
-      } while (wrongAnswer === quotient || newTargets.some(t => t.value === wrongAnswer));
-      
+      } while (wrongAnswer === quotient || newTargets.some((t) => t.value === wrongAnswer));
+
       newTargets.push({
         id: i,
         value: wrongAnswer,
         x: Math.random() * 70 + 10,
-        y: Math.random() * 60 + 10
+        y: Math.random() * 60 + 10,
       });
     }
 
@@ -63,11 +65,11 @@ const DivisionHuntGame: React.FC<DivisionHuntGameProps> = ({ onBack }) => {
     if (value === currentProblem.answer) {
       setScore(score + 15);
       setFeedback('🎯 İsabet!');
-      
+
       if ((score + 15) % 100 === 0) {
         setLevel(level + 1);
       }
-      
+
       setTimeout(() => generateProblem(), 800);
     } else {
       setScore(Math.max(0, score - 5));
@@ -124,7 +126,9 @@ const DivisionHuntGame: React.FC<DivisionHuntGameProps> = ({ onBack }) => {
               </div>
               <div className="text-3xl text-white font-bold">= ?</div>
               {feedback && (
-                <div className={`mt-4 text-3xl font-bold ${feedback.includes('🎯') ? 'text-green-300' : 'text-red-300'}`}>
+                <div
+                  className={`mt-4 text-3xl font-bold ${feedback.includes('🎯') ? 'text-green-300' : 'text-red-300'}`}
+                >
                   {feedback}
                 </div>
               )}

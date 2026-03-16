@@ -101,9 +101,7 @@ export default function LeaderboardPage() {
         {/* Leaderboard */}
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20">
           {leaderboard.length === 0 ? (
-            <div className="text-center py-12 text-white/60">
-              Henüz sıralama yok
-            </div>
+            <div className="text-center py-12 text-white/60">Henüz sıralama yok</div>
           ) : (
             <div className="space-y-4">
               {leaderboard.map((entry) => (

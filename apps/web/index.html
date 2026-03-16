@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Özel Edirne Koleji Eğitim Platformu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      /* Oyun Ekranı Stilleri - Merkezi Kontrol */
+      --game-screen-bg: transparent;
+      --game-title-color: #ffffff;
+      --game-title-style: normal;
+      --game-title-font-size: 48px;
+      --game-title-text-transform: uppercase;
+      --game-button-bg: rgba(255, 255, 255, 0.1);
+      --game-button-hover: rgba(255, 255, 255, 0.2);
+      --game-card-bg: rgba(15, 23, 42, 0.8);
+      --game-border-color: rgba(255, 255, 255, 0.1);
+      
+      /* Oyun başlıklarını ve oyuncu bilgisini gizle/göster */
+      --game-title-display: none;  /* none = gizle, block = göster */
+      --game-player-info-display: none;  /* none = gizle, block = göster */
+    }
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #020617;
+      overflow-x: hidden;
+      color: white;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Gelişmiş Yıldız Arkaplanı */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at bottom, #1e1b4b 0%, #020617 100%);
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: twinkle var(--duration) infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.2;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scale(1.3);
+      }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    /* Yazıların sığmasını garanti altına alan yardımcı sınıflar */
+    .text-balance {
+      text-wrap: balance;
+    }
+
+    /* ===== GLOBAL TITLE STYLES ===== */
+    /* Tüm başlıklar beyaz renk olsun - İtalik olmasın */
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff !important;
+      font-style: normal !important;
+    }
+
+    /* Gradient text efektlerini kaldır */
+    .text-transparent,
+    [class*="text-transparent"] {
+      color: #ffffff !important;
+      background-clip: unset !important;
+      -webkit-background-clip: unset !important;
+      -webkit-text-fill-color: unset !important;
+    }
+
+    /* Renkli başlıkları ve metinleri beyaz yap */
+    h1[class*="text-"],
+    h2[class*="text-"],
+    h3[class*="text-"],
+    h4[class*="text-"],
+    h5[class*="text-"],
+    h6[class*="text-"] {
+      color: #ffffff !important;
+    }
+
+    /* Tüm renkli text sınıflarını beyaz yap */
+    [class*="text-cyan"],
+    [class*="text-blue"],
+    [class*="text-red"],
+    [class*="text-green"],
+    [class*="text-yellow"],
+    [class*="text-purple"],
+    [class*="text-pink"],
+    [class*="text-orange"],
+    [class*="text-indigo"],
+    [class*="text-rose"],
+    [class*="text-emerald"],
+    [class*="text-teal"],
+    [class*="text-lime"],
+    [class*="text-amber"],
+    [class*="text-fuchsia"],
+    [class*="text-violet"] {
+      color: #ffffff !important;
+    }
+
+    /* Oyun başlıklarındaki span'ları da beyaz yap */
+    h1 span, h2 span, h3 span, h4 span, h5 span, h6 span {
+      color: #ffffff !important;
+    }
+
+    /* ===== OYUN EKRANI GLOBAL STİLLERİ ===== */
+    /* Tüm oyun ekranlarının arka planlarını kaldır */
+    [class*="min-h-screen"][class*="bg-gradient-to-br"],
+    [class*="min-h-screen"][class*="bg-gradient-to-r"],
+    [class*="min-h-screen"][class*="bg-gradient-to-l"],
+    [class*="min-h-screen"][class*="bg-gradient-to-t"],
+    [class*="min-h-screen"][class*="bg-gradient-to-b"] {
+      background: var(--game-screen-bg) !important;
+    }
+
+    /* Oyun başlıkları - Merkezi kontrol */
+    [class*="min-h-screen"] h1,
+    [class*="min-h-screen"] h2,
+    [class*="min-h-screen"] h3 {
+      color: var(--game-title-color) !important;
+      font-style: var(--game-title-style) !important;
+    }
+
+    /* Oyun başlıklarındaki gradient text efektlerini kaldır */
+    [class*="min-h-screen"] [class*="text-transparent"],
+    [class*="min-h-screen"] [class*="bg-clip-text"] {
+      color: var(--game-title-color) !important;
+      background-clip: unset !important;
+      -webkit-background-clip: unset !important;
+      -webkit-text-fill-color: unset !important;
+    }
+
+    /* Oyun başlıklarındaki renkli text'leri beyaz yap */
+    [class*="min-h-screen"] h1[class*="text-"],
+    [class*="min-h-screen"] h2[class*="text-"],
+    [class*="min-h-screen"] h3[class*="text-"] {
+      color: var(--game-title-color) !important;
+    }
+
+    /* Oyun butonları */
+    [class*="min-h-screen"] button[class*="bg-white/"] {
+      background: var(--game-button-bg) !important;
+    }
+
+    [class*="min-h-screen"] button[class*="bg-white/"]:hover {
+      background: var(--game-button-hover) !important;
+    }
+
+    /* Oyun kartları */
+    [class*="min-h-screen"] [class*="bg-slate-"][class*="/80"],
+    [class*="min-h-screen"] [class*="bg-slate-"][class*="/90"] {
+      background: var(--game-card-bg) !important;
+    }
+
+    /* Oyun kenarlıkları */
+    [class*="min-h-screen"] [class*="border-white/"] {
+      border-color: var(--game-border-color) !important;
+    }
+
+    /* Oyun başlıklarını gizle (opsiyonel - CSS değişkeni ile kontrol) */
+    [class*="min-h-screen"] h2[class*="bg-clip-text"],
+    [class*="min-h-screen"] h2[class*="bg-gradient"] {
+      display: var(--game-title-display, block) !important;
+    }
+
+    /* Oyuncu bilgisini gizle (opsiyonel) */
+    [class*="min-h-screen"] div:has(> :only-child):contains("Oyuncu") {
+      display: var(--game-player-info-display, block) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars-container" id="stars"></div>
+  <div id="root"></div>
+
+  <script>
+    const starsContainer = document.getElementById('stars');
+    const starCount = 100;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = (Math.random() * 2 + 1) + 'px';
+      star.style.width = size;
+      star.style.height = size;
+      star.style.top = Math.random() * 100 + '%';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.setProperty('--duration', (Math.random() * 3 + 3) + 's');
+      starsContainer.appendChild(star);
+    }
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

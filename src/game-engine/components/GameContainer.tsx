@@ -10,7 +10,12 @@ interface GameContainerProps {
   onExit: () => void;
 }
 
-export default function GameContainer({ gameId, datasetPath, onComplete, onExit }: GameContainerProps) {
+export default function GameContainer({
+  gameId,
+  datasetPath,
+  onComplete,
+  onExit,
+}: GameContainerProps) {
   const [dataset, setDataset] = useState<Dataset | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,11 +71,7 @@ export default function GameContainer({ gameId, datasetPath, onComplete, onExit 
 
   return (
     <Suspense fallback={<div className="text-white">Yükleniyor...</div>}>
-      <EngineComponent
-        dataset={dataset}
-        onComplete={onComplete}
-        onExit={onExit}
-      />
+      <EngineComponent dataset={dataset} onComplete={onComplete} onExit={onExit} />
     </Suspense>
   );
 }

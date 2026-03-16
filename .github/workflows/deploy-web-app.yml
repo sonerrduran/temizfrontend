@@ -1,0 +1,45 @@
+name: Deploy Web App
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build:web
+        env:
+          VITE_API_URL: ${{ secrets.API_URL }}
+          VITE_MATH_GAMES_URL: ${{ secrets.MATH_GAMES_URL }}
+          VITE_LOGIC_GAMES_URL: ${{ secrets.LOGIC_GAMES_URL }}
+          VITE_LANGUAGE_GAMES_URL: ${{ secrets.LANGUAGE_GAMES_URL }}
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./apps/web
+          vercel-args: ${{ github.event.inputs.environment == 'production' && '--prod' || '' }}

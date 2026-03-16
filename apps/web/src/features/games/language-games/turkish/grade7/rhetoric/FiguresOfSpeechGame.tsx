@@ -7,26 +7,26 @@ const questions = [
     sentence: 'Yıldızlar gökyüzünde dans ediyordu.',
     figure: 'Kişileştirme',
     explanation: 'Cansız varlıklara (yıldızlar) insana özgü özellikler (dans etmek) verilmiştir.',
-    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz']
+    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz'],
   },
   {
     sentence: 'Saçları kar gibi beyazdı.',
     figure: 'Benzetme',
     explanation: 'İki şey arasında benzerlik ilişkisi kurulmuştur (saçlar - kar).',
-    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz']
+    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz'],
   },
   {
     sentence: 'Bin yıl beklesem yine gelmezsin.',
     figure: 'Abartma',
     explanation: 'Gerçek olmayan, abartılı bir ifade kullanılmıştır.',
-    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz']
+    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz'],
   },
   {
     sentence: 'Gözleri doldu.',
     figure: 'Mecaz',
     explanation: 'Kelime gerçek anlamının dışında kullanılmıştır (ağlamak anlamında).',
-    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz']
-  }
+    options: ['Kişileştirme', 'Benzetme', 'Abartma', 'Mecaz'],
+  },
 ];
 
 export default function FiguresOfSpeechGame() {
@@ -74,9 +74,7 @@ export default function FiguresOfSpeechGame() {
           </div>
 
           <div className="mb-8 p-6 bg-violet-50 rounded-xl text-center">
-            <p className="text-2xl font-semibold text-gray-800 italic">
-              "{question.sentence}"
-            </p>
+            <p className="text-2xl font-semibold text-gray-800 italic">"{question.sentence}"</p>
           </div>
 
           <p className="text-xl text-gray-700 mb-6 text-center">
@@ -93,12 +91,12 @@ export default function FiguresOfSpeechGame() {
                   selectedAnswer === null
                     ? 'bg-gray-100 hover:bg-gray-200'
                     : selectedAnswer === option
-                    ? option === question.figure
-                      ? 'bg-green-100 border-2 border-green-500'
-                      : 'bg-red-100 border-2 border-red-500'
-                    : option === question.figure
-                    ? 'bg-green-100 border-2 border-green-500'
-                    : 'bg-gray-100'
+                      ? option === question.figure
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-red-100 border-2 border-red-500'
+                      : option === question.figure
+                        ? 'bg-green-100 border-2 border-green-500'
+                        : 'bg-gray-100'
                 }`}
               >
                 {option}

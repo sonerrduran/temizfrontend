@@ -13,7 +13,7 @@ export class DirectionLogic implements GameLogic {
     currentQuestion: 0,
     totalQuestions: 10,
   };
-  
+
   private questions: Question[] = [];
   private timeLeft = 30;
   private correctAnswers = 0;
@@ -29,7 +29,6 @@ export class DirectionLogic implements GameLogic {
     this.generateQuestions();
   }
 
-  
   private generateQuestions(): void {
     this.questions = [];
     for (let i = 0; i < this.state.totalQuestions; i++) {
@@ -39,55 +38,50 @@ export class DirectionLogic implements GameLogic {
       });
     }
   }
-  
 
   handleAnswer(answer: any): GameResult {
     const isCorrect = this.checkAnswer(answer);
-    
+
     if (isCorrect) {
       this.correctAnswers++;
       this.state.score += 10 + this.state.level * 5;
     }
-    
+
     this.state.currentQuestion++;
-    
+
     if (this.state.currentQuestion >= this.state.totalQuestions) {
       this.state.isComplete = true;
     } else {
       this.state.level = Math.min(this.state.level + 1, 10);
     }
-    
+
     return {
       isCorrect,
       score: this.state.score,
       feedback: isCorrect ? '✅ Doğru!' : '❌ Yanlış!',
     };
   }
-  
+
   private checkAnswer(answer: any): boolean {
     // Implement answer checking logic
     return true;
   }
-  
-  
+
   getCurrentQuestion(): Question | null {
     if (this.state.currentQuestion < this.questions.length) {
       return this.questions[this.state.currentQuestion];
     }
     return null;
   }
-  
-  
-  
+
   getTimeLeft(): number {
     return this.timeLeft;
   }
-  
+
   decrementTime(): void {
     this.timeLeft--;
   }
-  
-  
+
   getCorrectAnswers(): number {
     return this.correctAnswers;
   }

@@ -9,7 +9,9 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
   const [round, setRound] = useState(1);
   const [totalRounds] = useState(10);
   const [balloonCount, setBalloonCount] = useState(0);
-  const [balloons, setBalloons] = useState<Array<{ id: number; x: number; y: number; color: string }>>([]);
+  const [balloons, setBalloons] = useState<
+    Array<{ id: number; x: number; y: number; color: string }>
+  >([]);
   const [options, setOptions] = useState<number[]>([]);
   const [feedback, setFeedback] = useState('');
   const [showCelebration, setShowCelebration] = useState(false);
@@ -30,7 +32,7 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
         id: i,
         x: Math.random() * 80 + 10,
         y: Math.random() * 70 + 10,
-        color: BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)]
+        color: BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)],
       });
     }
     setBalloons(newBalloons);
@@ -52,7 +54,7 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
     if (selected === balloonCount) {
       setFeedback('🎉 Doğru!');
       setScore(score + 10);
-      
+
       setTimeout(() => {
         if (round < totalRounds) {
           setRound(round + 1);
@@ -112,7 +114,9 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
           >
             ← Geri
           </button>
-          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">🎈 Balon Say</h1>
+          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">
+            🎈 Balon Say
+          </h1>
           <div className="w-24"></div>
         </div>
 
@@ -124,7 +128,9 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <div className="text-white/80 text-sm">Tur</div>
-            <div className="text-3xl font-black text-white">{round}/{totalRounds}</div>
+            <div className="text-3xl font-black text-white">
+              {round}/{totalRounds}
+            </div>
           </div>
         </div>
 
@@ -143,7 +149,7 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
                 left: `${balloon.x}%`,
                 top: `${balloon.y}%`,
                 animationDelay: `${balloon.id * 0.1}s`,
-                animationDuration: '2s'
+                animationDuration: '2s',
               }}
             >
               <div
@@ -171,9 +177,13 @@ const BalloonCountGame: React.FC<BalloonCountGameProps> = ({ onBack }) => {
 
         {/* Feedback */}
         {feedback && (
-          <div className={`text-center text-3xl font-black p-6 rounded-xl ${
-            feedback.includes('🎉') ? 'bg-green-500/30 text-green-100' : 'bg-red-500/30 text-red-100'
-          }`}>
+          <div
+            className={`text-center text-3xl font-black p-6 rounded-xl ${
+              feedback.includes('🎉')
+                ? 'bg-green-500/30 text-green-100'
+                : 'bg-red-500/30 text-red-100'
+            }`}
+          >
             {feedback}
           </div>
         )}

@@ -8,10 +8,7 @@
     "grade": 3,
     "difficulty": "medium",
     "duration": 300,
-    "tags": [
-      "math",
-      "heaviest"
-    ],
+    "tags": ["math", "heaviest"],
     "description": "Heaviest Object oyunu",
     "icon": "🔢"
   },

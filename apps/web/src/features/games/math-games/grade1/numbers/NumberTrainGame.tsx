@@ -21,27 +21,27 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
   const generateRound = () => {
     const start = Math.floor(Math.random() * 5) + 1;
     const length = Math.min(5 + Math.floor(round / 2), 8);
-    
+
     const sequence = Array.from({ length }, (_, i) => start + i);
     const slots = [...sequence];
-    
+
     // Remove 2-3 numbers to create gaps
     const gapCount = Math.min(2 + Math.floor(round / 3), 3);
     const gapIndices: number[] = [];
-    
+
     while (gapIndices.length < gapCount) {
       const index = Math.floor(Math.random() * length);
       if (!gapIndices.includes(index)) {
         gapIndices.push(index);
       }
     }
-    
+
     const missing: number[] = [];
-    gapIndices.forEach(index => {
+    gapIndices.forEach((index) => {
       missing.push(slots[index]);
       slots[index] = null;
     });
-    
+
     setTrainSlots(slots);
     setAvailableNumbers(missing.sort(() => Math.random() - 0.5));
     setSelectedNumber(null);
@@ -55,11 +55,32 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
   const handleSlotClick = (index: number) => {
     if (selectedNumber === null || trainSlots[index] !== null || feedback) return;
 
-    const expectedNumber = trainSlots.find((n, i) => n !== null && i < index) !== undefined
-      ? Math.max(...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) < index)) + (index - trainSlots.lastIndexOf(Math.max(...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) < index))))
-      : trainSlots.find((n, i) => n !== null && i > index) !== undefined
-      ? Math.min(...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) > index)) - (trainSlots.indexOf(Math.min(...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) > index))) - index)
-      : selectedNumber;
+    const expectedNumber =
+      trainSlots.find((n, i) => n !== null && i < index) !== undefined
+        ? Math.max(
+            ...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) < index)
+          ) +
+          (index -
+            trainSlots.lastIndexOf(
+              Math.max(
+                ...trainSlots.filter(
+                  (n): n is number => n !== null && trainSlots.indexOf(n) < index
+                )
+              )
+            ))
+        : trainSlots.find((n, i) => n !== null && i > index) !== undefined
+          ? Math.min(
+              ...trainSlots.filter((n): n is number => n !== null && trainSlots.indexOf(n) > index)
+            ) -
+            (trainSlots.indexOf(
+              Math.min(
+                ...trainSlots.filter(
+                  (n): n is number => n !== null && trainSlots.indexOf(n) > index
+                )
+              )
+            ) -
+              index)
+          : selectedNumber;
 
     // Simple check: find the correct number for this position
     let correctNumber = 0;
@@ -81,8 +102,8 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
       const newSlots = [...trainSlots];
       newSlots[index] = selectedNumber;
       setTrainSlots(newSlots);
-      
-      const newAvailable = availableNumbers.filter(n => n !== selectedNumber);
+
+      const newAvailable = availableNumbers.filter((n) => n !== selectedNumber);
       setAvailableNumbers(newAvailable);
       setSelectedNumber(null);
       setScore(score + 10);
@@ -149,7 +170,9 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
           >
             ← Geri
           </button>
-          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">🚂 Sayı Treni</h1>
+          <h1 className="text-3xl md:text-5xl font-black text-white drop-shadow-lg">
+            🚂 Sayı Treni
+          </h1>
           <div className="w-24"></div>
         </div>
 
@@ -161,7 +184,9 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <div className="text-white/80 text-sm">Tur</div>
-            <div className="text-3xl font-black text-white">{round}/{totalRounds}</div>
+            <div className="text-3xl font-black text-white">
+              {round}/{totalRounds}
+            </div>
           </div>
         </div>
 
@@ -177,7 +202,7 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
             <div className="flex-shrink-0 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl p-6 text-4xl shadow-xl">
               🚂
             </div>
-            
+
             {/* Wagons */}
             {trainSlots.map((num, index) => (
               <div key={index} className="flex items-center flex-shrink-0">
@@ -189,8 +214,8 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
                     num !== null
                       ? 'bg-gradient-to-br from-blue-400 to-blue-600 text-white'
                       : selectedNumber
-                      ? 'bg-white/40 hover:bg-white/60 text-white border-4 border-dashed border-white cursor-pointer'
-                      : 'bg-white/20 text-white/40 border-4 border-dashed border-white/40'
+                        ? 'bg-white/40 hover:bg-white/60 text-white border-4 border-dashed border-white cursor-pointer'
+                        : 'bg-white/20 text-white/40 border-4 border-dashed border-white/40'
                   }`}
                 >
                   {num !== null ? num : '?'}
@@ -222,9 +247,13 @@ const NumberTrainGame: React.FC<NumberTrainGameProps> = ({ onBack }) => {
 
         {/* Feedback */}
         {feedback && (
-          <div className={`mt-6 text-center text-3xl font-black p-6 rounded-xl ${
-            feedback.includes('🎉') ? 'bg-green-500/30 text-green-100' : 'bg-red-500/30 text-red-100'
-          }`}>
+          <div
+            className={`mt-6 text-center text-3xl font-black p-6 rounded-xl ${
+              feedback.includes('🎉')
+                ? 'bg-green-500/30 text-green-100'
+                : 'bg-red-500/30 text-red-100'
+            }`}
+          >
             {feedback}
           </div>
         )}

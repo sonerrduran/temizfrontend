@@ -408,15 +408,15 @@ export function getLeaderboardByScope(
   if (scope === 'global') {
     return mockLeaderboardEntries;
   }
-  
+
   if (scope === 'school' && scopeId) {
     return mockLeaderboardEntries.filter((entry) => entry.schoolId === scopeId);
   }
-  
+
   if (scope === 'classroom' && scopeId) {
     return mockLeaderboardEntries.filter((entry) => entry.classroomId === scopeId);
   }
-  
+
   return mockLeaderboardEntries;
 }
 
@@ -447,7 +447,7 @@ export function getUserRank(userId: string): LeaderboardEntry | undefined {
 export function getUserAchievements(userId: string): Achievement[] {
   const user = mockLeaderboardEntries.find((entry) => entry.userId === userId);
   if (!user) return [];
-  
+
   // İlk N başarıyı döndür (gerçek uygulamada user.achievements ile eşleştirilecek)
   return mockAchievements.slice(0, user.achievements);
 }

@@ -1,0 +1,7 @@
+{
+  "name": "@egitim-galaksisi/ui",
+  "version": "3.0.0",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts"
+}

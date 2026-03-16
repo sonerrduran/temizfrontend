@@ -23,12 +23,12 @@ export default function DiagramEngine({ dataset, onComplete, onExit }: GameEngin
   const [startTime] = useState(Date.now());
 
   const handleLabelSelect = (labelId: string, option: string) => {
-    setAnswers(prev => ({ ...prev, [labelId]: option }));
+    setAnswers((prev) => ({ ...prev, [labelId]: option }));
   };
 
   const handleCheck = () => {
     const correctCount = diagramData.labels.filter(
-      label => answers[label.id] === label.text
+      (label) => answers[label.id] === label.text
     ).length;
 
     const duration = Math.floor((Date.now() - startTime) / 1000);
@@ -103,9 +103,7 @@ export default function DiagramEngine({ dataset, onComplete, onExit }: GameEngin
                   <button
                     key={index}
                     onClick={() => {
-                      const unassignedLabel = diagramData.labels.find(
-                        l => !answers[l.id]
-                      );
+                      const unassignedLabel = diagramData.labels.find((l) => !answers[l.id]);
                       if (unassignedLabel) {
                         handleLabelSelect(unassignedLabel.id, option);
                       }

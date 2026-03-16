@@ -21,19 +21,19 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
   const generateLevel = () => {
     // Basit saatler: tam saat ve yarım saat
     const hour = Math.floor(Math.random() * 12) + 1;
-    const minute = level <= 2 ? 0 : (Math.random() < 0.5 ? 0 : 30);
-    
+    const minute = level <= 2 ? 0 : Math.random() < 0.5 ? 0 : 30;
+
     setTargetHour(hour);
     setTargetMinute(minute);
 
     const correctAnswer = minute === 0 ? `${hour}:00` : `${hour}:30`;
-    
+
     const wrongOptions = [];
     while (wrongOptions.length < 2) {
       const wrongHour = Math.floor(Math.random() * 12) + 1;
       const wrongMinute = Math.random() < 0.5 ? 0 : 30;
       const wrongAnswer = wrongMinute === 0 ? `${wrongHour}:00` : `${wrongHour}:30`;
-      
+
       if (wrongAnswer !== correctAnswer && !wrongOptions.includes(wrongAnswer)) {
         wrongOptions.push(wrongAnswer);
       }
@@ -46,7 +46,7 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
   const handleAnswer = (selected: string) => {
     const correctAnswer = targetMinute === 0 ? `${targetHour}:00` : `${targetHour}:30`;
-    
+
     if (selected === correctAnswer) {
       const points = 10 + level * 5;
       setScore(score + points);
@@ -81,13 +81,16 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-cyan-900 to-blue-900 p-4 md:p-8 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(15)].map((_, i) => (
-          <div key={i} className="absolute text-6xl opacity-10 animate-float"
+          <div
+            key={i}
+            className="absolute text-6xl opacity-10 animate-float"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 10}s`
-            }}>
+              animationDuration: `${5 + Math.random() * 10}s`,
+            }}
+          >
             🕐
           </div>
         ))}
@@ -95,7 +98,10 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <button onClick={onExit} className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          <button
+            onClick={onExit}
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"
+          >
             ← Çıkış
           </button>
           <div className="flex gap-4">
@@ -112,9 +118,7 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
           <h1 className="text-5xl md:text-7xl font-black text-white mb-4 drop-shadow-2xl">
             🕐 Saat Kaç? 🕐
           </h1>
-          <p className="text-xl md:text-2xl text-cyan-300 font-bold">
-            Saati okumayı öğren!
-          </p>
+          <p className="text-xl md:text-2xl text-cyan-300 font-bold">Saati okumayı öğren!</p>
         </div>
 
         <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl mb-8">
@@ -133,7 +137,7 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
                       style={{
                         left: `${x}%`,
                         top: `${y}%`,
-                        transform: 'translate(-50%, -50%)'
+                        transform: 'translate(-50%, -50%)',
                       }}
                     >
                       {num}
@@ -150,7 +154,7 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
                 className="absolute top-1/2 left-1/2 w-2 h-16 bg-gray-800 rounded-full origin-bottom transform -translate-x-1/2"
                 style={{
                   transform: `translate(-50%, -100%) rotate(${hourRotation}deg)`,
-                  transformOrigin: 'bottom center'
+                  transformOrigin: 'bottom center',
                 }}
               ></div>
 
@@ -159,7 +163,7 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
                 className="absolute top-1/2 left-1/2 w-1.5 h-24 bg-blue-600 rounded-full origin-bottom transform -translate-x-1/2"
                 style={{
                   transform: `translate(-50%, -100%) rotate(${minuteRotation}deg)`,
-                  transformOrigin: 'bottom center'
+                  transformOrigin: 'bottom center',
                 }}
               ></div>
             </div>
@@ -182,9 +186,11 @@ const ClockReadingGame: React.FC<Props> = ({ onComplete, onExit }) => {
           </div>
 
           {feedback && (
-            <div className={`mt-8 text-center text-3xl font-black ${
-              feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'
-            }`}>
+            <div
+              className={`mt-8 text-center text-3xl font-black ${
+                feedback.includes('Doğru') ? 'text-green-400' : 'text-red-400'
+              }`}
+            >
               {feedback}
             </div>
           )}

@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 import { GameUIProps } from '../../../engine/types/game.types';
 import { ShapeHunterLogic } from './game.logic';
 
-export const ShapeHunterGame: React.FC<GameUIProps> = ({
-  config,
-  logic,
-  onComplete,
-  onExit,
-}) => {
+export const ShapeHunterGame: React.FC<GameUIProps> = ({ config, logic, onComplete, onExit }) => {
   const gameLogic = logic as ShapeHunterLogic;
   const [, forceUpdate] = useState({});
 
   const handleAnswer = (answer: any) => {
     const result = gameLogic.handleAnswer(answer);
     const state = gameLogic.getState();
-    
+
     if (state.isComplete) {
       onComplete(state.score);
     }
-    
+
     forceUpdate({});
   };
 
@@ -58,9 +53,7 @@ export const ShapeHunterGame: React.FC<GameUIProps> = ({
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <div className="text-white/80 text-sm">Doğru</div>
-            <div className="text-2xl font-black text-white">
-              {gameLogic.getCorrectAnswers()}
-            </div>
+            <div className="text-2xl font-black text-white">{gameLogic.getCorrectAnswers()}</div>
           </div>
         </div>
 
