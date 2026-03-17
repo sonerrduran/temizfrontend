@@ -16,12 +16,12 @@ const MemoryCardsGame = lazy(() => import('./MemoryCardsGame'));
 export function FocusRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<FocusMenu />} />
-      <Route path="/exercise" element={<FocusExercise />} />
-      <Route path="/pomodoro" element={<PomodoroTimer />} />
-      <Route path="/attention-tracking" element={<AttentionTrackingGame />} />
-      <Route path="/color-match" element={<ColorMatchGame />} />
-      <Route path="/memory-cards" element={<MemoryCardsGame />} />
+      <Route index element={<FocusMenu />} />
+      <Route path="exercise" element={<FocusExercise />} />
+      <Route path="pomodoro" element={<PomodoroTimer />} />
+      <Route path="attention-tracking" element={<AttentionTrackingGame />} />
+      <Route path="color-match" element={<ColorMatchGame />} />
+      <Route path="memory-cards" element={<MemoryCardsGame />} />
     </Routes>
   );
 }

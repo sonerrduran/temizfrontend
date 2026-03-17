@@ -8,11 +8,8 @@ export default function LoginPage() {
     const { login, isLoading, error, clearError } = useAuthStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
-    // Debug: Check mock mode
     const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
-    console.log('LoginPage - Mock Mode:', USE_MOCK, import.meta.env.VITE_USE_MOCK);
-
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearError();

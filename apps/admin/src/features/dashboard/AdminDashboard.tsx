@@ -1,4 +1,5 @@
 import { Card, Button } from '@egitim-galaksisi/ui';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { 
   Users, 
@@ -15,6 +16,7 @@ import {
 
 export function AdminDashboard() {
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
 
   const stats = [
     { label: 'Toplam Öğrenci', value: '1,245', icon: Users, color: 'from-purple-500 to-pink-500' },
@@ -85,7 +87,25 @@ export function AdminDashboard() {
               return (
                 <button
                   key={action.label}
-                  onClick={() => alert(`${action.label} sayfası yakında eklenecek`)}
+                  onClick={() => {
+                    if (action.path === '/users') {
+                      navigate('/users');
+                    } else if (action.path === '/schools') {
+                      navigate('/schools');
+                    } else if (action.path === '/teachers') {
+                      navigate('/teachers');
+                    } else if (action.path === '/students') {
+                      navigate('/students');
+                    } else if (action.path === '/timetable') {
+                      navigate('/timetable');
+                    } else if (action.path === '/settings') {
+                      navigate('/settings');
+                    } else if (action.path === '/reports') {
+                      navigate('/reports');
+                    } else {
+                      alert(`${action.label} sayfası yakında eklenecek`);
+                    }
+                  }}
                   className="flex flex-col items-center gap-3 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
                 >
                   <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 group-hover:scale-110 transition-transform">

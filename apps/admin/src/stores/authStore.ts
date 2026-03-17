@@ -1,6 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@egitim-galaksisi/shared';
+import { loginUser, mockPasswords } from '@egitim-galaksisi/mock-data';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  avatar?: string;
+  schoolId?: string;
+  permissions?: string[];
+}
 
 interface AuthState {
   user: User | null;
@@ -18,27 +28,33 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
 
-      login: async (email: string, _password: string) => {
-        // Mock login - in production, this would call the API
-        const mockUser: User = {
-          id: '1',
-          email,
-          name: 'Yönetici',
-          role: 'SCHOOL_ADMIN',
-          gradeLevel: 0,
-          stars: 0,
-          xp: 0,
-          level: 1,
-          avatar: '',
-          solvedProblems: 0,
-          streakDays: 0,
-          schoolId: null,
-          school: null,
+      login: async (email: string, password: string) => {
+        // Mock data ile login
+        const mockUser = loginUser(email, password);
+        
+        if (!mockUser) {
+          throw new Error('Geçersiz email veya şifre');
+        }
+
+        // Sadece admin rolüne izin ver
+        if (mockUser.role !== 'admin') {
+          throw new Error('Bu panele sadece yöneticiler giriş yapabilir');
+        }
+
+        // User objesini admin formatına dönüştür
+        const adminUser: User = {
+          id: mockUser.id,
+          email: mockUser.email,
+          name: mockUser.fullName,
+          role: mockUser.role,
+          avatar: mockUser.avatar,
+          schoolId: 'schoolId' in mockUser ? mockUser.schoolId : undefined,
+          permissions: 'permissions' in mockUser ? mockUser.permissions : ['all'],
         };
 
         set({
-          user: mockUser,
-          token: 'mock-token',
+          user: adminUser,
+          token: 'mock-admin-token-' + mockUser.id,
           isAuthenticated: true,
         });
       },
@@ -60,3 +76,11 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
+// Development için helper - console'da göster
+if (import.meta.env.DEV) {
+  console.log('🔐 Admin Login Credentials:');
+  console.log('Email: admin@egitimgalaksisi.com');
+  console.log('Password: admin123');
+  console.log('\n📋 All Mock Passwords:', mockPasswords);
+}

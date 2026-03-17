@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { GameMode, UserStats } from '../../types';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface FocusExerciseProps {
-  stats: UserStats;
-  setMode: (mode: GameMode) => void;
-}
+type Phase = 'WAITING' | 'FLASHING' | 'GUESSING' | 'RESULT';
 
-const FocusExercise: React.FC<FocusExerciseProps> = ({ stats, setMode }) => {
+export default function FocusExercise() {
+  const navigate = useNavigate();
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
   const [targetWord, setTargetWord] = useState('');
   const [options, setOptions] = useState<string[]>([]);
-
-  type Phase = 'WAITING' | 'FLASHING' | 'GUESSING' | 'RESULT';
   const [phase, setPhase] = useState<Phase>('WAITING');
   const [resultMsg, setResultMsg] = useState('');
 
@@ -82,7 +78,7 @@ const FocusExercise: React.FC<FocusExerciseProps> = ({ stats, setMode }) => {
     <div className="w-full max-w-4xl mx-auto px-4 py-8 animate-in fade-in">
       <div className="flex items-center gap-4 mb-8">
         <button
-          onClick={() => setMode(GameMode.FAST_READING_MENU)}
+          onClick={() => navigate('/focus')}
           className="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"
         >
           ⬅
@@ -153,4 +149,4 @@ const FocusExercise: React.FC<FocusExerciseProps> = ({ stats, setMode }) => {
   );
 };
 
-export default FocusExercise;
+}

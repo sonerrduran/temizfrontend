@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { GameMode } from '../../types';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface ColorMatchGameProps {
-  setMode: (mode: GameMode) => void;
-}
-
-const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ setMode }) => {
+export default function ColorMatchGame() {
+  const navigate = useNavigate();
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'result'>('idle');
@@ -73,7 +70,7 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ setMode }) => {
       <div className="w-full max-w-3xl bg-slate-800/80 backdrop-blur-xl rounded-[40px] p-1 border border-slate-700 shadow-2xl">
         <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-[36px] p-8 relative overflow-hidden">
           <button
-            onClick={() => setMode(GameMode.FOCUS_MENU)}
+            onClick={() => navigate('/focus')}
             className="absolute top-6 left-6 w-12 h-12 bg-red-600/90 hover:bg-red-500/90 rounded-full flex items-center justify-center text-white font-black text-xl transition-all z-10 shadow-lg"
           >
             ✕
@@ -141,4 +138,4 @@ const ColorMatchGame: React.FC<ColorMatchGameProps> = ({ setMode }) => {
   );
 };
 
-export default ColorMatchGame;
+}

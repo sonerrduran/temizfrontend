@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FastReadingMenu from '../../components/fast-reading/FastReadingMenu';
+import FastReadingMenu from '../fast-reading/FastReadingMenu';
 
 export default function FastReadingPage() {
   return (

@@ -119,8 +119,7 @@ export const MENTAL_DEVELOPMENT_CARDS: DashboardCard[] = [
     description: 'Okuma hızını ve odaklanmanı geliştir!',
     icon: '⚡',
     gradient: 'from-blue-500 to-indigo-600',
-    path: '/games/fast-reading',
-    comingSoon: true
+    path: '/fast-reading'
   },
   {
     id: 'focus',
@@ -128,8 +127,7 @@ export const MENTAL_DEVELOPMENT_CARDS: DashboardCard[] = [
     description: 'Odaklanma ve dikkatini zirveye taşı!',
     icon: '🧘',
     gradient: 'from-cyan-600 to-teal-700',
-    path: '/games/focus',
-    comingSoon: true
+    path: '/focus'
   },
   {
     id: 'learning',
@@ -137,8 +135,7 @@ export const MENTAL_DEVELOPMENT_CARDS: DashboardCard[] = [
     description: 'Öğrenme hızını ve tekniklerini keşfet!',
     icon: '🚀',
     gradient: 'from-amber-600 to-orange-700',
-    path: '/games/learning',
-    comingSoon: true
+    path: '/learning'
   }
 ];
 
@@ -150,8 +147,7 @@ export const LANGUAGE_COMMUNICATION_CARDS: DashboardCard[] = [
     description: 'Eğlenceli hikayeler oku ve dinle!',
     icon: '📖',
     gradient: 'from-rose-500 to-pink-600',
-    path: '/games/stories',
-    comingSoon: true
+    path: '/stories'
   },
   {
     id: 'language-games',
@@ -159,7 +155,7 @@ export const LANGUAGE_COMMUNICATION_CARDS: DashboardCard[] = [
     description: 'Kelime hazneni zenginleştir!',
     icon: '💬',
     gradient: 'from-purple-500 to-fuchsia-600',
-    path: '/games/language'
+    path: '/language'
   }
 ];
 

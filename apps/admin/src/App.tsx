@@ -2,6 +2,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from '@egitim-galaksisi/ui';
 import { LoginPage } from './features/auth';
 import { AdminDashboard } from './features/dashboard';
+import { UserList } from './features/users';
+import { SchoolList } from './features/schools';
+import { TeacherList } from './features/teachers';
+import { StudentList } from './features/students';
+import { TimetableManager } from './features/timetable';
+import { SystemSettings } from './features/settings';
+import { ReportsAnalytics } from './features/reports';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { useAuthStore } from './stores/authStore';
 
@@ -21,6 +28,62 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <UserList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schools"
+            element={
+              <ProtectedRoute>
+                <SchoolList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teachers"
+            element={
+              <ProtectedRoute>
+                <TeacherList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/students"
+            element={
+              <ProtectedRoute>
+                <StudentList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/timetable"
+            element={
+              <ProtectedRoute>
+                <TimetableManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SystemSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute>
+                <ReportsAnalytics />
               </ProtectedRoute>
             }
           />

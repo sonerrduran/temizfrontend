@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { GameMode } from '../../types';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface AttentionTrackingGameProps {
-  setMode: (mode: GameMode) => void;
-}
-
-const AttentionTrackingGame: React.FC<AttentionTrackingGameProps> = ({ setMode }) => {
+export default function AttentionTrackingGame() {
+  const navigate = useNavigate();
   const [gameState, setGameState] = useState<'idle' | 'showing' | 'moving' | 'guessing' | 'result'>(
     'idle'
   );
@@ -83,7 +80,7 @@ const AttentionTrackingGame: React.FC<AttentionTrackingGameProps> = ({ setMode }
         <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-[36px] p-8 relative overflow-hidden">
           {/* Çıkış Butonu */}
           <button
-            onClick={() => setMode(GameMode.FOCUS_MENU)}
+            onClick={() => navigate('/focus')}
             className="absolute top-6 left-6 w-12 h-12 bg-red-600/90 hover:bg-red-500/90 rounded-full flex items-center justify-center text-white font-black text-xl transition-all z-10 shadow-lg"
           >
             ✕
@@ -153,4 +150,4 @@ const AttentionTrackingGame: React.FC<AttentionTrackingGameProps> = ({ setMode }
   );
 };
 
-export default AttentionTrackingGame;
+}

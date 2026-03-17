@@ -13,12 +13,6 @@ import {
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
-console.log('🔧 API Configuration:', {
-  API_BASE,
-  USE_MOCK,
-  VITE_USE_MOCK: import.meta.env.VITE_USE_MOCK,
-});
-
 const api = axios.create({
   baseURL: `${API_BASE}/api`,
   headers: { 'Content-Type': 'application/json' },
@@ -108,10 +102,8 @@ export const authAPI = {
   },
   login: async (email: string, password: string) => {
     if (USE_MOCK) {
-      console.log('🔐 Mock Login Attempt:', { email, USE_MOCK });
       await mockDelay();
       const user = mockUsers.find((u) => u.email === email);
-      console.log('👤 User Found:', user ? user.name : 'NOT FOUND');
       if (!user) {
         throw { error: 'Kullanıcı bulunamadı' };
       }
@@ -124,7 +116,6 @@ export const authAPI = {
           refreshToken: 'mock-refresh-token-' + user.id,
         },
       };
-      console.log('✅ Mock Login Success:', response);
       return response;
     }
     return api.post('/auth/login', { email, password });

@@ -7,31 +7,23 @@ export default function MathGamesMenu() {
   const { user } = useAuthStore();
   const gradeLevel = user?.gradeLevel || 1;
 
-  const categories = [
+  const grades = [
     {
-      id: 'learn',
-      name: 'Öğren',
-      icon: '📖',
-      color: 'from-blue-500 to-cyan-500',
-      description: 'Konuları öğren, videolar izle',
-      path: '/lessons/math/learn',
+      id: 'preschool',
+      name: 'Okul Öncesi',
+      icon: '🎈',
+      color: 'from-orange-500 to-pink-500',
+      description: 'Okul öncesi matematik oyunları',
+      path: '/games/math/preschool',
     },
-    {
-      id: 'practice',
-      name: 'Pratik Yap',
-      icon: '✍️',
-      color: 'from-green-500 to-emerald-500',
-      description: 'Test çöz, alıştırma yap',
-      path: '/lessons/math/practice',
-    },
-    {
-      id: 'games',
-      name: 'Oyun Alanı',
+    ...Array.from({ length: 8 }, (_, i) => ({
+      id: `grade${i + 1}`,
+      name: `${i + 1}. Sınıf`,
       icon: '🎮',
-      color: 'from-purple-500 to-pink-500',
-      description: 'Eğlenceli oyunlarla öğren',
-      path: '/games/math/playground',
-    },
+      color: 'from-blue-500 to-indigo-500',
+      description: `${i + 1}. sınıf matematik oyunları`,
+      path: `/games/math/grade${i + 1}`,
+    })),
   ];
 
   return (
@@ -46,20 +38,20 @@ export default function MathGamesMenu() {
           </button>
           <div className="text-center">
             <div className="text-7xl mb-4">🔢</div>
-            <h1 className="text-4xl font-bold text-white mb-2">Matematik</h1>
-            <p className="text-white/60">Nasıl öğrenmek istersin?</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Matematik Oyunları</h1>
+            <p className="text-white/60">Sınıfını seç ve oynamaya başla</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {categories.map((category) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
+          {grades.map((grade) => (
             <GameCard
-              key={category.id}
-              title={category.name}
-              icon={category.icon}
-              color={category.color}
-              description={category.description}
-              onClick={() => navigate(category.path)}
+              key={grade.id}
+              title={grade.name}
+              icon={grade.icon}
+              color={grade.color}
+              description={grade.description}
+              onClick={() => navigate(grade.path)}
             />
           ))}
         </div>

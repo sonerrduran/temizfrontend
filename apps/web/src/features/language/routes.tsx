@@ -21,17 +21,17 @@ const LanguageWordGame = lazy(() => import('./LanguageWordGame'));
 export function LanguageRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LanguageMenu />} />
-      <Route path="/daily-vocabulary" element={<DailyVocabulary />} />
-      <Route path="/ai-quiz" element={<LanguageAIQuiz />} />
-      <Route path="/antonyms" element={<LanguageAntonyms />} />
-      <Route path="/daily-words" element={<LanguageDailyWords />} />
-      <Route path="/idioms" element={<LanguageIdioms />} />
-      <Route path="/metaphors" element={<LanguageMetaphors />} />
-      <Route path="/proverbs" element={<LanguageProverbs />} />
-      <Route path="/sim" element={<LanguageSim />} />
-      <Route path="/synonyms" element={<LanguageSynonyms />} />
-      <Route path="/word-game" element={<LanguageWordGame />} />
+      <Route index element={<LanguageMenu />} />
+      <Route path="daily-vocabulary" element={<DailyVocabulary />} />
+      <Route path="ai-quiz" element={<LanguageAIQuiz />} />
+      <Route path="antonyms" element={<LanguageAntonyms />} />
+      <Route path="daily-words" element={<LanguageDailyWords />} />
+      <Route path="idioms" element={<LanguageIdioms />} />
+      <Route path="metaphors" element={<LanguageMetaphors />} />
+      <Route path="proverbs" element={<LanguageProverbs />} />
+      <Route path="sim" element={<LanguageSim />} />
+      <Route path="synonyms" element={<LanguageSynonyms />} />
+      <Route path="word-game" element={<LanguageWordGame />} />
     </Routes>
   );
 }

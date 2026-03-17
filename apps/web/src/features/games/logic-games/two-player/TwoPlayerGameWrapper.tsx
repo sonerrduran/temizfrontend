@@ -45,7 +45,6 @@ export default function TwoPlayerGameWrapper() {
     >
       <GameComponent
         onComplete={(stars: number) => {
-          console.log('Game completed with', stars, 'stars');
           navigate('/games/logic/two-player');
         }}
         onExit={() => navigate('/games/logic/two-player')}

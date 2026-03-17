@@ -8,9 +8,19 @@ import { Routes, Route } from 'react-router-dom';
 
 // Lazy load game menus
 const MathGamesMenu = lazy(() => import('./math-games/MathGamesMenu'));
-const MathPlayground = lazy(() => import('./math-games/MathPlayground'));
-const MathPlaygroundGrade = lazy(() => import('./math-games/playground/MathPlaygroundGrade'));
-const MathPlaygroundCategory = lazy(() => import('./math-games/playground/MathPlaygroundCategory'));
+const MathGradeMenu = lazy(() => import('./math-games/MathGradeMenu'));
+const MathCategoryMenu = lazy(() => import('./math-games/MathCategoryMenu'));
+const MathGameWrapper = lazy(() => import('./math-games/MathGameWrapper'));
+
+// Preschool Math Games
+const PreschoolMenu = lazy(() => import('./math-games/preschool/PreschoolMenu'));
+const DirectionGame = lazy(() => import('./math-games/preschool/DirectionGame'));
+const MazeGame = lazy(() => import('./math-games/preschool/MazeGame'));
+const NumberComparisonGame = lazy(() => import('./math-games/preschool/NumberComparisonGame'));
+const NumberRecognitionGame = lazy(() => import('./math-games/preschool/NumberRecognitionGame'));
+const PatternPuzzleGame = lazy(() => import('./math-games/preschool/PatternPuzzleGame'));
+const SequencePatternGame = lazy(() => import('./math-games/preschool/SequencePatternGame'));
+const ShapeMatchingGame = lazy(() => import('./math-games/preschool/ShapeMatchingGame'));
 
 const TurkishPlayground = lazy(() => import('./language-games/TurkishPlayground'));
 const TurkishPlaygroundGrade = lazy(() => import('./language-games/playground/TurkishPlaygroundGrade'));
@@ -36,9 +46,20 @@ export function GameRoutes() {
   return (
     <Routes>
       <Route path="/math" element={<MathGamesMenu />} />
-      <Route path="/math/playground" element={<MathPlayground />} />
-      <Route path="/math/playground/:grade" element={<MathPlaygroundGrade />} />
-      <Route path="/math/playground/:grade/:category" element={<MathPlaygroundCategory />} />
+      <Route path="/math/playground" element={<MathGradeMenu />} />
+      <Route path="/math/playground/:grade" element={<MathCategoryMenu />} />
+      <Route path="/math/playground/:grade/:category/:gameId" element={<MathGameWrapper />} />
+      
+      {/* Preschool Math Routes */}
+      <Route path="/math/preschool" element={<PreschoolMenu />} />
+      <Route path="/math/preschool/direction" element={<DirectionGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/maze" element={<MazeGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/number-comparison" element={<NumberComparisonGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/number-recognition" element={<NumberRecognitionGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/pattern-puzzle" element={<PatternPuzzleGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/sequence-pattern" element={<SequencePatternGame onExit={() => window.history.back()} />} />
+      <Route path="/math/preschool/shape-matching" element={<ShapeMatchingGame onExit={() => window.history.back()} />} />
+      
       <Route path="/math/*" element={<MathGamesMenu />} />
 
       <Route path="/turkish/playground" element={<TurkishPlayground />} />

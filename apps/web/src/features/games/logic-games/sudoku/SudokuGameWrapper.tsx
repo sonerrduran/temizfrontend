@@ -46,7 +46,6 @@ export default function SudokuGameWrapper() {
         grade={5}
         difficulty="MEDIUM"
         onComplete={(stars: number) => {
-          console.log('Game completed with', stars, 'stars');
           navigate('/games/logic/sudoku');
         }}
         onExit={() => navigate('/games/logic/sudoku')}

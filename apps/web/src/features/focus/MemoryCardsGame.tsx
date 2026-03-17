@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { GameMode } from '../../types';
-
-interface MemoryCardsGameProps {
-  setMode: (mode: GameMode) => void;
-}
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Card {
   id: number;
@@ -12,7 +8,8 @@ interface Card {
   isMatched: boolean;
 }
 
-const MemoryCardsGame: React.FC<MemoryCardsGameProps> = ({ setMode }) => {
+export default function MemoryCardsGame() {
+  const navigate = useNavigate();
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -83,7 +80,7 @@ const MemoryCardsGame: React.FC<MemoryCardsGameProps> = ({ setMode }) => {
         <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-[36px] p-8 relative overflow-hidden">
           {/* Çıkış Butonu */}
           <button
-            onClick={() => setMode(GameMode.FOCUS_MENU)}
+            onClick={() => navigate('/focus')}
             className="absolute top-6 left-6 w-12 h-12 bg-red-600/90 hover:bg-red-500/90 rounded-full flex items-center justify-center text-white font-black text-xl transition-all z-10 shadow-lg"
           >
             ✕
@@ -147,4 +144,4 @@ const MemoryCardsGame: React.FC<MemoryCardsGameProps> = ({ setMode }) => {
   );
 };
 
-export default MemoryCardsGame;
+}

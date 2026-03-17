@@ -36,17 +36,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   error: null,
 
   login: async (email, password) => {
-    console.log('🚀 Login Started:', { email });
     set({ isLoading: true, error: null });
     try {
       const res: any = await authAPI.login(email, password);
-      console.log('📦 Login Response:', res);
       const { token, refreshToken, user } = res.data;
-      console.log('💾 Saving to localStorage:', { token, user: user.name });
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       set({ user, token, isAuthenticated: true, isLoading: false });
-      console.log('✅ Login Complete');
     } catch (err: any) {
       console.error('❌ Login Error:', err);
       set({ error: err?.error || 'Giriş başarısız', isLoading: false });

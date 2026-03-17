@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { GameMode } from '../../types';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface PomodoroTimerProps {
-  setMode: (mode: GameMode) => void;
-}
-
-const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ setMode }) => {
+export default function PomodoroTimer() {
+  const navigate = useNavigate();
   const [seconds, setSeconds] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [mode, setTimerMode] = useState<'work' | 'break'>('work');
@@ -66,7 +63,7 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ setMode }) => {
         >
           {/* Çıkış Butonu */}
           <button
-            onClick={() => setMode(GameMode.FOCUS_MENU)}
+            onClick={() => navigate('/focus')}
             className="absolute top-6 left-6 w-12 h-12 bg-red-600/90 hover:bg-red-500/90 rounded-full flex items-center justify-center text-white font-black text-xl transition-all z-10 shadow-lg"
           >
             ✕
@@ -155,4 +152,4 @@ const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ setMode }) => {
   );
 };
 
-export default PomodoroTimer;
+}

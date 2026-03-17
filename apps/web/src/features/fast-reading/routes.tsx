@@ -1,9 +1,9 @@
 /**
  * Fast Reading Routes
- * Hızlı okuma route tanımları
+ * Hızlı okuma route tanımları - Yeni mimari
  */
 
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 const FastReadingDashboard = lazy(() => import('./FastReadingDashboard'));
@@ -44,40 +44,40 @@ const FastReadingTeacher = lazy(() => import('./FastReadingTeacher'));
 export function FastReadingRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<FastReadingDashboard />} />
-      <Route path="/menu" element={<FastReadingMenu />} />
-      <Route path="/eye-flow" element={<EyeFlowMenu />} />
-      <Route path="/measurement" element={<MeasurementMenu />} />
-      <Route path="/brain-games" element={<BrainGamesMenu />} />
-      <Route path="/focus-training" element={<FocusTrainingMenu />} />
-      <Route path="/techniques" element={<TechniquesModule />} />
-      <Route path="/bionic-reading" element={<BionicReadingModule />} />
+      <Route index element={<FastReadingDashboard />} />
+      <Route path="menu" element={<FastReadingMenu />} />
+      <Route path="eye-flow" element={<EyeFlowMenu />} />
+      <Route path="measurement" element={<MeasurementMenu />} />
+      <Route path="brain-games" element={<BrainGamesMenu />} />
+      <Route path="focus-training" element={<FocusTrainingMenu />} />
+      <Route path="techniques" element={<TechniquesModule />} />
+      <Route path="bionic-reading" element={<BionicReadingModule />} />
       
       {/* Eye exercises */}
-      <Route path="/eye-exercise" element={<EyeExercise />} />
-      <Route path="/advanced-eye" element={<AdvancedEyeExercises />} />
-      <Route path="/saccade" element={<SaccadeExercise />} />
-      <Route path="/peripheral-vision" element={<PeripheralVisionExercise />} />
-      <Route path="/line-tracking" element={<LineTrackingExercise />} />
-      <Route path="/expanding-shapes" element={<ExpandingShapes />} />
+      <Route path="eye-exercise" element={<EyeExercise />} />
+      <Route path="advanced-eye" element={<AdvancedEyeExercises />} />
+      <Route path="saccade" element={<SaccadeExercise />} />
+      <Route path="peripheral-vision" element={<PeripheralVisionExercise />} />
+      <Route path="line-tracking" element={<LineTrackingExercise />} />
+      <Route path="expanding-shapes" element={<ExpandingShapes />} />
       
       {/* Reading exercises */}
-      <Route path="/rhythmic-reading" element={<RhythmicReading />} />
-      <Route path="/rhythmic-exercises" element={<RhythmicReadingExercises />} />
-      <Route path="/word-flow" element={<WordFlowExercise />} />
-      <Route path="/word-grouping" element={<WordGroupingExercise />} />
-      <Route path="/speed-test" element={<SpeedReadingTest />} />
-      <Route path="/speed-comprehension" element={<SpeedComprehension />} />
+      <Route path="rhythmic-reading" element={<RhythmicReading />} />
+      <Route path="rhythmic-exercises" element={<RhythmicReadingExercises />} />
+      <Route path="word-flow" element={<WordFlowExercise />} />
+      <Route path="word-grouping" element={<WordGroupingExercise />} />
+      <Route path="speed-test" element={<SpeedReadingTest />} />
+      <Route path="speed-comprehension" element={<SpeedComprehension />} />
       
       {/* Games */}
-      <Route path="/catch-word" element={<CatchWordGame />} />
-      <Route path="/flash-memory" element={<FlashMemoryGame />} />
-      <Route path="/visual-search" element={<VisualSearch />} />
-      <Route path="/visual-perception" element={<VisualPerceptionGames />} />
-      <Route path="/tachistoscope" element={<Tachistoscope />} />
+      <Route path="catch-word" element={<CatchWordGame />} />
+      <Route path="flash-memory" element={<FlashMemoryGame />} />
+      <Route path="visual-search" element={<VisualSearch />} />
+      <Route path="visual-perception" element={<VisualPerceptionGames />} />
+      <Route path="tachistoscope" element={<Tachistoscope />} />
       
       {/* Teacher */}
-      <Route path="/teacher" element={<FastReadingTeacher />} />
+      <Route path="teacher" element={<FastReadingTeacher />} />
     </Routes>
   );
 }

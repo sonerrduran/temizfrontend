@@ -1,0 +1,1 @@
+export { TimetableManager } from './TimetableManager';

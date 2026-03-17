@@ -1,87 +1,82 @@
 import React from 'react';
-import { GameCard } from '@egitim-galaksisi/ui';
-import { GameMode, UserStats } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
-interface FocusMenuProps {
-  stats: UserStats;
-  setMode: (mode: GameMode) => void;
-}
+const FocusMenu: React.FC = () => {
+  const navigate = useNavigate();
 
-const FocusMenu: React.FC<FocusMenuProps> = ({ stats, setMode }) => {
+  const games = [
+    {
+      id: 'pomodoro',
+      title: 'Pomodoro Görev',
+      icon: '⏳',
+      description: '25+5 kuralı ile derslerini odaklanarak bitir.',
+      gradient: 'from-rose-500 to-red-600',
+      path: '/focus/pomodoro'
+    },
+    {
+      id: 'attention',
+      title: 'Dikkat Takibi',
+      icon: '🎯',
+      description: 'Hareket eden objeleri gözden kaçırma.',
+      gradient: 'from-cyan-500 to-blue-600',
+      path: '/focus/attention-tracking'
+    },
+    {
+      id: 'focus-point',
+      title: 'Odak Noktası',
+      icon: '🔘',
+      description: 'Merkezdeki noktaya bakarak dikkat süreni artır.',
+      gradient: 'from-indigo-500 to-indigo-700',
+      path: '/focus/exercise'
+    },
+    {
+      id: 'memory-cards',
+      title: 'Hafıza Kartları',
+      icon: '🃏',
+      description: 'Eşleşen kartları bul, hafızanı güçlendir.',
+      gradient: 'from-purple-500 to-pink-600',
+      path: '/focus/memory-cards'
+    },
+    {
+      id: 'color-match',
+      title: 'Renk Odağı',
+      icon: '🎨',
+      description: 'Renk ve kelime uyumunu hızlıca değerlendir.',
+      gradient: 'from-orange-500 to-red-600',
+      path: '/focus/color-match'
+    }
+  ];
+
   return (
-    <div className="w-full max-w-6xl mx-auto px-2 bounce-in relative z-20">
-      <div className="text-center mb-12">
-        <button
-          onClick={() => setMode(GameMode.HOME)}
-          className="mb-6 px-6 py-2 bg-white/5 text-white rounded-full font-bold border border-white/20 hover:bg-white/10 transition-all text-sm"
-        >
-          ⬅ ANA MENÜYE DÖN
-        </button>
-        <h2 className="text-4xl md:text-7xl font-black text-white drop-shadow-2xl mb-4 uppercase">
-          Konsantrasyon Merkezi
-        </h2>
-        <p className="text-white/80 font-medium max-w-2xl mx-auto text-sm md:text-base mb-6">
-          Zihnini sakinleştir, odaklanmanı geliştir ve dikkatini tek bir noktada toplamayı öğren!
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="mb-6 px-6 py-2 bg-white/5 text-white rounded-full font-bold border border-white/20 hover:bg-white/10 transition-all text-sm"
+          >
+            ⬅ GERİ DÖN
+          </button>
+          <div className="text-6xl mb-4">🧘</div>
+          <h1 className="text-4xl md:text-5xl font-black text-white mb-2">Konsantrasyon Merkezi</h1>
+          <p className="text-white/80 text-lg">Zihnini sakinleştir, odaklanmanı geliştir ve dikkatini tek bir noktada toplamayı öğren!</p>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto pb-32">
-        <GameCard
-          title="Pomodoro Görev"
-          icon="⏳"
-          color="from-rose-500 to-red-600"
-          description="25+5 kuralı ile derslerini odaklanarak bitir."
-          onClick={() => setMode(GameMode.FOCUS_POMODORO)}
-        />
-        <GameCard
-          title="Dikkat Takibi"
-          icon="🎯"
-          color="from-cyan-500 to-blue-600"
-          description="Hareket eden objeleri gözden kaçırma."
-          onClick={() => setMode(GameMode.FOCUS_ATTENTION)}
-        />
-        <GameCard
-          title="Odak Noktası"
-          icon="🔘"
-          color="from-indigo-500 to-indigo-700"
-          description="Merkezdeki noktaya bakarak dikkat süreni artır."
-          onClick={() => setMode(GameMode.FAST_READING_FOCUS)}
-        />
-        <GameCard
-          title="Hafıza Kartları"
-          icon="🃏"
-          color="from-purple-500 to-pink-600"
-          description="Eşleşen kartları bul, hafızanı güçlendir."
-          onClick={() => setMode(GameMode.FOCUS_MEMORY_CARDS)}
-        />
-        <GameCard
-          title="Renk Odağı"
-          icon="🎨"
-          color="from-orange-500 to-red-600"
-          description="Renk ve kelime uyumunu hızlıca değerlendir."
-          onClick={() => setMode(GameMode.FOCUS_COLOR_MATCH)}
-        />
-        <GameCard
-          title="Sayı Dizisi"
-          icon="🔢"
-          color="from-green-500 to-emerald-600"
-          description="Sayı dizilerini hatırla ve tekrarla."
-          onClick={() => setMode(GameMode.FOCUS_NUMBER_SEQUENCE)}
-        />
-        <GameCard
-          title="Nefes Egzersizi"
-          icon="🌬️"
-          color="from-teal-500 to-cyan-600"
-          description="Derin nefes alarak zihnini sakinleştir."
-          onClick={() => setMode(GameMode.FOCUS_BREATHING)}
-        />
-        <GameCard
-          title="Labirent Çözücü"
-          icon="🧩"
-          color="from-violet-500 to-purple-600"
-          description="Labirentten çıkış yolunu bul."
-          onClick={() => setMode(GameMode.FOCUS_MAZE)}
-        />
+        {/* Games */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {games.map((game) => (
+            <button
+              key={game.id}
+              onClick={() => navigate(game.path)}
+              className={`bg-gradient-to-br ${game.gradient} p-8 rounded-2xl text-white hover:scale-105 transition-all duration-300 text-left border-2 border-white/10`}
+            >
+              <div className="text-5xl mb-4">{game.icon}</div>
+              <h2 className="text-2xl font-bold mb-2">{game.title}</h2>
+              <p className="text-white/80 text-sm">{game.description}</p>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
